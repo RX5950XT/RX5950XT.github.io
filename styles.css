@@ -1,0 +1,1675 @@
+/* ==========================================================================
+   rx5950xt.github.io
+   The handle is a part number, so the identity column is set like a spec
+   plate. The page is achromatic — the only hue comes from the languages
+   actually written. Light comes from the pointer.
+   ========================================================================== */
+
+/* --- Tokens --------------------------------------------------------------- */
+
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI",
+    system-ui, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas,
+    "PingFang TC", monospace;
+
+  --radius: 18px;
+  --radius-sm: 10px;
+  --plate-w: 340px;
+
+  /* Springs, borrowed from Apple's numbers: response 0.4 critically damped. */
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 0.4s;
+}
+
+:root[data-theme="dark"] {
+  --void: #08080b;
+  /* Base wash so the page isn't a flat black slab (mirrors light's soft fields).
+     Cool slate + muted teal only — no indigo/violet. */
+  --bg:
+    radial-gradient(120% 85% at 8% -5%, rgba(62, 82, 105, 0.42) 0%, transparent 58%),
+    radial-gradient(95% 75% at 96% 105%, rgba(42, 78, 82, 0.34) 0%, transparent 55%),
+    radial-gradient(70% 55% at 55% 40%, rgba(28, 32, 42, 0.55) 0%, transparent 72%),
+    linear-gradient(168deg, #0a0c12 0%, #08080b 48%, #090b10 100%);
+  --text: #f5f5f7;
+  /* Secondary / meta sit on frosted glass — keep brighter than solid-bg greys. */
+  --text-2: #c5c5cd;
+  --text-3: #9a9aa4;
+
+  /* Frosted glass: enough fill to read as material, low enough to show blur. */
+  --surface: rgba(255, 255, 255, 0.1);
+  --surface-hi: rgba(255, 255, 255, 0.16);
+  --surface-solid: #101015; /* fallback only when transparency is fully off */
+  --stroke: rgba(255, 255, 255, 0.16);
+  --stroke-hi: rgba(255, 255, 255, 0.32);
+  --hairline: rgba(255, 255, 255, 0.12);
+
+  /* Bright top edge + soft rim, like light catching real glass. */
+  --edge: rgba(255, 255, 255, 0.38);
+  --edge-soft: rgba(255, 255, 255, 0.1);
+  --sheen: rgba(255, 255, 255, 0.18);
+  --glass-blur: 40px;
+  --glass-sat: 180%;
+  --glass-shine: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.06) 36%,
+    rgba(255, 255, 255, 0) 66%
+  );
+  --glass-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 18px 48px -16px rgba(0, 0, 0, 0.72);
+
+  /* Drifting fields — stronger, so glass has something to frost through. */
+  --light-a: rgba(155, 180, 205, 0.28);
+  --light-b: rgba(95, 155, 150, 0.2);
+  /* Pointer lamp — same recipe as light (cool slate core → mid wash). */
+  --light-pointer: rgba(235, 242, 250, 0.26);
+  --light-pointer-mid: rgba(160, 185, 200, 0.14);
+  --pointer-blend: screen;
+
+  --cursor: #fff8f0;
+  --trail: 255, 248, 240;
+  --trail-alpha: 0.5;
+
+  /* Selection: frosted wash, not browser blue. */
+  --sel-bg: rgba(255, 255, 255, 0.18);
+  --sel-fg: #f5f5f7;
+
+  /* Scrollbars — soft glass thumb on void (page + sticky plate). */
+  --scroll-thumb: rgba(255, 255, 255, 0.2);
+  --scroll-thumb-hover: rgba(255, 255, 255, 0.36);
+  --scroll-track: rgba(255, 255, 255, 0.04);
+
+  /* Clickable controls — rest is readable as action; hover is louder. */
+  --action-bg: rgba(255, 255, 255, 0.14);
+  --action-bg-hover: rgba(255, 255, 255, 0.26);
+  --action-stroke: rgba(255, 255, 255, 0.26);
+  --action-stroke-hover: rgba(255, 255, 255, 0.52);
+  --action-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  --action-shadow-hover:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 8px 22px -10px rgba(0, 0, 0, 0.55);
+}
+
+:root[data-theme="light"] {
+  --void: #f5f5f7;
+  --bg: none; /* light 的層次交給 .field ambient，不動你喜歡的感覺 */
+  --text: #1d1d1f;
+  --text-2: #6e6e73;
+  --text-3: #8e8e93;
+
+  /* Slightly more open so ambient blur reads through the frost. */
+  --surface: rgba(255, 255, 255, 0.42);
+  --surface-hi: rgba(255, 255, 255, 0.68);
+  --surface-solid: #ffffff;
+  --stroke: rgba(0, 0, 0, 0.08);
+  --stroke-hi: rgba(0, 0, 0, 0.18);
+  --hairline: rgba(0, 0, 0, 0.09);
+
+  --edge: rgba(255, 255, 255, 0.95);
+  --edge-soft: rgba(255, 255, 255, 0.5);
+  --sheen: rgba(255, 255, 255, 0.5);
+  --glass-blur: 36px;
+  --glass-sat: 170%;
+  --glass-shine: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(255, 255, 255, 0.28) 40%,
+    rgba(255, 255, 255, 0.06) 72%
+  );
+  --glass-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 16px 40px -14px rgba(0, 0, 0, 0.16);
+
+  /* Soft cool fields — kept (user likes light mode as-is). */
+  --light-a: rgba(120, 140, 255, 0.28);
+  --light-b: rgba(80, 190, 210, 0.22);
+  /* Same hue family as dark (160,185,200); only lift strength for the bright void.
+     soft-light ≈ screen's "soft lamp" feel when the page is already light. */
+  --light-pointer: rgba(255, 255, 255, 0.72);
+  --light-pointer-mid: rgba(160, 185, 200, 0.42);
+  --pointer-blend: soft-light;
+
+  --sel-bg: rgba(29, 29, 31, 0.14);
+  --sel-fg: #1d1d1f;
+
+  --cursor: #1d1d1f;
+  --trail: 40, 44, 70;
+  --trail-alpha: 0.35;
+
+  /* Scrollbars — soft graphite on light void. */
+  --scroll-thumb: rgba(29, 29, 31, 0.22);
+  --scroll-thumb-hover: rgba(29, 29, 31, 0.4);
+  --scroll-track: rgba(29, 29, 31, 0.05);
+
+  /* Clickable controls — rest is readable as action; hover is louder. */
+  --action-bg: rgba(255, 255, 255, 0.78);
+  --action-bg-hover: rgba(255, 255, 255, 0.98);
+  --action-stroke: rgba(0, 0, 0, 0.14);
+  --action-stroke-hover: rgba(0, 0, 0, 0.32);
+  --action-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --action-shadow-hover:
+    0 0 0 1px rgba(0, 0, 0, 0.04),
+    0 8px 20px -8px rgba(0, 0, 0, 0.18);
+}
+
+/* --- Base ----------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+::selection {
+  background-color: var(--sel-bg);
+  color: var(--sel-fg);
+}
+
+::-moz-selection {
+  background-color: var(--sel-bg);
+  color: var(--sel-fg);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Firefox: page scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background-color: var(--void);
+  background-image: var(--bg, none);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  transition: background-color 0.5s var(--ease), color 0.5s var(--ease);
+}
+
+/* Chromium / Safari: thin glass-style scrollbars (page + any overflow box). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scroll-thumb-hover);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* The label face. Mono is reserved for machine-readable things:
+   identifiers, times, versions, language names. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* --- Ambient light -------------------------------------------------------- */
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+/* Soft radial fills — no live `filter: blur()`. CSS blur on huge layers
+   forces every glass surface (backdrop-filter) to re-sample every frame;
+   Edge is much harsher about that cost than Chrome. */
+.field {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.field-a {
+  top: -18vh;
+  left: -10vw;
+  width: 62vw;
+  height: 62vw;
+  min-width: 480px;
+  min-height: 480px;
+  background: radial-gradient(circle at 50% 50%, var(--light-a) 0%, transparent 70%);
+  animation: drift-a 34s var(--ease) infinite alternate;
+}
+
+.field-b {
+  bottom: -24vh;
+  right: -12vw;
+  width: 54vw;
+  height: 54vw;
+  min-width: 420px;
+  min-height: 420px;
+  background: radial-gradient(circle at 50% 50%, var(--light-b) 0%, transparent 70%);
+  animation: drift-b 44s var(--ease) infinite alternate;
+}
+
+/* Dark: slightly larger soft pools so the wash feels continuous, like light mode. */
+:root[data-theme="dark"] .field-a {
+  width: 70vw;
+  height: 70vw;
+  min-width: 520px;
+  min-height: 520px;
+}
+
+:root[data-theme="dark"] .field-b {
+  width: 62vw;
+  height: 62vw;
+  min-width: 460px;
+  min-height: 460px;
+}
+
+/* The signature: the pointer is the page's light source.
+   One shape for both themes — only --light-pointer* and --pointer-blend change. */
+.field-pointer {
+  top: 0;
+  left: 0;
+  width: 760px;
+  height: 760px;
+  margin: -380px 0 0 -380px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--light-pointer) 0%,
+    var(--light-pointer-mid) 36%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.55s var(--ease);
+  transform: translate3d(-999px, -999px, 0);
+  will-change: transform;
+  contain: strict;
+  mix-blend-mode: var(--pointer-blend, screen);
+}
+
+.field-pointer.lit {
+  opacity: 1;
+}
+
+@keyframes drift-a {
+  to {
+    transform: translate3d(9vw, 7vh, 0) scale(1.14);
+  }
+}
+
+@keyframes drift-b {
+  to {
+    transform: translate3d(-8vw, -6vh, 0) scale(1.1);
+  }
+}
+
+/* --- Pointer -------------------------------------------------------------- */
+
+.trail,
+.cursor,
+.cursor-ring {
+  display: none;
+}
+
+.trail {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.cursor,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  pointer-events: none;
+  border-radius: 50%;
+  will-change: transform;
+  opacity: 0; /* nothing to point at until the pointer actually moves */
+}
+
+html.pointing .cursor {
+  opacity: 1;
+}
+
+html.pointing .cursor-ring {
+  opacity: 0.35;
+}
+
+.cursor {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--cursor);
+}
+
+.cursor-ring {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 1px solid var(--cursor);
+  transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out),
+    margin 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
+}
+
+/* Pointer-driven, so it can only exist where there is a real pointer. */
+@media (pointer: fine) {
+  /* Avoid `* { cursor: none }` — universal selector thrash on every hit-test. */
+  html.pointer-fine,
+  html.pointer-fine body {
+    cursor: none;
+  }
+
+  html.pointer-fine a,
+  html.pointer-fine button,
+  html.pointer-fine [role="button"] {
+    cursor: none;
+  }
+
+  html.pointer-fine .trail,
+  html.pointer-fine .cursor,
+  html.pointer-fine .cursor-ring {
+    display: block;
+  }
+
+  html.pointing .cursor-ring.near {
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    opacity: 0.6;
+  }
+}
+
+/* --- Site chrome (theme + lang icon FABs, bottom-right — all viewports) --- */
+
+.chrome {
+  position: fixed;
+  top: auto;
+  right: max(14px, env(safe-area-inset-right, 0px));
+  bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  left: auto;
+  z-index: 50;
+  max-width: none;
+}
+
+.chrome-panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  background: var(--surface);
+  background-image: var(--glass-shine);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 10px 24px -10px rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+}
+
+.chrome-controls {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+
+.chrome-controls .chip {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+  border-radius: 50%;
+  background: var(--surface-hi);
+  box-shadow: inset 0 1px 0 0 var(--edge-soft);
+}
+
+/* Icon-only; labels stay for a11y via aria-label + .chip-text for paintControls. */
+.chrome-controls .chip-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.chrome-controls .chip-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  line-height: 1;
+}
+
+.chrome-controls .chip-glyph svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.chrome-controls .chip-lang {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  width: auto;
+  height: auto;
+}
+
+/* --- Layout --------------------------------------------------------------- */
+
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1240px;
+  margin: 0 auto;
+  /* Bottom room for icon chrome FABs. */
+  padding: 28px 24px 96px;
+}
+
+@media (min-width: 960px) {
+  .shell {
+    display: grid;
+    grid-template-columns: var(--plate-w) minmax(0, 1fr);
+    gap: 72px;
+    align-items: start;
+    padding: 48px 40px 120px;
+  }
+
+  .plate {
+    position: sticky;
+    top: 40px;
+    /* Tall plate (tools block) still fits short viewports. */
+    max-height: calc(100vh - 80px);
+    max-height: calc(100dvh - 80px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Same tokens as page; slightly slimmer gutter beside the plate. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
+  }
+
+  .plate::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .plate::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .plate::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .plate::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scroll-thumb-hover);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}
+
+/* Mid-width: less side gap so plate + cards both breathe. */
+@media (min-width: 960px) and (max-width: 1100px) {
+  .shell {
+    gap: 40px;
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+}
+
+/* Narrow phones: denser plate + tools. */
+@media (max-width: 420px) {
+  .plate-inner {
+    padding: 24px 16px;
+  }
+
+  .links {
+    gap: 5px;
+  }
+
+  .links .link {
+    padding: 7px 4px;
+    font-size: 0.625rem;
+    gap: 4px;
+  }
+
+  .links .link-ico {
+    width: 12px;
+    height: 12px;
+  }
+
+  .tools-chats {
+    gap: 4px;
+  }
+
+  .tools-link {
+    padding: 5px 2px;
+    font-size: 0.5625rem;
+  }
+
+  .tools-cmd {
+    font-size: 0.5625rem;
+  }
+
+  .copy-label {
+    /* Icon-only on the tightest screens; aria-label still names the action. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .copy-btn {
+    position: relative;
+    padding: 5px 7px;
+  }
+}
+
+/* --- Glass ---------------------------------------------------------------- */
+
+/* One material: plate, project cards, model cards.
+   Layers (back → front): backdrop blur · translucent fill · top-left shine · rim light.
+   Do NOT use contain:paint here — it can clip backdrop sampling and kill the frost. */
+.plate-inner,
+.card {
+  position: relative;
+  background-color: var(--surface);
+  background-image: var(--glass-shine);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  overflow: hidden;
+  isolation: isolate;
+  /* Promote once so the browser keeps a stable glass layer. */
+  transform: translateZ(0);
+}
+
+/* Off-screen project/model cards skip paint work until needed. */
+.card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 220px;
+}
+
+/* Keep text/controls above the glass shine layers. */
+.plate-inner > *,
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Bright top rim — the thin highlight a real pane catches. */
+.plate-inner::after,
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 4%,
+    var(--edge) 22%,
+    var(--edge) 78%,
+    transparent 96%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Soft secondary rim down the left edge (plate only — the hero glass). */
+.plate-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    var(--edge) 0%,
+    var(--edge-soft) 45%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Pointer-driven specular on cards — layered on top of the static shine. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      320px circle at var(--sx, 50%) var(--sy, 0%),
+      var(--sheen),
+      transparent 68%
+    );
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card:hover::before,
+.card:focus-within::before {
+  opacity: 1;
+}
+
+/* --- The plate ------------------------------------------------------------ */
+
+.plate-inner {
+  padding: 28px 24px;
+}
+
+/* Avatar top-left · local time top-right of the plate (not tight beside). */
+.plate-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.avatar {
+  flex: 0 0 auto;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 1px solid var(--stroke);
+  background: var(--surface-hi);
+}
+
+.plate-clock {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: min(11.5rem, calc(100% - 100px));
+  text-align: right;
+  /* Mirror the avatar block: sit in the opposite corner of the head row. */
+  padding-top: 2px;
+}
+
+.plate-clock .label {
+  display: block;
+  margin: 0 0 4px;
+}
+
+.plate-clock .date {
+  display: block;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+  line-height: 1.3;
+}
+
+.plate-clock .clock {
+  display: block;
+  margin: 2px 0 0;
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  color: var(--text);
+}
+
+.plate-clock .zone {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--text-3);
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.handle {
+  margin: 22px 0 0;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em; /* a part number wants air between characters */
+  line-height: 1.2;
+}
+
+.tagline {
+  margin: 10px 0 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.bio {
+  margin: 14px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--text-2);
+}
+
+.bio a {
+  color: var(--text);
+  border-bottom: 1.5px solid var(--action-stroke);
+  transition:
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+  border-radius: 2px;
+}
+
+.bio a:hover,
+.bio a:focus-visible {
+  border-bottom-color: var(--text);
+  background: color-mix(in srgb, var(--action-bg-hover) 55%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--action-bg-hover) 55%, transparent);
+}
+
+/* Profile links: fixed 2×2 — TL GitHub · TR HF · BL X · BR Discord */
+.links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 22px;
+}
+
+.links .link {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 8px 6px;
+  font-size: 0.6875rem;
+  letter-spacing: -0.02em;
+  gap: 5px;
+}
+
+.links .link-ico {
+  width: 13px;
+  height: 13px;
+}
+
+.links .link-label {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* --- Rig (machine specs on the plate) ------------------------------------- */
+
+.rig {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.rig-title {
+  margin: 0 0 10px;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.rig-list {
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-sm);
+  background: var(--surface-hi);
+  box-shadow: inset 0 1px 0 0 var(--edge-soft);
+}
+
+.rig-row {
+  display: grid;
+  grid-template-columns: 2.75rem 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 0;
+}
+
+.rig-row + .rig-row {
+  border-top: 1px solid var(--hairline);
+}
+
+.rig-key {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.rig-val {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 1.4;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rig-wish {
+  margin: 10px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--text-2);
+  font-style: italic;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1px solid var(--action-stroke);
+  border-radius: 999px;
+  background: var(--action-bg);
+  color: var(--text);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition:
+    transform 0.15s var(--ease-out),
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.link-ico {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  color: var(--text);
+  opacity: 0.78;
+  transition: color var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+
+.link:hover .link-ico,
+.link:focus-visible .link-ico,
+.ctx-item:hover .link-ico,
+.ctx-item:focus-visible .link-ico,
+.card-link:hover .link-ico,
+.card-link:focus-visible .link-ico {
+  color: var(--text);
+  opacity: 1;
+}
+
+.ctx-item .link-ico {
+  width: 16px;
+  height: 16px;
+}
+
+.card-link .link-ico {
+  width: 13px;
+  height: 13px;
+}
+
+.link:hover,
+.link:focus-visible {
+  border-color: var(--action-stroke-hover);
+  background: var(--action-bg-hover);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow-hover);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.link:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+.arrow {
+  color: var(--text-2);
+  transition: transform 0.25s var(--ease-out), color var(--dur) var(--ease);
+}
+
+.link:hover .arrow,
+.row:hover .arrow,
+.card-link:hover .arrow {
+  transform: translate(2px, -2px);
+  color: var(--text);
+}
+
+/* --- Tools (left plate bottom) -------------------------------------------- */
+
+.tools {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.tools-title {
+  margin: 0 0 10px;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.tools-block + .tools-block {
+  margin-top: 12px;
+}
+
+.tools-sub {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Four chat targets on one row — equal columns, no wrap. */
+.tools-chats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.tools-link {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 6px 4px;
+  font-size: 0.625rem;
+  letter-spacing: -0.02em;
+  gap: 2px;
+}
+
+.tools-link .link-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tools-link .arrow {
+  flex: 0 0 auto;
+  font-size: 0.625rem;
+}
+
+/* One terminal stack for all four installers — less card clutter. */
+.tools-installs {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-sm);
+  background: var(--surface-hi);
+  box-shadow: inset 0 1px 0 0 var(--edge-soft);
+  overflow: hidden;
+}
+
+.tools-row {
+  padding: 8px 10px;
+  min-width: 0;
+}
+
+.tools-row + .tools-row {
+  border-top: 1px solid var(--hairline);
+}
+
+.tools-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tools-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tools-cmd {
+  display: block;
+  margin-top: 3px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  cursor: text;
+  user-select: all;
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border: 1px solid var(--action-stroke);
+  border-radius: 999px;
+  background: var(--action-bg);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.625rem;
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    transform 0.12s var(--ease-out);
+}
+
+.copy-btn:hover,
+.copy-btn:focus-visible {
+  border-color: var(--action-stroke-hover);
+  background: var(--action-bg-hover);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow-hover);
+  color: var(--text);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.copy-btn:active {
+  transform: scale(0.96);
+}
+
+.copy-btn.is-copied {
+  border-color: var(--action-stroke-hover);
+  color: var(--text);
+  background: var(--action-bg-hover);
+}
+
+.copy-ico {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+.copy-label {
+  /* Keep width stable between Copy / Copied in EN & 複製 / 已複製 in ZH. */
+  min-width: 2.5em;
+  text-align: center;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border: 1px solid var(--action-stroke);
+  border-radius: 999px;
+  background: var(--action-bg);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+  transition:
+    transform 0.15s var(--ease-out),
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.chip:hover,
+.chip:focus-visible {
+  color: var(--text);
+  border-color: var(--action-stroke-hover);
+  background: var(--action-bg-hover);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow-hover);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.chip:active {
+  transform: scale(0.96);
+  transition-duration: 0.1s;
+}
+
+/* --- Sections ------------------------------------------------------------- */
+
+.section + .section {
+  margin-top: 72px;
+}
+
+/* A rule that reaches across the column, not a decorative divider. */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 0 24px;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--hairline);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* --- Project cards -------------------------------------------------------- */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+/* Colour on this page comes only from the languages actually written. */
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lang, var(--text-3));
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 0 var(--lang);
+  transition: box-shadow var(--dur) var(--ease);
+}
+
+.card:hover .dot {
+  box-shadow: 0 0 12px 0 var(--lang);
+}
+
+.card-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+
+.card-desc {
+  margin: 10px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 3px 8px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-3);
+}
+
+.card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: 1px solid var(--action-stroke);
+  border-radius: 999px;
+  background: var(--action-bg);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text);
+  transition:
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    transform 0.15s var(--ease-out);
+}
+
+.card-link:hover,
+.card-link:focus-visible {
+  color: var(--text);
+  border-color: var(--action-stroke-hover);
+  background: var(--action-bg-hover);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow-hover);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.card-link:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+/* --- The compact list ----------------------------------------------------- */
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--hairline);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 8px;
+  margin: 0 -4px;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: 8px;
+  transition:
+    background-color 0.25s var(--ease),
+    padding-left 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.row:hover,
+.row:focus-visible {
+  background: var(--action-bg-hover);
+  padding-left: 14px;
+  box-shadow: inset 0 0 0 1px var(--action-stroke);
+  outline: none;
+}
+
+.row-name {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.row-desc {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.8125rem;
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-lang {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-3);
+}
+
+.foot {
+  margin-top: 72px;
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+@media (max-width: 559px) {
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .row-desc {
+    flex-basis: 100%;
+    white-space: normal;
+  }
+}
+
+/* --- Entrance ------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+
+/* --- Context menu --------------------------------------------------------- */
+
+.ctx {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  min-width: 220px;
+  max-width: min(280px, calc(100vw - 20px));
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--stroke);
+  background-color: var(--surface);
+  background-image: var(--glass-shine);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  transform: translate3d(-9999px, -9999px, 0);
+  transform-origin: top left;
+  animation: ctx-in 0.18s var(--ease-out);
+  /* Sit above the custom cursor chrome. */
+  isolation: isolate;
+}
+
+.ctx[hidden] {
+  display: none;
+}
+
+@keyframes ctx-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.ctx-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 6px;
+}
+
+.ctx-handle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.ctx-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ctx-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  color: var(--text);
+  font-size: 0.875rem;
+  line-height: 1.2;
+  transition:
+    background-color 0.15s var(--ease),
+    color 0.15s var(--ease),
+    border-color 0.15s var(--ease),
+    box-shadow 0.15s var(--ease);
+}
+
+.ctx-item:hover,
+.ctx-item:focus-visible {
+  background: var(--action-bg-hover);
+  border-color: var(--action-stroke);
+  box-shadow: var(--action-shadow);
+  outline: none;
+}
+
+.ctx-item:active {
+  transform: scale(0.98);
+}
+
+.ctx-item-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ctx-item-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ctx-item-go {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  transition: transform 0.2s var(--ease-out), color 0.15s var(--ease);
+}
+
+.ctx-item:hover .ctx-item-go,
+.ctx-item:focus-visible .ctx-item-go {
+  color: var(--text);
+  transform: translate(1px, -1px);
+}
+
+/* While the menu is open, restore a real cursor (page uses custom cursor). */
+html.ctx-open,
+html.ctx-open body {
+  cursor: auto !important;
+}
+
+html.ctx-open .ctx,
+html.ctx-open .ctx * {
+  cursor: pointer;
+}
+
+html.ctx-open .cursor,
+html.ctx-open .cursor-ring,
+html.ctx-open .trail {
+  opacity: 0 !important;
+  visibility: hidden;
+}
+
+/* --- Preferences ---------------------------------------------------------- */
+
+/* Respect a11y: drop heavy blur, but keep a translucent frost — fully opaque
+   panels made the site look "not glass" for anyone with Windows transparency off. */
+@media (prefers-reduced-transparency: reduce) {
+  .plate-inner,
+  .card,
+  .ctx,
+  .chrome-panel {
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    backdrop-filter: blur(12px) saturate(120%);
+    background-color: color-mix(in srgb, var(--surface-solid) 78%, transparent);
+    background-image: var(--glass-shine);
+    box-shadow:
+      inset 0 1px 0 0 var(--edge-soft),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 12px 32px -14px rgba(0, 0, 0, 0.35);
+  }
+
+  .link,
+  .chip,
+  .copy-btn,
+  .card-link,
+  .row:hover {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    background: color-mix(in srgb, var(--surface-solid) 82%, transparent);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --stroke: var(--stroke-hi);
+    --text-2: var(--text);
+  }
+}
+
+/* Reduced motion keeps the cursor (it is feedback) but drops the trail,
+   the drifting fields and every translation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal.in {
+    transition: opacity 0.2s linear;
+  }
+
+  html.pointer-fine .trail {
+    display: none;
+  }
+
+  .field-pointer {
+    display: none;
+  }
+
+  .ctx {
+    animation: none;
+  }
+}

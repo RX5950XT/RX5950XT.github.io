@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>rx5950xt</title>
+<meta name="description" content="rx5950xt — vibe coder. ESP32 firmware, local AI inference, LoRA fine-tunes, scrapers, web and Android apps, quant research — mostly built with agents.">
+<meta name="theme-color" content="#08080b">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="favicon.png" type="image/png" sizes="256x256">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="stylesheet" href="styles.css">
+<script>
+  /* Resolve the appearance before first paint so the page never flashes. */
+  (function () {
+    try {
+      /* First visit follows OS scheme; manual toggle is stored thereafter. */
+      var theme = localStorage.getItem('theme') ||
+        (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.documentElement.dataset.theme = theme;
+      /* Prefer stored choice; otherwise zh* browser locales → Chinese. */
+      var lang = localStorage.getItem('lang');
+      if (!lang) {
+        try {
+          var list = (navigator.languages && navigator.languages.length)
+            ? navigator.languages
+            : [navigator.language || 'en'];
+          lang = 'en';
+          for (var i = 0; i < list.length; i++) {
+            if (/^zh\b/i.test(list[i])) { lang = 'zh'; break; }
+          }
+        } catch (e) { lang = 'en'; }
+      }
+      document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+    } catch (e) {}
+    /* Block the OS context menu as early as possible (before main.js).
+       main.js still owns opening the custom glass menu. */
+    window.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+    }, true);
+  })();
+</script>
+</head>
+<body>
+
+<!-- Ambient light: two slow fields, plus the one that follows the pointer. -->
+<div class="ambient" aria-hidden="true">
+  <span class="field field-a"></span>
+  <span class="field field-b"></span>
+  <span class="field field-pointer" id="pointerLight"></span>
+</div>
+<canvas class="trail" id="trail" aria-hidden="true"></canvas>
+<div class="cursor" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- Site chrome: theme + language (fixed bottom-right icon buttons). -->
+<aside class="chrome" id="chrome" aria-label="Site controls">
+  <div class="chrome-panel">
+    <div class="chrome-controls">
+      <button type="button" class="chip" id="themeToggle" aria-pressed="false">
+        <span class="chip-glyph" id="themeGlyph" aria-hidden="true"></span>
+        <span class="chip-text" id="themeText">Light</span>
+      </button>
+      <button type="button" class="chip" id="langToggle">
+        <span class="chip-glyph chip-lang" id="langGlyph" aria-hidden="true">中</span>
+        <span class="chip-text" id="langText">中文</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<main class="shell">
+
+  <!-- Left: the spec plate. rx5950xt is a part number, so it is set like one. -->
+  <header class="plate">
+    <div class="plate-inner">
+      <!-- Avatar top-left · local time top-right of this plate (symmetric). -->
+      <div class="plate-head reveal">
+        <img class="avatar" src="https://github.com/rx5950xt.png" alt="" width="88" height="88" fetchpriority="high">
+        <div class="plate-clock" id="plateClock">
+          <span class="label" id="clockLabel">Local time</span>
+          <span class="date" id="date"></span>
+          <time class="clock" id="clock" aria-live="off">--:--:--</time>
+          <span class="zone" id="zone"></span>
+        </div>
+      </div>
+
+      <h1 class="handle reveal" id="handle">rx5950xt</h1>
+      <p class="tagline reveal" id="tagline"></p>
+      <p class="bio reveal" id="bio"></p>
+
+      <nav class="links reveal" id="links" aria-label="Profile links"></nav>
+
+      <!-- Machine specs + DGX wish note. -->
+      <section class="rig reveal" id="rig" aria-labelledby="rigTitle">
+        <h2 class="rig-title" id="rigTitle"><span class="label">Rig</span></h2>
+        <dl class="rig-list" id="rigList"></dl>
+        <p class="rig-wish" id="rigWish"></p>
+      </section>
+
+      <!-- Tools: AI chat links + one-click install commands. -->
+      <section class="tools reveal" id="tools" aria-labelledby="toolsTitle">
+        <h2 class="tools-title" id="toolsTitle"><span class="label">Tools</span></h2>
+        <div class="tools-block">
+          <span class="tools-sub" id="toolsChatsLabel">Chat</span>
+          <nav class="tools-chats" id="toolsChats" aria-label="AI chat links"></nav>
+        </div>
+        <div class="tools-block">
+          <span class="tools-sub" id="toolsInstallsLabel">Install</span>
+          <ul class="tools-installs" id="toolsInstalls"></ul>
+        </div>
+      </section>
+    </div>
+  </header>
+
+  <!-- Right: what the machine produced. -->
+  <div class="output">
+    <section class="section" aria-labelledby="h-projects">
+      <h2 class="section-title" id="h-projects"><span class="label">Projects</span></h2>
+      <div class="grid" id="projects"></div>
+    </section>
+
+    <section class="section" aria-labelledby="h-more">
+      <h2 class="section-title" id="h-more"><span class="label">More</span></h2>
+      <ul class="list" id="more"></ul>
+    </section>
+
+    <section class="section" aria-labelledby="h-models">
+      <h2 class="section-title" id="h-models"><span class="label">Models</span></h2>
+      <div class="grid" id="models"></div>
+    </section>
+
+    <footer class="foot reveal" id="foot"></footer>
+  </div>
+
+</main>
+
+<!-- Custom context menu (Shift+right-click keeps the browser default). -->
+<div class="ctx" id="ctx" role="menu" hidden aria-hidden="true" aria-label="Site menu">
+  <div class="ctx-head">
+    <span class="label" id="ctxTitle">Quick links</span>
+    <span class="ctx-handle" id="ctxHandle">rx5950xt</span>
+  </div>
+  <div class="ctx-list" id="ctxList"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
