@@ -5,6 +5,12 @@
 `index.html` · `styles.css` · `main.js` · `data.js` · `favicon.png`  
 規範：`CLAUDE.md` ⇄ `AGENTS.md`（同步）
 
+## 部署
+- Repo：https://github.com/RX5950XT/RX5950XT.github.io（public）
+- 網址：https://rx5950xt.github.io/
+- 方式：GitHub Pages · Deploy from branch `main` · `/`（root）· `.nojekyll`
+- 更新：`git add` → `git commit` → `git push origin main`
+
 ## 溝通（使用者約定）
 - **左邊**＝`.plate` 個人資料（含 `#rig` 本機配置、`#tools`）
 - **右邊**＝`.output` 專案（projects / more / models）
@@ -45,6 +51,5 @@ npx --yes serve -l 8137 .
 - **主題**：首次跟 OS `prefers-color-scheme`；手動後寫 `localStorage.theme`，之後以手動為準
 
 ## 注意
-- 目錄尚未 `git init`
 - light ambient 偏藍紫（使用者保留）
 - 頭貼 URL 在 `index.html`（非 DATA）；`DATA.handle` 僅給右鍵選單標題
