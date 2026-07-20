@@ -181,8 +181,8 @@ const DATA = {
       repo: 'https://github.com/rx5950xt/PCPriceProxy',
       lang: 'TypeScript',
       tags: ['Scraping', 'SKU matching', 'REST API'],
-      en: 'Cross-store price comparison for Taiwanese PC parts. Scrapes three retailers, then merges the same SKU onto one card using exact keys per part type — it would rather split than merge wrong. A 32-check audit has to pass before the pipeline counts as healthy.',
-      zh: '台灣 DIY 零組件跨店比價：爬原價屋、欣亞、Autobuy，再依零件特性用精確鍵把同 SKU 併成一張卡——寧可分開也不誤併。管線稽核 32 項全 PASS 才算健康。',
+      en: 'Compare DIY PC part prices across CoolPC, Sinya and Autobuy in one place. Same model shows up as a single card with each store\'s price, so you can see who is cheaper without opening three tabs.',
+      zh: '一次比完原價屋、欣亞、Autobuy 的 DIY 零件價。同一型號收成一張卡，三家售價並排，不用開三個分頁就能看出哪家便宜。',
     },
     {
       name: '0050 Buy-Point Study',

@@ -53,3 +53,6 @@ npx --yes serve -l 8137 .
 ## 注意
 - light ambient 偏藍紫（使用者保留）
 - 頭貼 URL 在 `index.html`（非 DATA）；`DATA.handle` 僅給右鍵選單標題
+
+## 近期
+- 重寫右邊 **PCPriceProxy** 中英文描述（`data.js`）：專注用途——三家比價、同型一卡、並排看哪家便宜
