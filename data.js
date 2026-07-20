@@ -155,9 +155,9 @@ const DATA = {
       name: 'ESP32-CAM Remote Monitor',
       repo: 'https://github.com/rx5950xt/ESP-32-CAM_remote_monitor',
       lang: 'C++',
-      tags: ['ESP32-CAM', 'PlatformIO', 'Telegram Bot', 'Vision LLM'],
-      en: 'An ESP32-CAM that watches a room and pings you on Telegram. Scheduled captures run through a vision model; when it finds a person, the photo arrives with an alert. Exposure and gain are tuned for the OV2640 so low light still reads.',
-      zh: '用 ESP32-CAM 看著房間，有狀況就 Telegram 通知你。定時拍照送進視覺模型，偵測到人就把照片和警報一起推過去。針對 OV2640 調過曝光與增益，暗處也看得清。',
+      tags: ['ESP32-CAM', 'PlatformIO', 'Telegram Bot', 'TinyML'],
+      en: 'An ESP32-CAM that watches a room and pings you on Telegram. Person detection runs on the board with TFLite Micro—no OpenRouter or other cloud vision API. When it finds someone, the alert photo lands in chat. Exposure and gain are tuned for the OV2640 so low light still reads.',
+      zh: '用 ESP32-CAM 看著房間，有狀況就 Telegram 通知你。人物偵測在板端跑 TFLite Micro，不靠 OpenRouter 或其他雲端視覺 API。偵測到人就把警報照片推過去。針對 OV2640 調過曝光與增益，暗處也看得清。',
     },
     {
       name: 'LLM Arena',

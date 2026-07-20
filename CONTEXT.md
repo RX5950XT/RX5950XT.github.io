@@ -55,4 +55,6 @@ npx --yes serve -l 8137 .
 - 頭貼 URL 在 `index.html`（非 DATA）；`DATA.handle` 僅給右鍵選單標題
 
 ## 近期
-- 重寫右邊 **PCPriceProxy** 中英文描述（`data.js`）：專注用途——三家比價、同型一卡、並排看哪家便宜
+- 右邊 **ESP32-CAM Remote Monitor**：改為板端 TinyML／TFLite Micro 人物偵測（移除 OpenRouter 雲端視覺）；tags `TinyML`；cache `?v=20260720b`
+- 重寫 **PCPriceProxy** 中英文描述：三家比價、同型一卡
+- 靜態資源 cache-bust：`styles.css` / `data.js` / `main.js` 帶 `?v=`；改檔必 bump

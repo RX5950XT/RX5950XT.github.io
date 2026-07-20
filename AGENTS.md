@@ -68,6 +68,7 @@
 ## 工作原則
 
 - 改動範圍盡量小；內容只動 `data.js`，行為動 `main.js`，樣式動 `styles.css`。
+- 改 `styles.css` / `data.js` / `main.js` 後，同步 bump `index.html` 的 `?v=`（三處同一版號），否則訪客可能看到舊快取。
 - `CLAUDE.md` 與 `AGENTS.md` 內容對齊；任務完成後精簡更新 `CONTEXT.md`（交接用）。
 - Commit：`<type>: <description>`（feat / fix / refactor / docs / chore / perf…）。
 - 預覽：`npx --yes serve -l 8137 .`
