@@ -14,7 +14,7 @@ const DATA = {
   /* 2×2 on plate: GitHub | Hugging Face / X | Discord */
   links: [
     { label: 'GitHub', url: 'https://github.com/rx5950xt' },
-    { label: 'Hugging Face', url: 'https://huggingface.co/RX5950XTP' },
+    { label: 'Hugging Face', url: 'https://huggingface.co/RX5950XT' },
     { label: 'X', url: 'https://x.com/RX5950XT' },
     { label: 'Discord', url: 'https://discord.com/users/876324357893410817' },
   ],
@@ -31,6 +31,8 @@ const DATA = {
         },
       },
       { key: 'RAM', value: 'DDR4 3200 64GB' },
+      { key: '3DP', value: 'Bambu Lab A1' },
+      { key: 'VR', value: 'Meta Quest 2' },
     ],
   },
 
@@ -92,6 +94,8 @@ const DATA = {
       copy: 'Copy',
       copied: 'Copied',
       copyAria: 'Copy install command',
+      downloads: 'Downloads',
+      asOf: 'as of',
     },
     zh: {
       tagline: 'Vibe Coder。用 Agent 建造一切。',
@@ -118,6 +122,8 @@ const DATA = {
       copy: '複製',
       copied: '已複製',
       copyAria: '複製安裝指令',
+      downloads: '下載次數',
+      asOf: '截至',
     },
   },
 
@@ -236,14 +242,18 @@ const DATA = {
   models: [
     {
       name: 'silicon-based-girlfriend',
-      url: 'https://huggingface.co/RX5950XTP/silicon-based-girlfriend',
+      url: 'https://huggingface.co/RX5950XT/silicon-based-girlfriend',
+      downloads: 394,
+      downloadsDate: '2026/7/22',
       tags: ['Qwen3.5-4B', 'QLoRA r=32', 'GGUF'],
       en: 'A roleplay adapter for immersive Traditional Chinese conversation. Rank 32 across every linear layer, 8K context, nineteen hours on an A6000. Ships as both LoRA weights and a Q8_0 GGUF for llama.cpp. Silicon-based girlfriend V2, the next generation, is in preparation.',
       zh: '沉浸式繁體中文角色扮演 adapter。rank 32、全線性層、8K context，在 A6000 上訓了約 19 小時。同時提供 LoRA 權重與 Q8_0 GGUF，可直接餵給 llama.cpp。Silicon-based girlfriend V2 下一代模型正在準備中。',
     },
     {
       name: 'rx5950xt-digital-twin',
-      url: 'https://huggingface.co/RX5950XTP/rx5950xt-digital-twin-Qwen3.5-4B',
+      url: 'https://huggingface.co/RX5950XT/rx5950xt-digital-twin-Qwen3.5-4B',
+      downloads: 56,
+      downloadsDate: '2026/7/22',
       tags: ['Qwen3.5-4B', 'QLoRA r=8', 'zh-TW'],
       en: 'A digital twin of me, QLoRA-tuned on ~1,067 of my own Discord messages. Blended 1:2 with general instruction data and trained for a single epoch at rank 8 — kept small on purpose, so it learns the voice instead of memorising the transcript.',
       zh: '我的數位分身，用約 1,067 則自己的 Discord 對話做 QLoRA 微調。與通用中文指令資料以 1:2 混合、rank 8、只跑 1 epoch——刻意做小，讓它學語氣而不是背對話。',

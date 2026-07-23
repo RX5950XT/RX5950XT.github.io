@@ -356,6 +356,16 @@ function moreRow(p, i) {
 }
 
 function modelCard(m, i) {
+  const s = DATA.ui[lang];
+  const dlBadge =
+    m.downloads != null
+      ? `<div class="model-downloads" title="${s.asOf} ${m.downloadsDate}">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+           <span class="dl-count">${m.downloads.toLocaleString()}</span>
+           <span class="dl-label">${s.downloads}</span>
+           <span class="dl-date">${s.asOf} ${m.downloadsDate}</span>
+         </div>`
+      : '';
   return `<article class="card reveal" style="--i:${i}; --lang:#ffd21e">
     <div class="card-head">
       <span class="dot" aria-hidden="true"></span>
@@ -363,6 +373,7 @@ function modelCard(m, i) {
     </div>
     <p class="card-desc">${m[lang]}</p>
     <ul class="tags">${m.tags.map((x) => `<li class="tag">${x}</li>`).join('')}</ul>
+    ${dlBadge}
     <div class="card-foot">
       <a class="card-link" href="${m.url}" target="_blank" rel="noopener">${linkIcon('Hugging Face')}<span>Hugging Face</span>${arrow}</a>
     </div>
