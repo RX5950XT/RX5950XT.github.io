@@ -66,10 +66,30 @@
 ## 工作原則
 
 - 改動範圍盡量小；內容只動 `data.js`，行為動 `main.js`，樣式動 `styles.css`。
-- 改 `styles.css` / `data.js` / `main.js` 後，同步 bump `index.html` 的 `?v=`（三處同一版號），否則訪客可能看到舊快取。
 - `CLAUDE.md` 與 `AGENTS.md` 內容對齊；任務完成後精簡更新 `CONTEXT.md`（交接用）。
 - Commit：`<type>: <description>`（feat / fix / refactor / docs / chore / perf…）。
 - 預覽：`npx --yes serve -l 8137 .`
+
+---
+
+## 靜態資源版號（cache-bust，必做）
+
+`index.html` 以 query string 強制刷新快取，三處**同一版號**：
+
+```html
+<link rel="stylesheet" href="styles.css?v=YYYYMMDDx">
+<script src="data.js?v=YYYYMMDDx"></script>
+<script src="main.js?v=YYYYMMDDx"></script>
+```
+
+| 規則 | 說明 |
+|------|------|
+| **何時 bump** | 只要改了 `styles.css` / `data.js` / `main.js` 任一檔（或三者），**推送前**必 bump |
+| **格式** | `YYYYMMDD` + 當日序字母（`a`→`b`→…）；跨日重從 `a` |
+| **範圍** | 三處 `?v=` 必須完全一致，不可只改一處 |
+| **不 bump 的後果** | 訪客仍吃舊 CDN／瀏覽器快取，畫面與資料不同步 |
+
+每次任務結束、commit / push 前自查：版號是否已更新。
 
 ---
 

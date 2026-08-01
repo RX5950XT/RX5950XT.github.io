@@ -114,11 +114,26 @@ function paintRig() {
     list.innerHTML = (rig.specs || [])
       .map((row) => {
         const raw = row.value;
-        const val =
-          raw && typeof raw === 'object' ? raw[lang] || raw.en || '' : raw;
+        let valHtml;
+        if (Array.isArray(raw)) {
+          // One key, multiple lines (e.g. dual GPU).
+          valHtml = raw
+            .map((item) => {
+              const s =
+                item && typeof item === 'object'
+                  ? item[lang] || item.en || ''
+                  : item;
+              return `<span class="rig-line">${escapeHtml(s)}</span>`;
+            })
+            .join('');
+        } else {
+          const val =
+            raw && typeof raw === 'object' ? raw[lang] || raw.en || '' : raw;
+          valHtml = escapeHtml(val);
+        }
         return `<div class="rig-row">
           <dt class="rig-key">${escapeHtml(row.key)}</dt>
-          <dd class="rig-val">${escapeHtml(val)}</dd>
+          <dd class="rig-val">${valHtml}</dd>
         </div>`;
       })
       .join('');

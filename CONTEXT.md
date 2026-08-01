@@ -27,7 +27,7 @@
 
 ## 左邊 plate
 - **bio**：並列列表（含 quant research／量化研究）+ Agent + TAD 連結
-- **rig**（`DATA.rig`）：CPU Ryzen 7 5700X · GPU RTX 3070 Ti FE · RAM DDR4 3200 64GB  
+- **rig**（`DATA.rig`）：CPU Ryzen 7 5700X · GPU 一鍵兩行（上 5060 Ti 16GB、下 3070 Ti FE）· RAM DDR4 3200 64GB  
   許願句 en/zh 在 `DATA.ui.rigWish`（DGX Spark）
 - **tools**：對話四鈕同一排 Grok→Claude→ChatGPT→Gemini；安裝 4 項無編號（CC→Codex→Grok Build→Antigravity）
 - Profile links 2×2：GitHub | HF / X | Discord
@@ -54,7 +54,12 @@ npx --yes serve -l 8137 .
 - light ambient 偏藍紫（使用者保留）
 - 頭貼 URL 在 `index.html`（非 DATA）；`DATA.handle` 僅給右鍵選單標題
 
+## 版號（cache-bust）
+- `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
+- 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
+- 目前：`20260801b`
+
 ## 近期
-- 右邊 **ESP32-CAM Remote Monitor**：改為板端 TinyML／TFLite Micro 人物偵測（移除 OpenRouter 雲端視覺）；tags `TinyML`；cache `?v=20260720b`
-- 重寫 **PCPriceProxy** 中英文描述：三家比價、同型一卡
-- 靜態資源 cache-bust：`styles.css` / `data.js` / `main.js` 帶 `?v=`；改檔必 bump
+- 手機版：`.output` 在 ≤959px 加 `margin-top: 48px`，專案與上方 plate 拉開空隙
+- rig：GPU 標籤一次，值為陣列（上 5060 Ti 16GB、下 3070 Ti FE）
+- 文件：CLAUDE / AGENTS 補齊版號 bump 專節

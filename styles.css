@@ -595,6 +595,13 @@ html.pointing .cursor-ring {
   }
 }
 
+/* Stacked (phone / tablet portrait): plate on top, projects below — need air. */
+@media (max-width: 959px) {
+  .output {
+    margin-top: 48px;
+  }
+}
+
 /* Narrow phones: denser plate + tools. */
 @media (max-width: 420px) {
   .plate-inner {
@@ -930,6 +937,9 @@ html.pointing .cursor-ring {
 
 .rig-val {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -937,6 +947,10 @@ html.pointing .cursor-ring {
   line-height: 1.4;
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.rig-line {
+  display: block;
 }
 
 .rig-wish {

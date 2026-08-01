@@ -19,17 +19,12 @@ const DATA = {
     { label: 'Discord', url: 'https://discord.com/users/876324357893410817' },
   ],
 
-  /* Left plate: machine specs (values with en/zh only when they differ). */
+  /* Left plate: machine specs (values with en/zh only when they differ).
+     Array value = stacked lines under one key (GPU lists 5060 then 3070). */
   rig: {
     specs: [
       { key: 'CPU', value: 'AMD Ryzen 7 5700X' },
-      {
-        key: 'GPU',
-        value: {
-          en: 'RTX 3070 Ti FE',
-          zh: 'RTX 3070 Ti FE',
-        },
-      },
+      { key: 'GPU', value: ['RTX 5060 Ti 16GB', 'RTX 3070 Ti FE'] },
       { key: 'RAM', value: 'DDR4 3200 64GB' },
       { key: '3DP', value: 'Bambu Lab A1' },
       { key: 'VR', value: 'Meta Quest 2' },
