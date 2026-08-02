@@ -17,6 +17,7 @@
 - **時鐘**＝`.plate-clock` 在左欄 plate 頭列右上，與頭貼（左上）`space-between` 對稱；手機／桌面同一套  
 - **chrome**＝`#chrome` 僅 theme + lang，右下角固定圓形圖示鈕（日/月、中/EN）；全視窗一致
 - **右鍵選單**＝`#ctx`（≠ 右邊）
+- **星空**＝`#skyToggle`（chrome 最左）：加 `html.starry`，`.sky` 三層星點（tile 尺寸互質、各自 offset）＋6 道循環流星、強制 dark、暫時收起深淺鈕；星空下左鍵點擊生成一次性 `.meteor-shot`（animationend 自刪）；記在 `localStorage.sky`
 
 ## 設計方向
 - 無彩度底；語系標籤帶色；深色 ambient 避紫
@@ -27,9 +28,10 @@
 
 ## 左邊 plate
 - **bio**：並列列表（含 quant research／量化研究）+ Agent + TAD 連結
+- **taste**（`DATA.taste`）：bio 下方，無標題，沿用 `.rig-list` 兩列（喜歡／不喜歡）
 - **rig**（`DATA.rig`）：CPU Ryzen 7 5700X · GPU 一鍵兩行（上 5060 Ti 16GB、下 3070 Ti FE）· RAM DDR4 3200 64GB  
   許願句 en/zh 在 `DATA.ui.rigWish`（DGX Spark）
-- **tools**：對話四鈕同一排 Grok→Claude→ChatGPT→Gemini；安裝 4 項無編號（CC→Codex→Grok Build→Antigravity）
+- **tools**（標題「使用它們」／`Use them`）：對話四鈕同一排 Grok→Claude→ChatGPT→Gemini；安裝 4 項無編號（CC→Codex→Grok Build→Antigravity）
 - Profile links 2×2：GitHub | HF / X | Discord
 - Desktop sticky plate 有 `max-height` + 內部 scroll
 - 可點元素：`--action-*` token（深淺色）；rest 較明顯、hover 抬升＋邊框＋陰影（link / chip / copy / card-link / row / bio a）
@@ -40,7 +42,8 @@ npx --yes serve -l 8137 .
 ```
 
 ## more 順序
-1. calcrux → 2. VoiceInk → 3. FJU-TronClass-MCP → chimera → rolling-around
+1. calcrux → 2. FJU-TronClass-MCP → chimera → rolling-around
+- VoiceInk 已升格到 projects（第 4 張，Portfolio Visualizer 之後）：一行摘要會被 `.row-desc` 截斷，改走卡片。
 
 ## models 順序
 1. silicon-based-girlfriend（文末註 V2 準備中）→ 2. digital-twin → 3. LinguaForge-Qwen3.5-0.8B
@@ -58,9 +61,10 @@ npx --yes serve -l 8137 .
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
-- 目前：`20260802b`
+- 目前：`20260803i`
 
 ## 近期
+- 卡片 hover／focus-within 亮一圈：邊框＋外光暈用該卡的 `--lang`（models 為 HF 黃 `#ffd21e`），疊在 `var(--glass-shadow)` 之上；`prefers-reduced-transparency` 區塊改由 `:root[data-theme]` 覆寫 `--glass-shadow`，讓光暈與 fallback 陰影同步（`:root` 特異度輸給 `:root[data-theme="dark"]`，必須帶屬性）。
 - 專案慣例：不建立或維護 `tasks/` 資料夾。
 - Projects／Models 按鈕文案對齊：原始碼統一為 `GitHub`；線上試用為中文「試用」、英文 `demo`。
 - Models：新增 LinguaForge 繁中／英／日六向翻譯模型；`DATA.models[].repo` 可選並列 GitHub。

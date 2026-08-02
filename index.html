@@ -10,7 +10,7 @@
 <link rel="icon" href="favicon.png" type="image/png" sizes="256x256">
 <link rel="apple-touch-icon" href="favicon.png">
 <!-- Cache-bust: bump ?v= when styles.css / data.js / main.js change. -->
-<link rel="stylesheet" href="styles.css?v=20260802b">
+<link rel="stylesheet" href="styles.css?v=20260803i">
 <script>
   /* Resolve the appearance before first paint so the page never flashes. */
   (function () {
@@ -18,6 +18,11 @@
       /* First visit follows OS scheme; manual toggle is stored thereafter. */
       var theme = localStorage.getItem('theme') ||
         (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      /* Starfield forces dark, and is resolved here so it never flashes. */
+      if (localStorage.getItem('sky') === 'stars') {
+        theme = 'dark';
+        document.documentElement.classList.add('starry');
+      }
       document.documentElement.dataset.theme = theme;
       /* Prefer stored choice; otherwise zh* browser locales → Chinese. */
       var lang = localStorage.getItem('lang');
@@ -44,6 +49,19 @@
 </head>
 <body>
 
+<!-- Starfield: only painted while html.starry (chrome toggle). -->
+<div class="sky" id="sky" aria-hidden="true">
+  <span class="stars"></span>
+  <span class="stars stars-mid"></span>
+  <span class="stars stars-far"></span>
+  <span class="meteor" style="--x:8%; --d:0s"></span>
+  <span class="meteor" style="--x:31%; --d:1.3s"></span>
+  <span class="meteor" style="--x:52%; --d:2.9s"></span>
+  <span class="meteor" style="--x:69%; --d:4.1s"></span>
+  <span class="meteor" style="--x:88%; --d:5.6s"></span>
+  <span class="meteor" style="--x:19%; --d:6.8s"></span>
+</div>
+
 <!-- Ambient light: two slow fields, plus the one that follows the pointer. -->
 <div class="ambient" aria-hidden="true">
   <span class="field field-a"></span>
@@ -58,6 +76,10 @@
 <aside class="chrome" id="chrome" aria-label="Site controls">
   <div class="chrome-panel">
     <div class="chrome-controls">
+      <button type="button" class="chip" id="skyToggle" aria-pressed="false">
+        <span class="chip-glyph" id="skyGlyph" aria-hidden="true"></span>
+        <span class="chip-text" id="skyText">Starfield</span>
+      </button>
       <button type="button" class="chip" id="themeToggle" aria-pressed="false">
         <span class="chip-glyph" id="themeGlyph" aria-hidden="true"></span>
         <span class="chip-text" id="themeText">Light</span>
@@ -89,6 +111,20 @@
       <h1 class="handle reveal" id="handle">rx5950xt</h1>
       <p class="tagline reveal" id="tagline"></p>
       <p class="bio reveal" id="bio"></p>
+
+      <!-- Likes / dislikes — same plate list as the rig, one row each. -->
+      <section class="rig taste reveal" id="taste">
+        <dl class="rig-list">
+          <div class="rig-row">
+            <dt class="rig-key" id="likesKey">Like</dt>
+            <dd class="rig-val" id="likesVal"></dd>
+          </div>
+          <div class="rig-row">
+            <dt class="rig-key" id="dislikesKey">Nope</dt>
+            <dd class="rig-val" id="dislikesVal"></dd>
+          </div>
+        </dl>
+      </section>
 
       <nav class="links reveal" id="links" aria-label="Profile links"></nav>
 
@@ -145,7 +181,7 @@
   <div class="ctx-list" id="ctxList"></div>
 </div>
 
-<script src="data.js?v=20260802b"></script>
-<script src="main.js?v=20260802b"></script>
+<script src="data.js?v=20260803i"></script>
+<script src="main.js?v=20260803i"></script>
 </body>
 </html>

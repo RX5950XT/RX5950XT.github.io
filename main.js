@@ -97,8 +97,19 @@ function paintPlate() {
     )
     .join('');
 
+  paintTaste();
   paintRig();
   paintTools();
+}
+
+function paintTaste() {
+  const s = ui();
+  const t = DATA.taste;
+  if (!t) return;
+  $('#likesKey').textContent = s.likes;
+  $('#dislikesKey').textContent = s.dislikes;
+  $('#likesVal').textContent = t.likes[lang] || t.likes.en;
+  $('#dislikesVal').textContent = t.dislikes[lang] || t.dislikes.en;
 }
 
 function paintRig() {
@@ -253,22 +264,74 @@ const ICON_SUN =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
 const ICON_MOON =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"/></svg>';
+/* Shooting star: a four-point sparkle with a streak behind it. */
+const ICON_STARS =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3.5c.6 2.4 1.6 3.4 4 4-2.4.6-3.4 1.6-4 4-.6-2.4-1.6-3.4-4-4 2.4-.6 3.4-1.6 4-4z"/><path d="M6.5 12.5c.35 1.35.9 1.9 2.25 2.25-1.35.35-1.9.9-2.25 2.25-.35-1.35-.9-1.9-2.25-2.25 1.35-.35 1.9-.9 2.25-2.25z"/><path d="M20 14 14 20M12 4 9.5 6.5"/></svg>';
+
+/* --- Starfield ------------------------------------------------------------ */
+
+/* Stars force the dark palette, so the appearance toggle tucks away while on
+   and the stored preference comes back when it is switched off. */
+function storedTheme() {
+  return (
+    localStorage.getItem('theme') ||
+    (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+  );
+}
+
+function applySky(on) {
+  root.classList.toggle('starry', on);
+  $('#skyToggle').setAttribute('aria-pressed', String(on));
+  $('#themeToggle').hidden = on;
+  applyTheme(on ? 'dark' : storedTheme());
+}
+
+/* While the sky is out, a click throws one more streak from the pointer. */
+function startSkyClicks() {
+  const sky = $('#sky');
+  if (!sky) return;
+  addEventListener(
+    'pointerdown',
+    (e) => {
+      if (e.button !== 0) return;
+      if (!root.classList.contains('starry') || reduced.matches) return;
+      const shot = document.createElement('span');
+      shot.className = 'meteor meteor-shot';
+      // Right edge = the streak's head; park it on the cursor.
+      shot.style.left = `${e.clientX - 190}px`;
+      shot.style.top = `${e.clientY - 1}px`;
+      shot.addEventListener('animationend', () => shot.remove());
+      sky.appendChild(shot);
+    },
+    { passive: true }
+  );
+}
+
+function setSky(on) {
+  localStorage.setItem('sky', on ? 'stars' : 'off');
+  applySky(on);
+}
 
 function paintControls() {
   const s = ui();
   const dark = root.dataset.theme === 'dark';
+  const starry = root.classList.contains('starry');
   const chrome = $('#chrome');
   if (chrome) chrome.setAttribute('aria-label', s.chromeLabel || 'Site controls');
   $('#themeText').textContent = dark ? (lang === 'zh' ? '淺色' : 'Light') : lang === 'zh' ? '深色' : 'Dark';
   $('#themeToggle').setAttribute('aria-label', dark ? s.themeLabel : s.themeLabelDark);
   $('#langText').textContent = lang === 'zh' ? 'English' : '中文';
   $('#langToggle').setAttribute('aria-label', s.langLabel);
+  $('#skyText').textContent = s.skyText;
+  $('#skyToggle').setAttribute('aria-label', starry ? s.skyLabelOff : s.skyLabel);
 
   // Icon buttons: show the target mode / language, not the current one.
   const themeGlyph = $('#themeGlyph');
   if (themeGlyph) themeGlyph.innerHTML = dark ? ICON_SUN : ICON_MOON;
   const langGlyph = $('#langGlyph');
   if (langGlyph) langGlyph.textContent = lang === 'zh' ? 'EN' : '中';
+  const skyGlyph = $('#skyGlyph');
+  if (skyGlyph) skyGlyph.innerHTML = ICON_STARS;
 }
 
 /* --- Clock ---------------------------------------------------------------- */
@@ -711,13 +774,17 @@ $('#themeToggle').addEventListener('click', () =>
   setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark')
 );
 $('#langToggle').addEventListener('click', () => setLang(lang === 'zh' ? 'en' : 'zh'));
+$('#skyToggle').addEventListener('click', () => setSky(!root.classList.contains('starry')));
 
 // Follow the system appearance until the visitor states a preference.
 matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-  if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'light' : 'dark');
+  if (!localStorage.getItem('theme') && !root.classList.contains('starry')) {
+    applyTheme(e.matches ? 'light' : 'dark');
+  }
 });
 
 applyTheme(root.dataset.theme);
+applySky(localStorage.getItem('sky') === 'stars');
 root.lang = lang === 'zh' ? 'zh-Hant' : 'en';
 paintPlate();
 paintContextMenu();
@@ -726,3 +793,4 @@ startClock();
 startPointer();
 startContextMenu();
 startToolsCopy();
+startSkyClicks();

@@ -366,6 +366,158 @@ img {
   }
 }
 
+/* --- Starfield ------------------------------------------------------------ */
+
+/* Off by default; the chrome toggle adds html.starry. Stars are tiled radial
+   gradients (no canvas, no live blur), meteors are three rotated streaks. */
+.sky {
+  display: none;
+}
+
+html.starry .sky {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+  background: radial-gradient(125% 95% at 50% 0%, #16203a 0%, #070a16 55%, #03040a 100%);
+}
+
+html.starry .field-a,
+html.starry .field-b {
+  display: none;
+}
+
+/* Three tiles of different sizes and offsets — the periods never line up,
+   so the field reads as scattered rather than as a repeating grid. */
+.stars {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  background-image:
+    radial-gradient(1.7px 1.7px at 13% 7%, #fff, transparent),
+    radial-gradient(1.4px 1.4px at 41% 19%, #dfe6ff, transparent),
+    radial-gradient(1.9px 1.9px at 77% 11%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 58% 33%, #cfd8ff, transparent),
+    radial-gradient(1.6px 1.6px at 92% 39%, #fff, transparent),
+    radial-gradient(1.3px 1.3px at 24% 47%, #e8ecff, transparent),
+    radial-gradient(1.8px 1.8px at 66% 62%, #fff, transparent),
+    radial-gradient(1.1px 1.1px at 6% 71%, #d6dfff, transparent),
+    radial-gradient(1.5px 1.5px at 37% 84%, #fff, transparent),
+    radial-gradient(1.3px 1.3px at 85% 88%, #e4e9ff, transparent),
+    radial-gradient(1.6px 1.6px at 51% 96%, #fff, transparent);
+  background-size: 541px 617px;
+  opacity: 0.9;
+  animation: twinkle 5.5s var(--ease) infinite alternate;
+}
+
+.stars-mid {
+  background-image:
+    radial-gradient(1.3px 1.3px at 9% 26%, #fff, transparent),
+    radial-gradient(1.1px 1.1px at 34% 5%, #d3ddff, transparent),
+    radial-gradient(1.4px 1.4px at 63% 41%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 88% 17%, #e6ebff, transparent),
+    radial-gradient(1.3px 1.3px at 47% 58%, #fff, transparent),
+    radial-gradient(1.1px 1.1px at 18% 79%, #ccd8ff, transparent),
+    radial-gradient(1.4px 1.4px at 74% 91%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 96% 68%, #dee5ff, transparent);
+  background-size: 383px 431px;
+  background-position: 97px 163px;
+  opacity: 0.62;
+  animation: twinkle 7s var(--ease) 0.8s infinite alternate;
+}
+
+.stars-far {
+  background-image:
+    radial-gradient(1px 1px at 27% 14%, #fff, transparent),
+    radial-gradient(1px 1px at 55% 56%, #c9d4ff, transparent),
+    radial-gradient(1px 1px at 78% 26%, #fff, transparent),
+    radial-gradient(1px 1px at 12% 52%, #dbe2ff, transparent),
+    radial-gradient(1px 1px at 91% 73%, #fff, transparent),
+    radial-gradient(1px 1px at 40% 90%, #cbd6ff, transparent),
+    radial-gradient(1px 1px at 68% 8%, #fff, transparent);
+  background-size: 227px 269px;
+  background-position: 41px 58px;
+  opacity: 0.45;
+  animation: twinkle 8s var(--ease) 1.5s infinite alternate;
+}
+
+.meteor {
+  position: absolute;
+  top: -8%;
+  left: var(--x, 20%);
+  width: 150px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9));
+  opacity: 0;
+  animation: meteor 7s linear var(--d, 0s) infinite;
+}
+
+/* One-shot streak spawned at the pointer (main.js sets left/top inline).
+   Origin is the head, so the streak starts exactly under the cursor and the
+   tail grows out behind it. */
+.meteor-shot {
+  top: 0;
+  left: 0;
+  width: 190px;
+  transform-origin: 100% 50%;
+  animation: meteor-shot 8.5s var(--ease-out) forwards;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 0.95;
+  }
+}
+
+@keyframes meteor {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(34deg);
+  }
+  5% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(62vw, 84vh, 0) rotate(34deg);
+  }
+}
+
+@keyframes meteor-shot {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(34deg) scaleX(0.35);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(44vw, 60vh, 0) rotate(34deg) scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stars,
+  .meteor {
+    animation: none;
+  }
+
+  .meteor {
+    opacity: 0;
+  }
+}
+
 /* --- Pointer -------------------------------------------------------------- */
 
 .trail,
@@ -479,6 +631,11 @@ html.pointing .cursor-ring {
   display: flex;
   flex-wrap: nowrap;
   gap: 6px;
+}
+
+/* .chip sets display, so the UA [hidden] rule needs the same weight. */
+.chip[hidden] {
+  display: none;
 }
 
 .chrome-controls .chip {
@@ -745,6 +902,23 @@ html.pointing .cursor-ring {
   opacity: 1;
 }
 
+/* Hover ring: the rim lights up in the card's own language colour
+   (models fall back to the HF yellow set in main.js). */
+.card {
+  transition:
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: color-mix(in srgb, var(--lang, var(--edge)) 55%, var(--stroke));
+  box-shadow:
+    var(--glass-shadow),
+    0 0 0 1px color-mix(in srgb, var(--lang, var(--edge)) 34%, transparent),
+    0 0 24px -2px color-mix(in srgb, var(--lang, var(--edge)) 42%, transparent);
+}
+
 /* --- The plate ------------------------------------------------------------ */
 
 .plate-inner {
@@ -951,6 +1125,11 @@ html.pointing .cursor-ring {
 
 .rig-line {
   display: block;
+}
+
+/* Likes / dislikes reuse the rig list; the keys are words, not acronyms. */
+.taste .rig-row {
+  grid-template-columns: 3.25rem 1fr;
 }
 
 .rig-wish {
@@ -1656,6 +1835,15 @@ html.ctx-open .trail {
 /* Respect a11y: drop heavy blur, but keep a translucent frost — fully opaque
    panels made the site look "not glass" for anyone with Windows transparency off. */
 @media (prefers-reduced-transparency: reduce) {
+  /* Same fallback shadow, but as the token — so anything composing on top of
+     var(--glass-shadow) (e.g. the card hover ring) stays in sync. */
+  :root[data-theme] {
+    --glass-shadow:
+      inset 0 1px 0 0 var(--edge-soft),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 12px 32px -14px rgba(0, 0, 0, 0.35);
+  }
+
   .plate-inner,
   .card,
   .ctx,
