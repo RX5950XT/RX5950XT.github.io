@@ -43,7 +43,8 @@ npx --yes serve -l 8137 .
 1. calcrux → 2. VoiceInk → 3. FJU-TronClass-MCP → chimera → rolling-around
 
 ## models 順序
-1. silicon-based-girlfriend（文末註 V2 準備中）→ 2. digital-twin
+1. silicon-based-girlfriend（文末註 V2 準備中）→ 2. digital-twin → 3. LinguaForge-Qwen3.5-0.8B
+- LinguaForge 卡片並列 Hugging Face 模型與 GitHub 訓練／評測程式碼，下載數截至 2026/8/2 為 64。
 
 ## 首次造訪預設
 - **時鐘**：瀏覽器系統時區（`Intl` / `getTimezoneOffset`），非 GPS 定位
@@ -57,9 +58,12 @@ npx --yes serve -l 8137 .
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
-- 目前：`20260801b`
+- 目前：`20260802b`
 
 ## 近期
+- 專案慣例：不建立或維護 `tasks/` 資料夾。
+- Projects／Models 按鈕文案對齊：原始碼統一為 `GitHub`；線上試用為中文「試用」、英文 `demo`。
+- Models：新增 LinguaForge 繁中／英／日六向翻譯模型；`DATA.models[].repo` 可選並列 GitHub。
 - 手機版：`.output` 在 ≤959px 加 `margin-top: 48px`，專案與上方 plate 拉開空隙
 - rig：GPU 標籤一次，值為陣列（上 5060 Ti 16GB、下 3070 Ti FE）
 - 文件：CLAUDE / AGENTS 補齊版號 bump 專節

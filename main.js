@@ -391,6 +391,7 @@ function modelCard(m, i) {
     ${dlBadge}
     <div class="card-foot">
       <a class="card-link" href="${m.url}" target="_blank" rel="noopener">${linkIcon('Hugging Face')}<span>Hugging Face</span>${arrow}</a>
+      ${m.repo ? `<a class="card-link" href="${m.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>GitHub</span>${arrow}</a>` : ''}
     </div>
   </article>`;
 }

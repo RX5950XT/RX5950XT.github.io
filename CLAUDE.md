@@ -44,7 +44,7 @@
 | 右上 chrome | `#chrome` 時間／theme／lang | `DATA.ui` + clock JS |
 | 右邊 projects | `#projects` | `DATA.projects` |
 | 右邊 more | `#more` | `DATA.more` |
-| 右邊 models | `#models` | `DATA.models` |
+| 右邊 models | `#models` | `DATA.models`（模型可用 `repo` 並列 GitHub） |
 | 右鍵選單 | `#ctx` | `DATA.links` + `LINK_ICONS` |
 
 - 主題：`data-theme` + `localStorage.theme`
@@ -67,6 +67,7 @@
 
 - 改動範圍盡量小；內容只動 `data.js`，行為動 `main.js`，樣式動 `styles.css`。
 - `CLAUDE.md` 與 `AGENTS.md` 內容對齊；任務完成後精簡更新 `CONTEXT.md`（交接用）。
+- 本專案不建立或維護 `tasks/` 資料夾。
 - Commit：`<type>: <description>`（feat / fix / refactor / docs / chore / perf…）。
 - 預覽：`npx --yes serve -l 8137 .`
 
