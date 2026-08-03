@@ -47,7 +47,8 @@ npx --yes serve -l 8137 .
 
 ## models 順序
 1. silicon-based-girlfriend（文末註 V2 準備中）→ 2. digital-twin → 3. LinguaForge-Qwen3.5-0.8B
-- LinguaForge 卡片並列 Hugging Face 模型與 GitHub 訓練／評測程式碼，下載數截至 2026/8/2 為 64。
+- 下載數截至 2026/8/4：silicon-based-girlfriend 424 · digital-twin 68 · LinguaForge 153
+- LinguaForge 卡片並列 Hugging Face 模型與 GitHub 訓練／評測程式碼
 
 ## 首次造訪預設
 - **時鐘**：瀏覽器系統時區（`Intl` / `getTimezoneOffset`），非 GPS 定位
@@ -61,7 +62,7 @@ npx --yes serve -l 8137 .
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
-- 目前：`20260803i`
+- 目前：`20260804a`
 
 ## 近期
 - 卡片 hover／focus-within 亮一圈：邊框＋外光暈用該卡的 `--lang`（models 為 HF 黃 `#ffd21e`），疊在 `var(--glass-shadow)` 之上；`prefers-reduced-transparency` 區塊改由 `:root[data-theme]` 覆寫 `--glass-shadow`，讓光暈與 fallback 陰影同步（`:root` 特異度輸給 `:root[data-theme="dark"]`，必須帶屬性）。
