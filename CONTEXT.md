@@ -62,13 +62,10 @@ npx --yes serve -l 8137 .
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
-- 目前：`20260804a`
+- 目前：`20260814c`
 
 ## 近期
-- 卡片 hover／focus-within 亮一圈：邊框＋外光暈用該卡的 `--lang`（models 為 HF 黃 `#ffd21e`），疊在 `var(--glass-shadow)` 之上；`prefers-reduced-transparency` 區塊改由 `:root[data-theme]` 覆寫 `--glass-shadow`，讓光暈與 fallback 陰影同步（`:root` 特異度輸給 `:root[data-theme="dark"]`，必須帶屬性）。
-- 專案慣例：不建立或維護 `tasks/` 資料夾。
-- Projects／Models 按鈕文案對齊：原始碼統一為 `GitHub`；線上試用為中文「試用」、英文 `demo`。
-- Models：新增 LinguaForge 繁中／英／日六向翻譯模型；`DATA.models[].repo` 可選並列 GitHub。
-- 手機版：`.output` 在 ≤959px 加 `margin-top: 48px`，專案與上方 plate 拉開空隙
-- rig：GPU 標籤一次，值為陣列（上 5060 Ti 16GB、下 3070 Ti FE）
-- 文件：CLAUDE / AGENTS 補齊版號 bump 專節
+- **上下單欄一頁式設計**：移除原本桌面左右雙欄分拆雙滾輪設計，重構為全頁統一滾動的一頁式上下架構。上方為 Hero Profile Glass Plate（寬螢幕下 Rig 與 Tools 透過 `.plate-grid` 兩欄並列，緊湊對稱），下方為 Output 區塊（Projects、More、Models、Footer 自適應 16:9 與手機直式螢幕）。
+- **Profile links**：新增 `Local.ai`（`https://local.ai/rx5950xt`），採用官方正版品牌向量標誌（綠色節點），以 flex-wrap pill 列自適應排列 5 項連結（GitHub, HF, Local.ai, X, Discord），同步支援自訂右鍵玻璃選單。
+- **本機配置 (Rig)**：GPU 新增 RTX 3060 12GB（RTX 5060 Ti 16GB、RTX 3060 12GB、RTX 3070 Ti FE）；RAM 更新為 `DDR4 96GB`（無頻率）。
+- **快取版號**：bump 至 `20260814c`。

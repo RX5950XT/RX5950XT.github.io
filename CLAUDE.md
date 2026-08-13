@@ -8,21 +8,19 @@
 
 ## 溝通規範（必讀）
 
-使用者口語對應版面，之後直接講「左邊／右邊」即可：
+使用者口語對應版面，支援「上面／下面」（一頁式上下架構）或沿用「左邊／右邊」：
 
 | 說法 | 指什麼 | DOM / 程式 |
 |------|--------|------------|
-| **左邊** | 個人資料那一塊 | `.plate`：頭貼、handle、tagline、bio、links、**本機配置**（`#rig`）、**工具**（`#tools`） |
-| **右邊** | 專案那一塊 | `.output`：Projects 卡、More 列表、Models 卡、footer |
+| **上面（或左邊）** | 個人資料那一塊（Hero Plate） | `.plate`：頭貼、時鐘、handle、tagline、bio、taste、links、**本機配置**（`#rig`）、**工具**（`#tools`） |
+| **下面（或右邊）** | 作品輸出那一塊 | `.output`：Projects 卡、More 列表、Models 卡、footer |
 
 補充：
 
-- **右鍵選單**＝自訂玻璃選單 `#ctx`（不是「右邊」）。
-- **右上 chrome**＝`#chrome`：當地時間 + 深淺色 + 語言切換（固定浮層，屬全域）。
+- **版面**＝全頁單一滾輪上下流動（無雙滾輪）；寬螢幕下 `#rig` 與 `#tools` 透過 `.plate-grid` 兩欄對稱展開。
+- **右鍵選單**＝自訂玻璃選單 `#ctx`。
+- **右上 chrome**＝`#chrome`：星空切換 + 深淺色 + 語言切換（固定浮層，屬全域）。
 - **全域**＝ambient／pointer 光、trail、cursor、背景、選取反白、favicon、`#chrome` 等跨欄元素。
-- 窄螢幕上下堆疊時語意不變：上＝左邊（plate），下＝右邊（output）。
-
-回覆時優先用同一套詞，避免再寫「個人資料欄／作品輸出欄」。
 
 ---
 
@@ -38,18 +36,19 @@
 
 | 區塊 | 選擇器 | 資料來源 |
 |------|--------|----------|
-| 左邊 plate | `.plate` / `#links` `#bio`… | `DATA` + `DATA.ui[lang]` |
-| 左邊 rig | `#rig` 本機規格＋ DGX 許願 | `DATA.rig` + `DATA.ui` 文案 |
-| 左邊 tools | `#tools` 對話四鈕同一排＋安裝指令複製 | `DATA.tools` + `DATA.ui` 文案 |
-| 右上 chrome | `#chrome` 時間／theme／lang | `DATA.ui` + clock JS |
-| 右邊 projects | `#projects` | `DATA.projects` |
-| 右邊 more | `#more` | `DATA.more` |
-| 右邊 models | `#models` | `DATA.models`（模型可用 `repo` 並列 GitHub） |
+| 上方 plate | `.plate` / `#links` `#bio` `#taste`… | `DATA` + `DATA.ui[lang]` |
+| plate grid | `.plate-grid` 寬螢幕雙欄容器 | 包裹 `#rig` 與 `#tools` |
+| 本機配置 rig | `#rig` 本機規格＋ DGX 許願 | `DATA.rig` + `DATA.ui` 文案 |
+| 工具 tools | `#tools` 對話四鈕同一排＋安裝指令複製 | `DATA.tools` + `DATA.ui` 文案 |
+| 右上 chrome | `#chrome` 星空／theme／lang | `DATA.ui` + clock JS |
+| 下方 projects | `#projects` | `DATA.projects` |
+| 下方 more | `#more` | `DATA.more` |
+| 下方 models | `#models` | `DATA.models`（模型可用 `repo` 並列 GitHub） |
 | 右鍵選單 | `#ctx` | `DATA.links` + `LINK_ICONS` |
 
 - 主題：`data-theme` + `localStorage.theme`
 - 語系：`lang` en | zh，文案在 `DATA.ui`
-- 品牌 icon：`LINK_ICONS`（GitHub、Hugging Face、X、Discord）
+- 品牌 icon：`LINK_ICONS`（GitHub、Hugging Face、Local.ai、X、Discord）
 
 ---
 

@@ -10,7 +10,7 @@
 <link rel="icon" href="favicon.png" type="image/png" sizes="256x256">
 <link rel="apple-touch-icon" href="favicon.png">
 <!-- Cache-bust: bump ?v= when styles.css / data.js / main.js change. -->
-<link rel="stylesheet" href="styles.css?v=20260804a">
+<link rel="stylesheet" href="styles.css?v=20260814c">
 <script>
   /* Resolve the appearance before first paint so the page never flashes. */
   (function () {
@@ -94,7 +94,7 @@
 
 <main class="shell">
 
-  <!-- Left: the spec plate. rx5950xt is a part number, so it is set like one. -->
+  <!-- Top Hero Plate: rx5950xt spec plate -->
   <header class="plate">
     <div class="plate-inner">
       <!-- Avatar top-left · local time top-right of this plate (symmetric). -->
@@ -128,29 +128,31 @@
 
       <nav class="links reveal" id="links" aria-label="Profile links"></nav>
 
-      <!-- Machine specs + DGX wish note. -->
-      <section class="rig reveal" id="rig" aria-labelledby="rigTitle">
-        <h2 class="rig-title" id="rigTitle"><span class="label">Rig</span></h2>
-        <dl class="rig-list" id="rigList"></dl>
-        <p class="rig-wish" id="rigWish"></p>
-      </section>
+      <div class="plate-grid">
+        <!-- Machine specs + DGX wish note. -->
+        <section class="rig reveal" id="rig" aria-labelledby="rigTitle">
+          <h2 class="rig-title" id="rigTitle"><span class="label">Rig</span></h2>
+          <dl class="rig-list" id="rigList"></dl>
+          <p class="rig-wish" id="rigWish"></p>
+        </section>
 
-      <!-- Tools: AI chat links + one-click install commands. -->
-      <section class="tools reveal" id="tools" aria-labelledby="toolsTitle">
-        <h2 class="tools-title" id="toolsTitle"><span class="label">Tools</span></h2>
-        <div class="tools-block">
-          <span class="tools-sub" id="toolsChatsLabel">Chat</span>
-          <nav class="tools-chats" id="toolsChats" aria-label="AI chat links"></nav>
-        </div>
-        <div class="tools-block">
-          <span class="tools-sub" id="toolsInstallsLabel">Install</span>
-          <ul class="tools-installs" id="toolsInstalls"></ul>
-        </div>
-      </section>
+        <!-- Tools: AI chat links + one-click install commands. -->
+        <section class="tools reveal" id="tools" aria-labelledby="toolsTitle">
+          <h2 class="tools-title" id="toolsTitle"><span class="label">Tools</span></h2>
+          <div class="tools-block">
+            <span class="tools-sub" id="toolsChatsLabel">Chat</span>
+            <nav class="tools-chats" id="toolsChats" aria-label="AI chat links"></nav>
+          </div>
+          <div class="tools-block">
+            <span class="tools-sub" id="toolsInstallsLabel">Install</span>
+            <ul class="tools-installs" id="toolsInstalls"></ul>
+          </div>
+        </section>
+      </div>
     </div>
   </header>
 
-  <!-- Right: what the machine produced. -->
+  <!-- Bottom Output: what the machine produced. -->
   <div class="output">
     <section class="section" aria-labelledby="h-projects">
       <h2 class="section-title" id="h-projects"><span class="label">Projects</span></h2>
@@ -181,7 +183,7 @@
   <div class="ctx-list" id="ctxList"></div>
 </div>
 
-<script src="data.js?v=20260804a"></script>
-<script src="main.js?v=20260804a"></script>
+<script src="data.js?v=20260814c"></script>
+<script src="main.js?v=20260814c"></script>
 </body>
 </html>

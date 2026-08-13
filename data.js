@@ -11,21 +11,22 @@ const LANG_COLOR = {
 const DATA = {
   handle: 'rx5950xt',
 
-  /* 2×2 on plate: GitHub | Hugging Face / X | Discord */
+  /* Links on plate: GitHub | Hugging Face | Local.ai | X | Discord */
   links: [
     { label: 'GitHub', url: 'https://github.com/rx5950xt' },
     { label: 'Hugging Face', url: 'https://huggingface.co/RX5950XT' },
+    { label: 'Local.ai', url: 'https://local.ai/rx5950xt' },
     { label: 'X', url: 'https://x.com/RX5950XT' },
     { label: 'Discord', url: 'https://discord.com/users/876324357893410817' },
   ],
 
-  /* Left plate: machine specs (values with en/zh only when they differ).
-     Array value = stacked lines under one key (GPU lists 5060 then 3070). */
+  /* Plate: machine specs (values with en/zh only when they differ).
+     Array value = stacked lines under one key (GPU lists 5060, 3060, then 3070). */
   rig: {
     specs: [
       { key: 'CPU', value: 'AMD Ryzen 7 5700X' },
-      { key: 'GPU', value: ['RTX 5060 Ti 16GB', 'RTX 3070 Ti FE'] },
-      { key: 'RAM', value: 'DDR4 3200 64GB' },
+      { key: 'GPU', value: ['RTX 5060 Ti 16GB', 'RTX 3060 12GB', 'RTX 3070 Ti FE'] },
+      { key: 'RAM', value: 'DDR4 96GB' },
       { key: 'AUD', value: 'Sennheiser HD 550 + FiiO KA13' },
       { key: '3DP', value: 'Bambu Lab A1' },
       { key: 'VR', value: 'Meta Quest 2' },

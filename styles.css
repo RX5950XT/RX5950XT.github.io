@@ -693,91 +693,41 @@ html.pointing .cursor-ring {
 .shell {
   position: relative;
   z-index: 1;
-  max-width: 1240px;
+  max-width: 1140px;
   margin: 0 auto;
   /* Bottom room for icon chrome FABs. */
-  padding: 28px 24px 96px;
+  padding: 32px 20px 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 640px) {
   .shell {
-    display: grid;
-    grid-template-columns: var(--plate-w) minmax(0, 1fr);
+    padding: 44px 32px 120px;
+    gap: 64px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    padding: 56px 40px 140px;
     gap: 72px;
-    align-items: start;
-    padding: 48px 40px 120px;
-  }
-
-  .plate {
-    position: sticky;
-    top: 40px;
-    /* Tall plate (tools block) still fits short viewports. */
-    max-height: calc(100vh - 80px);
-    max-height: calc(100dvh - 80px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    /* Same tokens as page; slightly slimmer gutter beside the plate. */
-    scrollbar-width: thin;
-    scrollbar-color: var(--scroll-thumb) transparent;
-  }
-
-  .plate::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .plate::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .plate::-webkit-scrollbar-thumb {
-    background-color: var(--scroll-thumb);
-    border-radius: 999px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-  }
-
-  .plate::-webkit-scrollbar-thumb:hover {
-    background-color: var(--scroll-thumb-hover);
-    border: 2px solid transparent;
-    background-clip: padding-box;
   }
 }
 
-/* Mid-width: less side gap so plate + cards both breathe. */
-@media (min-width: 960px) and (max-width: 1100px) {
-  .shell {
-    gap: 40px;
-    padding-left: 28px;
-    padding-right: 28px;
-  }
+.plate {
+  width: 100%;
 }
 
-/* Stacked (phone / tablet portrait): plate on top, projects below — need air. */
-@media (max-width: 959px) {
-  .output {
-    margin-top: 48px;
-  }
+.output {
+  width: 100%;
 }
 
-/* Narrow phones: denser plate + tools. */
+/* Narrow phones: denser plate padding & controls. */
 @media (max-width: 420px) {
   .plate-inner {
     padding: 24px 16px;
-  }
-
-  .links {
-    gap: 5px;
-  }
-
-  .links .link {
-    padding: 7px 4px;
-    font-size: 0.625rem;
-    gap: 4px;
-  }
-
-  .links .link-ico {
-    width: 12px;
-    height: 12px;
   }
 
   .tools-chats {
@@ -922,7 +872,19 @@ html.pointing .cursor-ring {
 /* --- The plate ------------------------------------------------------------ */
 
 .plate-inner {
-  padding: 28px 24px;
+  padding: 28px 20px;
+}
+
+@media (min-width: 640px) {
+  .plate-inner {
+    padding: 34px 32px;
+  }
+}
+
+@media (min-width: 960px) {
+  .plate-inner {
+    padding: 40px 42px;
+  }
 }
 
 /* Avatar top-left · local time top-right of the plate (not tight beside). */
@@ -946,7 +908,7 @@ html.pointing .cursor-ring {
 .plate-clock {
   flex: 0 1 auto;
   min-width: 0;
-  max-width: min(11.5rem, calc(100% - 100px));
+  max-width: min(12rem, calc(100% - 100px));
   text-align: right;
   /* Mirror the avatar block: sit in the opposite corner of the head row. */
   padding-top: 2px;
@@ -1016,6 +978,7 @@ html.pointing .cursor-ring {
   font-size: 0.8125rem;
   line-height: 1.7;
   color: var(--text-2);
+  max-width: 82ch;
 }
 
 .bio a {
@@ -1035,33 +998,58 @@ html.pointing .cursor-ring {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--action-bg-hover) 55%, transparent);
 }
 
-/* Profile links: fixed 2×2 — TL GitHub · TR HF · BL X · BR Discord */
+/* Profile links: modern pill bar supporting 5+ items with flex wrap */
 .links {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 22px;
 }
 
 .links .link {
-  width: 100%;
   min-width: 0;
   justify-content: center;
   box-sizing: border-box;
-  padding: 8px 6px;
-  font-size: 0.6875rem;
-  letter-spacing: -0.02em;
-  gap: 5px;
+  padding: 8px 14px;
+  font-size: 0.75rem;
+  letter-spacing: -0.01em;
+  gap: 6px;
 }
 
 .links .link-ico {
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
 }
 
 .links .link-label {
   min-width: 0;
   white-space: nowrap;
+}
+
+/* Plate Grid: Side-by-side on wide screens for Rig and Tools */
+.plate-grid {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 860px) {
+  .plate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .plate-grid .rig,
+  .plate-grid .tools {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
 }
 
 /* --- Rig (machine specs on the plate) ------------------------------------- */
@@ -1080,7 +1068,7 @@ html.pointing .cursor-ring {
 
 .rig-list {
   margin: 0;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border: 1px solid var(--stroke);
   border-radius: var(--radius-sm);
   background: var(--surface-hi);
@@ -1089,7 +1077,7 @@ html.pointing .cursor-ring {
 
 .rig-row {
   display: grid;
-  grid-template-columns: 2.75rem 1fr;
+  grid-template-columns: 3rem 1fr;
   gap: 8px;
   align-items: baseline;
   padding: 5px 0;
@@ -1464,8 +1452,14 @@ html.pointing .cursor-ring {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* --- Project cards -------------------------------------------------------- */
