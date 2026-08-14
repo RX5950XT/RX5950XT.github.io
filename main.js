@@ -90,13 +90,21 @@ function paintPlate() {
   a.textContent = s.tadLabel;
   bio.append(before, a, after);
 
-  // 2×2 grid is tight (esp. "Hugging Face") — no ↗; target=_blank still marks external.
+  // Vertical list stack of profile links
   $('#links').innerHTML = DATA.links
     .map(
       (l) => `<a class="link" href="${l.url}" target="_blank" rel="noopener me">
-        ${linkIcon(l.label)}<span class="link-label">${l.label}</span></a>`
+        <span class="link-main">${linkIcon(l.label)}<span class="link-label">${l.label}</span></span>
+        <span class="arrow" aria-hidden="true">↗</span></a>`
     )
     .join('');
+
+  const btnLinksText = $('#btnLinksText');
+  if (btnLinksText) btnLinksText.textContent = s.linksTitle || 'Links';
+  const btnRigText = $('#btnRigText');
+  if (btnRigText) btnRigText.textContent = s.rigTitle || 'Rig';
+  const btnToolsText = $('#btnToolsText');
+  if (btnToolsText) btnToolsText.textContent = s.toolsTitle || 'Use them';
 
   paintTaste();
   paintRig();
@@ -107,8 +115,16 @@ function paintTaste() {
   const s = ui();
   const t = DATA.taste;
   if (!t) return;
-  $('#likesKey').textContent = s.likes;
-  $('#dislikesKey').textContent = s.dislikes;
+  const lk = $('#likesKey');
+  const dk = $('#dislikesKey');
+  if (lk) {
+    lk.setAttribute('aria-label', s.likes);
+    lk.setAttribute('title', s.likes);
+  }
+  if (dk) {
+    dk.setAttribute('aria-label', s.dislikes);
+    dk.setAttribute('title', s.dislikes);
+  }
   $('#likesVal').textContent = t.likes[lang] || t.likes.en;
   $('#dislikesVal').textContent = t.dislikes[lang] || t.dislikes.en;
 }
@@ -769,6 +785,95 @@ function startContextMenu() {
   });
 }
 
+function startPlateMenu() {
+  const menu = $('#plateMenu');
+  if (!menu || menu.dataset.bound) return;
+  menu.dataset.bound = '1';
+
+  const buttons = menu.querySelectorAll('.plate-menu-btn');
+  const panels = {
+    links: $('#panelLinks'),
+    rig: $('#panelRig'),
+    tools: $('#panelTools'),
+  };
+
+  let activePanelKey = 'links';
+
+  function setActivePanel(key) {
+    activePanelKey = key;
+    buttons.forEach((btn) => {
+      const panelKey = btn.dataset.panel;
+      const isActive = panelKey === key;
+      btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-expanded', String(isActive));
+    });
+
+    Object.entries(panels).forEach(([pKey, el]) => {
+      if (!el) return;
+      const isOpen = pKey === key;
+      if (isOpen) {
+        el.hidden = false;
+        requestAnimationFrame(() => {
+          el.classList.add('is-open');
+        });
+      } else {
+        el.classList.remove('is-open');
+        el.hidden = true;
+      }
+    });
+  }
+
+  menu.addEventListener('click', (e) => {
+    const btn = e.target.closest('.plate-menu-btn');
+    if (!btn) return;
+    const targetKey = btn.dataset.panel;
+    if (!targetKey) return;
+
+    if (activePanelKey === targetKey) {
+      setActivePanel(null);
+    } else {
+      setActivePanel(targetKey);
+    }
+  });
+}
+
+function startHandleEffect() {
+  const handle = $('#handle');
+  if (!handle) return;
+  const originalText = DATA.handle || 'rx5950xt';
+  const chars = '0123456789ABCDEF!<>-_\\/[]{}—=+*^?#';
+  let interval = null;
+
+  handle.addEventListener('mouseenter', () => {
+    if (reduced.matches) return;
+    let iteration = 0;
+    clearInterval(interval);
+
+    interval = setInterval(() => {
+      handle.textContent = originalText
+        .split('')
+        .map((char, index) => {
+          if (index < iteration) {
+            return originalText[index];
+          }
+          return chars[Math.floor(Math.random() * chars.length)];
+        })
+        .join('');
+
+      if (iteration >= originalText.length) {
+        clearInterval(interval);
+        handle.textContent = originalText;
+      }
+      iteration += 1 / 3;
+    }, 28);
+  });
+
+  handle.addEventListener('mouseleave', () => {
+    clearInterval(interval);
+    handle.textContent = originalText;
+  });
+}
+
 /* --- Boot ----------------------------------------------------------------- */
 
 $('#themeToggle').addEventListener('click', () =>
@@ -794,4 +899,8 @@ startClock();
 startPointer();
 startContextMenu();
 startToolsCopy();
+startPlateMenu();
+startHandleEffect();
 startSkyClicks();
+
+

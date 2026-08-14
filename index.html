@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>rx5950xt</title>
-<meta name="description" content="rx5950xt — vibe coder. ESP32 firmware, local AI inference, LoRA fine-tunes, scrapers, web and Android apps, quant research — mostly built with agents.">
+<meta name="description" content="rx5950xt — vibe coder. Web and Android app development, local AI inference optimization, LoRA fine-tunes, ESP32 firmware, web scraping, quant research — mostly built with agents.">
 <meta name="theme-color" content="#08080b">
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="favicon.png" type="image/png" sizes="256x256">
 <link rel="apple-touch-icon" href="favicon.png">
 <!-- Cache-bust: bump ?v= when styles.css / data.js / main.js change. -->
-<link rel="stylesheet" href="styles.css?v=20260814c">
+<link rel="stylesheet" href="styles.css?v=20260814i">
 <script>
   /* Resolve the appearance before first paint so the page never flashes. */
   (function () {
@@ -112,42 +112,73 @@
       <p class="tagline reveal" id="tagline"></p>
       <p class="bio reveal" id="bio"></p>
 
-      <!-- Likes / dislikes — same plate list as the rig, one row each. -->
+      <!-- Likes / dislikes with thumbs up / thumbs down icons. -->
       <section class="rig taste reveal" id="taste">
         <dl class="rig-list">
           <div class="rig-row">
-            <dt class="rig-key" id="likesKey">Like</dt>
+            <dt class="rig-key taste-key" id="likesKey" aria-label="Like" title="Like">
+              <svg class="taste-ico taste-like" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h3"/><path d="M7 10a5 5 0 0 0 5-5V3.5a1.5 1.5 0 0 1 3 0V5.88z"/></svg>
+            </dt>
             <dd class="rig-val" id="likesVal"></dd>
           </div>
           <div class="rig-row">
-            <dt class="rig-key" id="dislikesKey">Nope</dt>
+            <dt class="rig-key taste-key" id="dislikesKey" aria-label="Nope" title="Nope">
+              <svg class="taste-ico taste-dislike" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3"/><path d="M17 14a5 5 0 0 0-5 5v1.5a1.5 1.5 0 0 1-3 0V18.12z"/></svg>
+            </dt>
             <dd class="rig-val" id="dislikesVal"></dd>
           </div>
         </dl>
       </section>
 
-      <nav class="links reveal" id="links" aria-label="Profile links"></nav>
+      <!-- Section Switcher: Links / Rig / Use them -->
+      <nav class="plate-menu reveal" id="plateMenu" aria-label="Profile sections">
+        <button type="button" class="plate-menu-btn is-active" id="btnLinks" aria-expanded="true" aria-controls="panelLinks" data-panel="links">
+          <svg class="plate-menu-ico" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <span class="plate-menu-text" id="btnLinksText">Links</span>
+          <span class="plate-menu-chevron" aria-hidden="true">▾</span>
+        </button>
+        <button type="button" class="plate-menu-btn" id="btnRig" aria-expanded="false" aria-controls="panelRig" data-panel="rig">
+          <svg class="plate-menu-ico" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/></svg>
+          <span class="plate-menu-text" id="btnRigText">Rig</span>
+          <span class="plate-menu-chevron" aria-hidden="true">▾</span>
+        </button>
+        <button type="button" class="plate-menu-btn" id="btnTools" aria-expanded="false" aria-controls="panelTools" data-panel="tools">
+          <svg class="plate-menu-ico" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <span class="plate-menu-text" id="btnToolsText">Use them</span>
+          <span class="plate-menu-chevron" aria-hidden="true">▾</span>
+        </button>
+      </nav>
 
-      <div class="plate-grid">
-        <!-- Machine specs + DGX wish note. -->
-        <section class="rig reveal" id="rig" aria-labelledby="rigTitle">
-          <h2 class="rig-title" id="rigTitle"><span class="label">Rig</span></h2>
-          <dl class="rig-list" id="rigList"></dl>
-          <p class="rig-wish" id="rigWish"></p>
-        </section>
+      <!-- Expandable / collapsible panels (exclusive accordion) -->
+      <div class="plate-panels reveal" id="platePanels">
+        <!-- 1. Five Profile Links (Vertical Stack) -->
+        <div class="plate-panel is-open" id="panelLinks" aria-labelledby="btnLinks">
+          <nav class="links" id="links" aria-label="Profile links"></nav>
+        </div>
 
-        <!-- Tools: AI chat links + one-click install commands. -->
-        <section class="tools reveal" id="tools" aria-labelledby="toolsTitle">
-          <h2 class="tools-title" id="toolsTitle"><span class="label">Tools</span></h2>
-          <div class="tools-block">
-            <span class="tools-sub" id="toolsChatsLabel">Chat</span>
-            <nav class="tools-chats" id="toolsChats" aria-label="AI chat links"></nav>
-          </div>
-          <div class="tools-block">
-            <span class="tools-sub" id="toolsInstallsLabel">Install</span>
-            <ul class="tools-installs" id="toolsInstalls"></ul>
-          </div>
-        </section>
+        <!-- 2. Machine Specs (Rig) - title omitted to prevent duplication -->
+        <div class="plate-panel" id="panelRig" aria-labelledby="btnRig" hidden>
+          <section class="rig" id="rig">
+            <dl class="rig-list" id="rigList"></dl>
+            <p class="rig-wish" id="rigWish"></p>
+          </section>
+        </div>
+
+        <!-- 3. Tools (Use them) - title omitted; Chat & Install split left & right -->
+        <div class="plate-panel" id="panelTools" aria-labelledby="btnTools" hidden>
+          <section class="tools" id="tools">
+            <div class="tools-grid">
+              <div class="tools-block tools-block-chats">
+                <span class="tools-sub" id="toolsChatsLabel">Chat</span>
+                <nav class="tools-chats" id="toolsChats" aria-label="AI chat links"></nav>
+              </div>
+              <div class="tools-block tools-block-installs">
+                <span class="tools-sub" id="toolsInstallsLabel">Install</span>
+                <ul class="tools-installs" id="toolsInstalls"></ul>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   </header>
@@ -183,7 +214,7 @@
   <div class="ctx-list" id="ctxList"></div>
 </div>
 
-<script src="data.js?v=20260814c"></script>
-<script src="main.js?v=20260814c"></script>
+<script src="data.js?v=20260814i"></script>
+<script src="main.js?v=20260814i"></script>
 </body>
 </html>

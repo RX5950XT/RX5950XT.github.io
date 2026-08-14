@@ -37,7 +37,7 @@
 | 區塊 | 選擇器 | 資料來源 |
 |------|--------|----------|
 | 上方 plate | `.plate` / `#links` `#bio` `#taste`… | `DATA` + `DATA.ui[lang]` |
-| plate grid | `.plate-grid` 寬螢幕雙欄容器 | 包裹 `#rig` 與 `#tools` |
+| plate 選單 | `#plateMenu` / `.plate-panels` 展開切換選單 | 包裹 `#panelLinks`、`#panelRig`、`#panelTools` |
 | 本機配置 rig | `#rig` 本機規格＋ DGX 許願 | `DATA.rig` + `DATA.ui` 文案 |
 | 工具 tools | `#tools` 對話四鈕同一排＋安裝指令複製 | `DATA.tools` + `DATA.ui` 文案 |
 | 右上 chrome | `#chrome` 星空／theme／lang | `DATA.ui` + clock JS |

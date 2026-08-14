@@ -79,7 +79,7 @@ const DATA = {
     en: {
       tagline: 'Vibe coder. Builds everything with agents.',
       // {tad} is replaced by a link to Token-Anxiety-Dashboard.
-      bio: 'ESP32 firmware, local AI inference, LoRA fine-tunes, scrapers, web and Android apps, quant research. Mostly grown by pointing agents at a problem. Most days I am staring at {tad}, watching quotas I am about to burn through.',
+      bio: 'Web and Android app development, local AI inference optimization, LoRA fine-tunes, ESP32 firmware, web scraping, quant research. Mostly grown by pointing agents at a problem. Most days I am staring at {tad}, watching quotas I am about to burn through.',
       tadLabel: 'Token Anxiety Dashboard',
       localTime: 'Local time',
       projects: 'Projects',
@@ -99,6 +99,7 @@ const DATA = {
       chromeLabel: 'Site controls',
       likes: 'Like',
       dislikes: 'Nope',
+      linksTitle: 'Links',
       rigTitle: 'Rig',
       rigWish:
         'Urgently seeking a DGX Spark for local deploy, fine-tunes, and development!',
@@ -113,7 +114,7 @@ const DATA = {
     },
     zh: {
       tagline: 'Vibe Coder。用 Agent 建造一切。',
-      bio: 'ESP32 韌體、本地 AI 推論、LoRA 微調、網路爬蟲、網頁與 Android 開發、量化研究。大多是把問題丟給 Agent 之後長出來的。多數時候我盯著 {tad}，看著自己快燒完的額度。',
+      bio: '網頁與 Android 應用開發、本地 AI 推論優化、LoRA 微調、ESP32 韌體、網路爬蟲、量化研究。大多是把問題丟給 Agent 之後長出來的。多數時候我盯著 {tad}，看著自己快燒完的額度。',
       tadLabel: 'Token Anxiety Dashboard',
       localTime: '當地時間',
       projects: '專案',
@@ -133,6 +134,7 @@ const DATA = {
       chromeLabel: '網站控制列',
       likes: '喜歡',
       dislikes: '不喜歡',
+      linksTitle: '連結',
       rigTitle: '本機配置',
       rigWish: '急需一臺 DGX Spark 用於本地部署、微調與開發！',
       toolsTitle: '使用它們',

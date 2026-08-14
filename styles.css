@@ -956,12 +956,71 @@ html.pointing .cursor-ring {
 }
 
 .handle {
+  display: inline-block;
   margin: 22px 0 0;
   font-family: var(--font-mono);
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 0.02em; /* a part number wants air between characters */
   line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    letter-spacing 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out),
+    filter 0.25s var(--ease-out),
+    color var(--dur) var(--ease);
+}
+
+.handle:hover {
+  letter-spacing: 0.05em;
+  transform: translateY(-1px);
+  background: linear-gradient(
+    90deg,
+    #60a5fa 0%,
+    #a78bfa 25%,
+    #f472b6 50%,
+    #38bdf8 75%,
+    #60a5fa 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: handleFlow 2s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.45));
+}
+
+[data-theme="light"] .handle:hover {
+  background: linear-gradient(
+    90deg,
+    #2563eb 0%,
+    #7c3aed 25%,
+    #db2777 50%,
+    #0284c7 75%,
+    #2563eb 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.28));
+}
+
+@keyframes handleFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handle:hover {
+    animation: none;
+  }
 }
 
 .tagline {
@@ -998,27 +1057,196 @@ html.pointing .cursor-ring {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--action-bg-hover) 55%, transparent);
 }
 
-/* Profile links: modern pill bar supporting 5+ items with flex wrap */
-.links {
+/* Likes / dislikes with thumbs icons. */
+.taste .rig-row {
+  grid-template-columns: 1.5rem 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.taste-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  line-height: 1;
+}
+
+.taste-ico {
+  display: block;
+  width: 14px;
+  height: 14px;
+  color: var(--text-2);
+  flex: 0 0 auto;
+  transition: color var(--dur) var(--ease), transform 0.15s var(--ease);
+}
+
+.taste .rig-row:hover .taste-ico {
+  color: var(--text);
+  transform: scale(1.15);
+}
+
+.taste-like {
+  color: #3b82f6;
+}
+
+.taste-dislike {
+  color: #ef4444;
+}
+
+/* --- Plate Menu & Panels (Exclusive Accordion / Switcher) ------------------ */
+
+.plate-menu {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 22px;
+  align-items: center;
+}
+
+.plate-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--action-stroke);
+  border-radius: 999px;
+  background: var(--action-bg);
+  color: var(--text-2);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  cursor: pointer;
+  transition:
+    transform 0.15s var(--ease-out),
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+  user-select: none;
+}
+
+.plate-menu-btn:hover,
+.plate-menu-btn:focus-visible {
+  border-color: var(--action-stroke-hover);
+  background: var(--action-bg-hover);
+  color: var(--text);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow-hover);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.plate-menu-btn:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+.plate-menu-btn.is-active {
+  color: var(--text);
+  background: var(--surface-hi);
+  border-color: color-mix(in srgb, var(--text) 32%, var(--stroke));
+  box-shadow:
+    inset 0 1px 0 0 var(--edge),
+    0 2px 8px -2px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+}
+
+.plate-menu-ico {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  opacity: 0.8;
+  transition: opacity var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.plate-menu-btn:hover .plate-menu-ico,
+.plate-menu-btn.is-active .plate-menu-ico {
+  opacity: 1;
+}
+
+.plate-menu-chevron {
+  display: inline-block;
+  font-size: 0.65rem;
+  line-height: 1;
+  opacity: 0.55;
+  margin-left: 2px;
+  transition: transform 0.2s var(--ease), opacity var(--dur) var(--ease);
+}
+
+.plate-menu-btn.is-active .plate-menu-chevron {
+  transform: rotate(180deg);
+  opacity: 0.9;
+}
+
+.plate-panels {
+  margin-top: 14px;
+}
+
+.plate-panel {
+  display: none;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+.plate-panel.is-open {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate-panel {
+    transition: none;
+    transform: none;
+  }
+  .plate-menu-chevron {
+    transition: none;
+  }
+}
+
+/* Profile links: vertical list stack */
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 0;
+  width: 100%;
 }
 
 .links .link {
-  min-width: 0;
-  justify-content: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   box-sizing: border-box;
-  padding: 8px 14px;
-  font-size: 0.75rem;
+  padding: 9px 14px;
+  font-size: 0.8125rem;
   letter-spacing: -0.01em;
-  gap: 6px;
+  gap: 10px;
+}
+
+.links .link-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .links .link-ico {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
 }
 
 .links .link-label {
@@ -1026,37 +1254,29 @@ html.pointing .cursor-ring {
   white-space: nowrap;
 }
 
-/* Plate Grid: Side-by-side on wide screens for Rig and Tools */
-.plate-grid {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--hairline);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.links .arrow {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  color: var(--text-3);
+  transition: transform 0.2s var(--ease-out), color var(--dur) var(--ease);
 }
 
-@media (min-width: 860px) {
-  .plate-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    align-items: start;
-  }
-
-  .plate-grid .rig,
-  .plate-grid .tools {
-    margin-top: 0;
-    padding-top: 0;
-    border-top: none;
-  }
+.links .link:hover .arrow {
+  transform: translate(2px, -2px);
+  color: var(--text);
 }
 
 /* --- Rig (machine specs on the plate) ------------------------------------- */
 
 .rig {
-  margin-top: 20px;
-  padding-top: 16px;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.taste.rig {
+  margin-top: 18px;
+  padding-top: 14px;
   border-top: 1px solid var(--hairline);
 }
 
@@ -1113,11 +1333,6 @@ html.pointing .cursor-ring {
 
 .rig-line {
   display: block;
-}
-
-/* Likes / dislikes reuse the rig list; the keys are words, not acronyms. */
-.taste .rig-row {
-  grid-template-columns: 3.25rem 1fr;
 }
 
 .rig-wish {
@@ -1209,22 +1424,31 @@ html.pointing .cursor-ring {
   color: var(--text);
 }
 
-/* --- Tools (left plate bottom) -------------------------------------------- */
+/* --- Tools (Use them: Chat on left, Install on right) ---------------------- */
 
 .tools {
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px solid var(--hairline);
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
-.tools-title {
-  margin: 0 0 10px;
-  font-size: inherit;
-  font-weight: inherit;
+.tools-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.tools-block + .tools-block {
-  margin-top: 12px;
+@media (min-width: 640px) {
+  .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+}
+
+.tools-block {
+  min-width: 0;
 }
 
 .tools-sub {
@@ -1238,22 +1462,24 @@ html.pointing .cursor-ring {
   color: var(--text-3);
 }
 
-/* Four chat targets on one row — equal columns, no wrap. */
+/* Chat targets: 1 column vertical stack (1x4) */
 .tools-chats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .tools-link {
   width: 100%;
   min-width: 0;
-  justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   box-sizing: border-box;
-  padding: 6px 4px;
-  font-size: 0.625rem;
-  letter-spacing: -0.02em;
-  gap: 2px;
+  padding: 9px 14px;
+  font-size: 0.75rem;
+  letter-spacing: -0.01em;
+  gap: 6px;
 }
 
 .tools-link .link-label {
@@ -1265,7 +1491,9 @@ html.pointing .cursor-ring {
 
 .tools-link .arrow {
   flex: 0 0 auto;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
+  color: var(--text-3);
+  transition: transform 0.2s var(--ease-out), color var(--dur) var(--ease);
 }
 
 /* One terminal stack for all four installers — less card clutter. */
