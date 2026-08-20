@@ -49,7 +49,39 @@ function applyTheme(theme) {
 
 function setTheme(theme) {
   localStorage.setItem('theme', theme);
-  applyTheme(theme);
+
+  // The new appearance wipes in as a circle out of the toggle. Browsers without
+  // View Transitions — and anyone asking for less motion — get a plain swap.
+  if (reduced.matches || !document.startViewTransition) {
+    applyTheme(theme);
+    return;
+  }
+
+  const r = $('#themeToggle').getBoundingClientRect();
+  const x = r.left + r.width / 2;
+  const y = r.top + r.height / 2;
+  // Reach the farthest corner, so the circle always clears the viewport.
+  const reach = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+  document
+    .startViewTransition(() => applyTheme(theme))
+    .ready.then(() => {
+      root.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${reach}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 560,
+          easing: 'cubic-bezier(.42, 0, .24, 1)',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    })
+    // A skipped transition rejects; the theme is already applied either way.
+    .catch(() => {});
 }
 
 /* --- Language ------------------------------------------------------------- */
@@ -456,7 +488,7 @@ function modelCard(m, i) {
     m.downloads != null
       ? `<div class="model-downloads" title="${s.asOf} ${m.downloadsDate}">
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-           <span class="dl-count">${m.downloads.toLocaleString()}</span>
+           <span class="dl-count" data-count="${m.downloads}">${m.downloads.toLocaleString()}</span>
            <span class="dl-label">${s.downloads}</span>
            <span class="dl-date">${s.asOf} ${m.downloadsDate}</span>
          </div>`
@@ -494,12 +526,31 @@ function render() {
 
 /* --- Entrance ------------------------------------------------------------- */
 
+/* A download count is the one number on the page worth watching arrive. */
+
+function countUp(el) {
+  const target = Number(el.dataset.count);
+  if (!target || reduced.matches) return;
+
+  const start = performance.now();
+  const step = (now) => {
+    const p = Math.min(1, (now - start) / 1100);
+    const eased = 1 - Math.pow(1 - p, 4);
+    el.textContent = Math.round(target * eased).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+  };
+
+  el.textContent = '0';
+  requestAnimationFrame(step);
+}
+
 function observeReveals() {
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
         e.target.classList.add('in');
+        e.target.querySelectorAll('.dl-count').forEach(countUp);
         io.unobserve(e.target);
       });
     },
@@ -874,6 +925,41 @@ function startHandleEffect() {
   });
 }
 
+/* --- Console -------------------------------------------------------------- */
+
+/* Anyone who opens DevTools gets the avatar. The ramp skips '%' on purpose:
+   console.log would read it as a format specifier and eat the next character. */
+
+const ASCII_AVATAR = [
+  '                  .=-=+-=.',
+  '                 .-#@@@@#-:.',
+  '               .--=&@@@@&+==-:',
+  '             .:::+#@&*@@@#===--:..',
+  '          :=::-==##+++**&@++==---=+-.',
+  '          ==-:=***: .. .-&*&#+--+++*-',
+  '          -=*+*#++-...:--#*@***##***:',
+  '          :=**##+#****##*&*@#&*&++++.',
+  '           :==+**&#&&@@@&&*&+#=*-+=.',
+  '            .  -*&@&@@@@@&+=:.....',
+  '               .-*##&@@@&&&*..',
+  '              .:.=*+******==:',
+  '               :-*&#@#&@##==:',
+  '                .:===+++=+:.',
+].join('\n');
+
+function printBanner() {
+  console.log(
+    '%c' + ASCII_AVATAR,
+    'font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; line-height: 1.05'
+  );
+  console.log(
+    '%crx5950xt%c  vibe coder  %chttps://github.com/rx5950xt',
+    'font: 700 13px ui-monospace, monospace',
+    'font: 12px ui-monospace, monospace; opacity: .65',
+    'font: 12px ui-monospace, monospace; opacity: .5'
+  );
+}
+
 /* --- Boot ----------------------------------------------------------------- */
 
 $('#themeToggle').addEventListener('click', () =>
@@ -902,5 +988,6 @@ startToolsCopy();
 startPlateMenu();
 startHandleEffect();
 startSkyClicks();
+printBanner();
 
 

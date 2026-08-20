@@ -1821,6 +1821,7 @@ html.pointing .cursor-ring {
 .dl-count {
   font-weight: 700;
   color: var(--text);
+  font-variant-numeric: tabular-nums;
 }
 
 .dl-label {
@@ -2089,6 +2090,25 @@ html.ctx-open .trail {
     backdrop-filter: blur(8px);
     background: color-mix(in srgb, var(--surface-solid) 82%, transparent);
   }
+}
+
+/* --- Theme transition ------------------------------------------------------ */
+
+/* The appearance swap wipes in as a circle out of the theme button. The default
+   cross-fade is dropped; main.js animates clip-path on the incoming snapshot. */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 0;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
 }
 
 @media (prefers-contrast: more) {

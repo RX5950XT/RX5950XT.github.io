@@ -62,9 +62,12 @@ npx --yes serve -l 8137 .
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
-- 目前：`20260814i`
+- 目前：`20260820a`
 
 ## 近期
+- **主題切換過場（View Transitions）**：`setTheme()` 走 `document.startViewTransition`，新主題以圓形從 `#themeToggle` 中心擴散（560ms，clip-path 動畫在 `::view-transition-new(root)`）。CSS 端在 styles.css「Theme transition」關掉預設 cross-fade 並排 z-index。不支援或 `prefers-reduced-motion` → 直接套用。
+- **Console ASCII 頭貼**：`printBanner()` 於 boot 尾端印出頭貼的 ASCII 版（`ASCII_AVATAR`，46 字寬 × 14 行）＋ handle 與 GitHub 連結。字元階從 `" .:-=+*#&@"`，**刻意避開 `%`**（console.log 會當成格式指示符吃掉下一個字元）。來源 `https://github.com/rx5950xt.png`（原圖是 1-bit dither，先高斯模糊再 BOX 取樣才還原得出灰階）。
+- **模型下載數 count-up**：`.dl-count` 帶 `data-count`，卡片首次進場（`observeReveals` 的 IntersectionObserver）觸發 `countUp()`，1.1s ease-out 滾到目標值；`.dl-count` 加 `tabular-nums` 避免位數變化抖寬。語系切換不重播（直接是最終值）。
 - **自我介紹內容微調（Bio）**：更新為「網頁與 Android 應用開發、本地 AI 推論優化、LoRA 微調、ESP32 韌體、網路爬蟲、量化研究」（「網路爬蟲」與「量化研究」中間加上頓號）。
 - **ID 標題特效（Handle Hover Effect）**：滑鼠懸停於 `rx5950xt` 時觸發霓虹極光流光漸變（Iridescent Flow Gradient & Glow）與動態字元矩陣解碼（Text Scramble Effect）。
 - **喜歡與不喜歡（Taste）**：將原本文字標籤改成「讚（Thumbs Up 藍色）」與「倒讚（Thumbs Down 紅色）」精緻向量圖示，支援 hover 放大與無障礙 tooltip。
@@ -72,4 +75,4 @@ npx --yes serve -l 8137 .
   - 連結（Links）：改為直式列表排列，每列包含品牌 icon、文字與 ↗ 箭頭。
   - 本機配置（Rig）與使用它們（Tools）：移除內部重複出現的標題文字。
   - 使用它們（Tools）：內部「對話」改為直式一排 1×4 按鈕，與右側 4 個安裝指令完美對齊。
-- **快取版號**：bump 至 `20260814i`。
+- **快取版號**：bump 至 `20260820a`。
