@@ -62,11 +62,14 @@ npx --yes serve -l 8137 .
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
-- 目前：`20260820b`
+- 目前：`20260820c`
 
 ## 近期
-- **主題切換過場（View Transitions）**：`setTheme()` 走 `document.startViewTransition`，新主題以圓形從 `#themeToggle` 中心擴散（560ms，clip-path 動畫在 `::view-transition-new(root)`）。CSS 端在 styles.css「Theme transition」關掉預設 cross-fade 並排 z-index。不支援或 `prefers-reduced-motion` → 直接套用。
-- **Console ASCII 頭貼**：`printBanner()` 於 boot 尾端印出頭貼的 ASCII 版（`ASCII_AVATAR`，46 字寬 × 14 行）＋ handle 與 GitHub 連結。字元階從 `" .:-=+*#&@"`，**刻意避開 `%`**（console.log 會當成格式指示符吃掉下一個字元）。來源 `https://github.com/rx5950xt.png`（原圖是 1-bit dither，先高斯模糊再 BOX 取樣才還原得出灰階）。**空白必須是 NBSP**：`%c` 訊息被 DevTools 畫成 inline span，連續空格會被摺疊、圖形整個歪掉——所以 source 維持普通空格好讀，`join` 後才 `.replace(/ /g, String.fromCharCode(0xa0))`。
+- **主題切換過場（View Transitions）**：`setTheme()` 走 `document.startViewTransition`，新主題以圓形從 `#themeToggle` 中心擴散（clip-path 動畫掛在 `::view-transition-new(root)`，easing `cubic-bezier(.22,1,.36,1)` 起手快、尾巴柔）。**時長隨視窗縮放**：`reach / 2.6` clamp 到 320–620ms，讓手機與大螢幕的邊緣推進速度一致（390×844→327ms、1280×800→549ms、1080p 以上→620ms）。CSS 端在 styles.css「Theme transition」關掉預設 cross-fade 並排 z-index。不支援、`prefers-reduced-motion`、或瀏覽器跳過 transition（例如視窗失焦）→ `.catch` 直接套用，主題照樣切換。
+- **Console ASCII 頭貼**：`printBanner()` 於 boot 尾端印出頭貼的 ASCII 版（`ASCII_AVATAR`，66 字寬 × 30 行，樣式 10px / line-height 1.1）＋ handle 與 GitHub 連結。生成的三個關鍵點：
+  - **解析度**：46×14 太小，骷髏會糊成斑點、圓形遮罩變歪多邊形；66×30 才看得出眼窩、鼻孔、牙齒。
+  - **取樣**：原圖是 1-bit dither，要先高斯模糊（blur 1.4）再 `Image.BOX` 區域平均才還原得出灰階；並先裁掉 18% 死角讓骷髏佔更多字元。取樣比 `k = 0.5` 必須對上 console 的 cell 比例（字寬 / 行高 = 5.5 / 11）。
+  - **字元**：階從 `" .:-=+*#&@"`，**刻意避開 `%`**（console.log 當成格式指示符會吃掉下一個字元）；空白 join 後轉 NBSP，因為 `%c` 訊息是 inline span，連續空格會被摺疊。
 - **模型下載數 count-up**：`.dl-count` 帶 `data-count`，卡片首次進場（`observeReveals` 的 IntersectionObserver）觸發 `countUp()`，1.1s ease-out 滾到目標值；`.dl-count` 加 `tabular-nums` 避免位數變化抖寬。語系切換不重播（直接是最終值）。
 - **自我介紹內容微調（Bio）**：更新為「網頁與 Android 應用開發、本地 AI 推論優化、LoRA 微調、ESP32 韌體、網路爬蟲、量化研究」（「網路爬蟲」與「量化研究」中間加上頓號）。
 - **ID 標題特效（Handle Hover Effect）**：滑鼠懸停於 `rx5950xt` 時觸發霓虹極光流光漸變（Iridescent Flow Gradient & Glow）與動態字元矩陣解碼（Text Scramble Effect）。
@@ -75,4 +78,4 @@ npx --yes serve -l 8137 .
   - 連結（Links）：改為直式列表排列，每列包含品牌 icon、文字與 ↗ 箭頭。
   - 本機配置（Rig）與使用它們（Tools）：移除內部重複出現的標題文字。
   - 使用它們（Tools）：內部「對話」改為直式一排 1×4 按鈕，與右側 4 個安裝指令完美對齊。
-- **快取版號**：bump 至 `20260820b`。
+- **快取版號**：bump 至 `20260820c`。
