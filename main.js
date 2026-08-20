@@ -930,6 +930,7 @@ function startHandleEffect() {
 /* Anyone who opens DevTools gets the avatar. The ramp skips '%' on purpose:
    console.log would read it as a format specifier and eat the next character. */
 
+/* Rendered with NBSP: see the join below. */
 const ASCII_AVATAR = [
   '                  .=-=+-=.',
   '                 .-#@@@@#-:.',
@@ -945,7 +946,7 @@ const ASCII_AVATAR = [
   '              .:.=*+******==:',
   '               :-*&#@#&@##==:',
   '                .:===+++=+:.',
-].join('\n');
+].join('\n').replace(/ /g, '\u00a0');
 
 function printBanner() {
   console.log(
