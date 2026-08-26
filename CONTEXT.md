@@ -45,10 +45,19 @@ npx --yes serve -l 8137 .
 1. calcrux → 2. FJU-TronClass-MCP → chimera → rolling-around
 - VoiceInk 已升格到 projects（第 4 張，Portfolio Visualizer 之後）：一行摘要會被 `.row-desc` 截斷，改走卡片。
 
+## projects 順序
+1. **3DP-MATX**（新增，置頂）→ just-a-submarine → LLM Wiki → Portfolio Visualizer → VoiceInk → …
+- 3DP-MATX：全 3D 列印 microATX NAS 機殼，賣點是「由 AI Agent 驅動 FreeCAD Part CSG 建模」，Python／無 demo。
+
 ## models 順序
 1. silicon-based-girlfriend（文末註 V2 準備中）→ 2. digital-twin → 3. LinguaForge-Qwen3.5-0.8B
-- 下載數截至 2026/8/4：silicon-based-girlfriend 424 · digital-twin 68 · LinguaForge 153
+- 下載數截至 2026/8/26：silicon-based-girlfriend 1200 · digital-twin 71 · LinguaForge 213
 - LinguaForge 卡片並列 Hugging Face 模型與 GitHub 訓練／評測程式碼
+
+## 品牌 icon 規則
+- 凡是 GitHub／Hugging Face 按鈕一律帶 logo（`linkIcon()` + `LINK_ICONS`）：
+  `#links`、`#ctx`、model 卡（HF／GitHub）、project 卡的 GitHub 連結。
+- `.card-link .link-ico` 樣式已存在，新增 icon 不需動 CSS。
 
 ## 首次造訪預設
 - **時鐘**：瀏覽器系統時區（`Intl` / `getTimezoneOffset`），非 GPS 定位

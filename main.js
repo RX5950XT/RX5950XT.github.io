@@ -466,7 +466,7 @@ function projectCard(p, i) {
       ${p.tags.map((x) => `<li class="tag">${x}</li>`).join('')}
     </ul>
     <div class="card-foot">
-      <a class="card-link" href="${p.repo}" target="_blank" rel="noopener">${s.code}${arrow}</a>
+      <a class="card-link" href="${p.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>${s.code}</span>${arrow}</a>
       ${p.demo ? `<a class="card-link" href="${p.demo}" target="_blank" rel="noopener">${s.demo}${arrow}</a>` : ''}
     </div>
   </article>`;

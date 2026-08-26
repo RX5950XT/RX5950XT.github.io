@@ -152,6 +152,14 @@ const DATA = {
 
   projects: [
     {
+      name: '3DP-MATX',
+      repo: 'https://github.com/RX5950XT/3DP-MATX',
+      lang: 'Python',
+      tags: ['FreeCAD CSG', 'Parametric', 'PETG', 'Bambu Lab A1'],
+      en: 'A fully 3D-printed microATX NAS case — modelled end to end by agents driving the Part CSG booleans in FreeCAD, not by hand in a GUI. Eleven printed parts, 13.70 L, and not one screw between case pieces: slide rails, detents and one-way wedges hold it together. Every dimension lives in a single parameter file, and the STLs, assembly figures and a 58-test regression suite all regenerate from it.',
+      zh: '全 3D 列印的 microATX NAS 機殼——整套建模由 Agent 驅動 FreeCAD 的 Part CSG 布林完成，不是在 GUI 裡手拉。11 個列印件、13.70 L，機殼件之間一顆螺絲都沒有：靠滑槽、detent 與單向楔互鎖。所有尺寸集中在單一參數檔，STL、組裝圖與 58 項回歸測試都由它重生。',
+    },
+    {
       name: 'just-a-submarine',
       repo: 'https://github.com/just-a-submarine',
       demo: 'https://rov-web-xi.vercel.app',
@@ -265,8 +273,8 @@ const DATA = {
     {
       name: 'silicon-based-girlfriend',
       url: 'https://huggingface.co/RX5950XT/silicon-based-girlfriend',
-      downloads: 424,
-      downloadsDate: '2026/8/4',
+      downloads: 1200,
+      downloadsDate: '2026/8/26',
       tags: ['Qwen3.5-4B', 'QLoRA r=32', 'GGUF'],
       en: 'A roleplay adapter for immersive Traditional Chinese conversation. Rank 32 across every linear layer, 8K context, nineteen hours on an A6000. Ships as both LoRA weights and a Q8_0 GGUF for llama.cpp. Silicon-based girlfriend V2, the next generation, is in preparation.',
       zh: '沉浸式繁體中文角色扮演 adapter。rank 32、全線性層、8K context，在 A6000 上訓了約 19 小時。同時提供 LoRA 權重與 Q8_0 GGUF，可直接餵給 llama.cpp。Silicon-based girlfriend V2 下一代模型正在準備中。',
@@ -274,8 +282,8 @@ const DATA = {
     {
       name: 'rx5950xt-digital-twin',
       url: 'https://huggingface.co/RX5950XT/rx5950xt-digital-twin-Qwen3.5-4B',
-      downloads: 68,
-      downloadsDate: '2026/8/4',
+      downloads: 71,
+      downloadsDate: '2026/8/26',
       tags: ['Qwen3.5-4B', 'QLoRA r=8', 'zh-TW'],
       en: 'A digital twin of me, QLoRA-tuned on ~1,067 of my own Discord messages. Blended 1:2 with general instruction data and trained for a single epoch at rank 8 — kept small on purpose, so it learns the voice instead of memorising the transcript.',
       zh: '我的數位分身，用約 1,067 則自己的 Discord 對話做 QLoRA 微調。與通用中文指令資料以 1:2 混合、rank 8、只跑 1 epoch——刻意做小，讓它學語氣而不是背對話。',
@@ -284,8 +292,8 @@ const DATA = {
       name: 'LinguaForge-Qwen3.5-0.8B',
       url: 'https://huggingface.co/RX5950XT/LinguaForge-Qwen3.5-0.8B-zhTW-en-ja',
       repo: 'https://github.com/RX5950XT/LinguaForge-Qwen3.5-0.8B-zhTW-en-ja',
-      downloads: 153,
-      downloadsDate: '2026/8/4',
+      downloads: 213,
+      downloadsDate: '2026/8/26',
       tags: ['Qwen3.5-0.8B', 'LoRA r=64', 'zh-TW · en · ja'],
       en: 'A compact six-way translator for Traditional Chinese (Taiwan), English and Japanese. The v5e release uses LoRA SFT on about 503K examples, raises mean COMET by 1.92 points and cuts simplified-Chinese leakage to 1.09% and 0.69% in the two Chinese-output directions. Ships as an adapter, merged bf16 model and GGUF.',
       zh: '繁體中文（臺灣）、英文、日文六方向翻譯特化小模型。v5e 以約 50.3 萬筆資料進行 LoRA SFT，平均 COMET 提升 1.92 分，兩個繁中輸出方向的簡體洩漏分別降至 1.09% 與 0.69%；提供 adapter、合併 bf16 模型與 GGUF。',
