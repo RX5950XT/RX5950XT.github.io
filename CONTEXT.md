@@ -46,8 +46,18 @@ npx --yes serve -l 8137 .
 - VoiceInk 已升格到 projects（第 4 張，Portfolio Visualizer 之後）：一行摘要會被 `.row-desc` 截斷，改走卡片。
 
 ## projects 順序
-1. **3DP-MATX**（新增，置頂）→ just-a-submarine → LLM Wiki → Portfolio Visualizer → VoiceInk → …
-- 3DP-MATX：全 3D 列印 microATX NAS 機殼，賣點是「由 AI Agent 驅動 FreeCAD Part CSG 建模」，Python／無 demo。
+just-a-submarine → LLM Wiki → Portfolio Visualizer → VoiceInk → ESP32-CAM → LLM Arena →
+Qwen-35B-A3B → PCPriceProxy → 0050 Buy-Point → **3DP-MATX（最後一張）**
+- 3DP-MATX：全 3D 列印 microATX NAS 機殼，賣點是「由 AI Agent 驅動 FreeCAD Part CSG 建模」，Python／無 demo。使用者指定放最後。
+- bio（en/zh）與 `index.html` meta description 都已列入「由 Agent 驅動的 3D 列印參數化建模」。
+
+## 2026/8/26 對照 repo 現況做過的內容更新
+- **VoiceInk**：repo 已從語音轉文字擴成「Windows 桌面 AI 工作台」（聊天／額度儀錶板／檔案轉錄／即時字幕／翻譯 TTS），描述與 tags 重寫。
+- **Portfolio Visualizer**：補 LLM 健診與配息頁。
+- **PCPriceProxy**：補 19 主分類語意子樹、REST API 與 Agent CLI（tags 加 `Agent CLI`）。
+- **0050 Buy-Point**：補 VT 全球股票 ETF 複製實驗（tags 加 `0050 · VT`）。
+- **calcrux**：補單位／貸款／匯率。
+- 其餘（just-a-submarine、LLM Wiki、ESP32-CAM、LLM Arena、Qwen-35B-A3B、chimera、rolling-around、FJU-TronClass-MCP）比對 README 後描述仍準確，未動。
 
 ## models 順序
 1. silicon-based-girlfriend（文末註 V2 準備中）→ 2. digital-twin → 3. LinguaForge-Qwen3.5-0.8B

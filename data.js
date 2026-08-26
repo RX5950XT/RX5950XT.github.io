@@ -79,7 +79,7 @@ const DATA = {
     en: {
       tagline: 'Vibe coder. Builds everything with agents.',
       // {tad} is replaced by a link to Token-Anxiety-Dashboard.
-      bio: 'Web and Android app development, local AI inference optimization, LoRA fine-tunes, ESP32 firmware, web scraping, quant research. Mostly grown by pointing agents at a problem. Most days I am staring at {tad}, watching quotas I am about to burn through.',
+      bio: 'Web and Android app development, local AI inference optimization, LoRA fine-tunes, ESP32 firmware, agent-driven parametric CAD for 3D printing, web scraping, quant research. Mostly grown by pointing agents at a problem. Most days I am staring at {tad}, watching quotas I am about to burn through.',
       tadLabel: 'Token Anxiety Dashboard',
       localTime: 'Local time',
       projects: 'Projects',
@@ -114,7 +114,7 @@ const DATA = {
     },
     zh: {
       tagline: 'Vibe Coder。用 Agent 建造一切。',
-      bio: '網頁與 Android 應用開發、本地 AI 推論優化、LoRA 微調、ESP32 韌體、網路爬蟲、量化研究。大多是把問題丟給 Agent 之後長出來的。多數時候我盯著 {tad}，看著自己快燒完的額度。',
+      bio: '網頁與 Android 應用開發、本地 AI 推論優化、LoRA 微調、ESP32 韌體、由 Agent 驅動的 3D 列印參數化建模、網路爬蟲、量化研究。大多是把問題丟給 Agent 之後長出來的。多數時候我盯著 {tad}，看著自己快燒完的額度。',
       tadLabel: 'Token Anxiety Dashboard',
       localTime: '當地時間',
       projects: '專案',
@@ -152,14 +152,6 @@ const DATA = {
 
   projects: [
     {
-      name: '3DP-MATX',
-      repo: 'https://github.com/RX5950XT/3DP-MATX',
-      lang: 'Python',
-      tags: ['FreeCAD CSG', 'Parametric', 'PETG', 'Bambu Lab A1'],
-      en: 'A fully 3D-printed microATX NAS case — modelled end to end by agents driving the Part CSG booleans in FreeCAD, not by hand in a GUI. Eleven printed parts, 13.70 L, and not one screw between case pieces: slide rails, detents and one-way wedges hold it together. Every dimension lives in a single parameter file, and the STLs, assembly figures and a 58-test regression suite all regenerate from it.',
-      zh: '全 3D 列印的 microATX NAS 機殼——整套建模由 Agent 驅動 FreeCAD 的 Part CSG 布林完成，不是在 GUI 裡手拉。11 個列印件、13.70 L，機殼件之間一顆螺絲都沒有：靠滑槽、detent 與單向楔互鎖。所有尺寸集中在單一參數檔，STL、組裝圖與 58 項回歸測試都由它重生。',
-    },
-    {
       name: 'just-a-submarine',
       repo: 'https://github.com/just-a-submarine',
       demo: 'https://rov-web-xi.vercel.app',
@@ -183,16 +175,16 @@ const DATA = {
       demo: 'https://portfolio-visualizer-roan.vercel.app/',
       lang: 'TypeScript',
       tags: ['Next.js', 'TWR / XIRR', 'ETF look-through', 'RBAC'],
-      en: 'Portfolio tracking for people who hold things for years. Allocation, TWR and XIRR, Sharpe and drawdown, an S&P 500 shadow line replaying your actual buys, and ETF look-through that shows what you really own.',
-      zh: '給長期持有者的組合追蹤：資產配置、TWR 與 XIRR、Sharpe 與回撤，還有依你實際買點重播的 S&P 500 對照線，以及穿透 ETF 看出真正持有什麼。',
+      en: 'Portfolio tracking for people who hold things for years. Allocation, TWR and XIRR, Sharpe and drawdown, an S&P 500 shadow line replaying your actual buys, and ETF look-through that shows what you really own. An LLM health check calls out concentration, ETF overlap and fee drag; a dividends page tracks yield and upcoming ex-dates.',
+      zh: '給長期持有者的組合追蹤：資產配置、TWR 與 XIRR、Sharpe 與回撤，還有依你實際買點重播的 S&P 500 對照線，以及穿透 ETF 看出真正持有什麼。另有 LLM 健診指出集中度、ETF 重疊與費用拖累，配息頁追蹤殖利率與即將除息。',
     },
     {
       name: 'VoiceInk',
       repo: 'https://github.com/RX5950XT/VoiceInk',
       lang: 'JavaScript',
-      tags: ['Electron', 'sherpa-onnx', 'GGUF', 'Edge TTS'],
-      en: 'A Windows desktop transcriber. Drop in an audio file, or capture whatever the machine is playing and read live captions in a floating window. ASR runs locally on Qwen3-ASR-0.6B and translation on my own fine-tuned LinguaForge, so the whole loop stays offline on CPU — cloud APIs optional, Edge TTS reads the translation back.',
-      zh: 'Windows 桌面語音轉文字：拖進音檔轉錄，或擷取電腦正在播的聲音，在置頂懸浮視窗即時上字幕。ASR 跑本地 Qwen3-ASR-0.6B，翻譯用自己微調的 LinguaForge，整條流程 CPU 就能全離線——想接雲端 API 也行，譯文還能用 Edge TTS 朗讀。',
+      tags: ['Electron', 'Quota dashboard', 'sherpa-onnx', 'Edge TTS'],
+      en: 'A Windows desktop AI workbench. Multi-session chat over any OpenAI-compatible endpoint, a quota dashboard for Claude Code, Codex, Antigravity, OpenCode and Grok, file transcription, live captions of whatever the machine is playing, and translation read back with Edge TTS. ASR runs locally on Qwen3-ASR-0.6B and translation on my own fine-tuned LinguaForge, so the voice half of it stays offline on CPU.',
+      zh: 'Windows 桌面 AI 工作台：走 OpenAI 相容端點的多會話聊天、Claude Code／Codex／Antigravity／OpenCode／Grok 的額度儀錶板、檔案轉錄、擷取電腦正在播的聲音做即時字幕，以及翻譯與 Edge TTS 朗讀。ASR 跑本地 Qwen3-ASR-0.6B、翻譯用自己微調的 LinguaForge，語音那半條流程 CPU 就能全離線。',
     },
     {
       name: 'ESP32-CAM Remote Monitor',
@@ -223,17 +215,25 @@ const DATA = {
       name: 'PCPriceProxy',
       repo: 'https://github.com/rx5950xt/PCPriceProxy',
       lang: 'TypeScript',
-      tags: ['Scraping', 'SKU matching', 'REST API'],
-      en: 'Compare DIY PC part prices across CoolPC, Sinya and Autobuy in one place. Same model shows up as a single card with each store\'s price, so you can see who is cheaper without opening three tabs.',
-      zh: '一次比完原價屋、欣亞、Autobuy 的 DIY 零件價。同一型號收成一張卡，三家售價並排，不用開三個分頁就能看出哪家便宜。',
+      tags: ['Scraping', 'SKU matching', 'REST API', 'Agent CLI'],
+      en: 'Compare DIY PC part prices across CoolPC, Sinya and Autobuy in one place. Same model shows up as a single card with each store\'s price, so you can see who is cheaper without opening three tabs. Nineteen categories with semantic sub-trees, plus a REST API and an agent CLI so a model can do the shopping.',
+      zh: '一次比完原價屋、欣亞、Autobuy 的 DIY 零件價。同一型號收成一張卡，三家售價並排，不用開三個分頁就能看出哪家便宜。19 個主分類各自長出語意子分類，另有 REST API 與給 Agent 用的 CLI，讓模型替你比價。',
     },
     {
       name: '0050 Buy-Point Study',
       repo: 'https://github.com/rx5950xt/Buy_Price_Assessment',
       lang: 'Python',
-      tags: ['Walk-forward', 'Bootstrap CI', 'Sealed holdout'],
-      en: 'Twenty-three years of 0050 data, walk-forward and free of look-ahead, asking one question: if you buy once a month, which day? The first trading day wins at 3.20% average regret — and the machine learning strategy built to beat it lost by 116 bps.',
-      zh: '用 0050 上市至今 23 年的資料做無前視偏誤的滾動窗口研究，只問一件事：每月只買一次，該買哪天？答案是每月第一個交易日——平均 regret 3.20%，而被拿來挑戰它的機器學習策略輸了 116 bps。',
+      tags: ['Walk-forward', 'Bootstrap CI', 'Sealed holdout', '0050 · VT'],
+      en: 'Twenty-three years of 0050 data, walk-forward and free of look-ahead, asking one question: if you buy once a month, which day? The first trading day wins at 3.20% average regret — and the machine learning strategy built to beat it lost by 116 bps. The same protocol replays on VT, the global-equity ETF, and lands in exactly the same place.',
+      zh: '用 0050 上市至今 23 年的資料做無前視偏誤的滾動窗口研究，只問一件事：每月只買一次，該買哪天？答案是每月第一個交易日——平均 regret 3.20%，而被拿來挑戰它的機器學習策略輸了 116 bps。同一套協議在全球股票 ETF VT 上重跑一次，結論一模一樣。',
+    },
+    {
+      name: '3DP-MATX',
+      repo: 'https://github.com/RX5950XT/3DP-MATX',
+      lang: 'Python',
+      tags: ['FreeCAD CSG', 'Parametric', 'PETG', 'Bambu Lab A1'],
+      en: 'A fully 3D-printed microATX NAS case — modelled end to end by agents driving the Part CSG booleans in FreeCAD, not by hand in a GUI. Eleven printed parts, 13.70 L, and not one screw between case pieces: slide rails, detents and one-way wedges hold it together. Every dimension lives in a single parameter file, and the STLs, assembly figures and a 58-test regression suite all regenerate from it.',
+      zh: '全 3D 列印的 microATX NAS 機殼——整套建模由 Agent 驅動 FreeCAD 的 Part CSG 布林完成，不是在 GUI 裡手拉。11 個列印件、13.70 L，機殼件之間一顆螺絲都沒有：靠滑槽、detent 與單向楔互鎖。所有尺寸集中在單一參數檔，STL、組裝圖與 58 項回歸測試都由它重生。',
     },
   ],
 
@@ -242,8 +242,8 @@ const DATA = {
       name: 'calcrux',
       repo: 'https://github.com/rx5950xt/calcrux',
       lang: 'Rust',
-      en: 'Android calculator on a Rust core, via UniFFI',
-      zh: 'Rust 核心的 Android 計算機，走 UniFFI 橋接',
+      en: 'Android calculator on a Rust core via UniFFI — units, loans, FX',
+      zh: 'Rust 核心的 Android 計算機，走 UniFFI 橋接——單位、貸款、匯率',
     },
     {
       name: 'FJU-TronClass-MCP',
