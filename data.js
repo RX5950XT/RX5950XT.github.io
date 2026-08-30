@@ -267,6 +267,13 @@ const DATA = {
       en: 'Abstract Three.js web game: a roller that eats the world and grows',
       zh: '抽象風格的 Three.js 網頁遊戲：滾球吃遍世界然後長大',
     },
+    {
+      name: 'surface_optimizer',
+      repo: 'https://github.com/RX5950XT/surface_optimizer',
+      lang: 'C++',
+      en: 'Native Windows daemon for Surface Pro 7 — CPU power scheduling, memory trimming and runaway-process control',
+      zh: 'Surface Pro 7 原生 Windows 守護程式——CPU 能耗調度、記憶體修剪與失控進程抑制',
+    },
   ],
 
   models: [

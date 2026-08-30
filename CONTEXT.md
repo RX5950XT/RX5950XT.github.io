@@ -42,8 +42,9 @@ npx --yes serve -l 8137 .
 ```
 
 ## more 順序
-1. calcrux → 2. FJU-TronClass-MCP → chimera → rolling-around
+1. calcrux → 2. FJU-TronClass-MCP → chimera → rolling-around → surface_optimizer
 - VoiceInk 已升格到 projects（第 4 張，Portfolio Visualizer 之後）：一行摘要會被 `.row-desc` 截斷，改走卡片。
+- surface_optimizer：C++ 原生 Surface Pro 7 效能／能耗優化守護程式。
 
 ## projects 順序
 just-a-submarine → LLM Wiki → Portfolio Visualizer → VoiceInk → ESP32-CAM → LLM Arena →
