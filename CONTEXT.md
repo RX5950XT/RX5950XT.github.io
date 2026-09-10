@@ -82,9 +82,10 @@ Qwen-35B-A3B → PCPriceProxy → 0050 Buy-Point → **3DP-MATX（最後一張�
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
-- 目前：`20260820c`
+- 目前：`20260910a`
 
 ## 近期
+- **2026/09/10 分支合併與本機配置／專案更新**：合併 `worktree-rig-and-copy-refresh` 分支。本機配置 GPU 調整為 3060 Ti 8GB；更新 VoiceInk、LLM Arena 專案文案；more 專案新增 `AgentCAD_MCP`；快取版號升至 `20260910a`；`.gitignore` 排除 `.claude/`。
 - **主題切換過場（View Transitions）**：`setTheme()` 走 `document.startViewTransition`，新主題以圓形從 `#themeToggle` 中心擴散（clip-path 動畫掛在 `::view-transition-new(root)`，easing `cubic-bezier(.22,1,.36,1)` 起手快、尾巴柔）。**時長隨視窗縮放**：`reach / 2.6` clamp 到 320–620ms，讓手機與大螢幕的邊緣推進速度一致（390×844→327ms、1280×800→549ms、1080p 以上→620ms）。CSS 端在 styles.css「Theme transition」關掉預設 cross-fade 並排 z-index。不支援、`prefers-reduced-motion`、或瀏覽器跳過 transition（例如視窗失焦）→ `.catch` 直接套用，主題照樣切換。
 - **Console ASCII 頭貼**：`printBanner()` 於 boot 尾端印出頭貼的 ASCII 版（`ASCII_AVATAR`，66 字寬 × 30 行，樣式 10px / line-height 1.1）＋ handle 與 GitHub 連結。生成的三個關鍵點：
   - **解析度**：46×14 太小，骷髏會糊成斑點、圓形遮罩變歪多邊形；66×30 才看得出眼窩、鼻孔、牙齒。
