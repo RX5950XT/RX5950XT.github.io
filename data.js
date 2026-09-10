@@ -25,7 +25,7 @@ const DATA = {
   rig: {
     specs: [
       { key: 'CPU', value: 'AMD Ryzen 7 5700X' },
-      { key: 'GPU', value: ['RTX 5060 Ti 16GB', 'RTX 3060 12GB', 'RTX 3070 Ti FE'] },
+      { key: 'GPU', value: ['RTX 5060 Ti 16GB', 'RTX 3060 Ti 8GB', 'RTX 3070 Ti FE'] },
       { key: 'RAM', value: 'DDR4 96GB' },
       { key: 'AUD', value: 'Sennheiser HD 550 + FiiO KA13' },
       { key: '3DP', value: 'Bambu Lab A1' },
@@ -182,9 +182,9 @@ const DATA = {
       name: 'VoiceInk',
       repo: 'https://github.com/RX5950XT/VoiceInk',
       lang: 'JavaScript',
-      tags: ['Electron', 'Quota dashboard', 'sherpa-onnx', 'Edge TTS'],
-      en: 'A Windows desktop AI workbench. Multi-session chat over any OpenAI-compatible endpoint, a quota dashboard for Claude Code, Codex, Antigravity, OpenCode and Grok, file transcription, live captions of whatever the machine is playing, and translation read back with Edge TTS. ASR runs locally on Qwen3-ASR-0.6B and translation on my own fine-tuned LinguaForge, so the voice half of it stays offline on CPU.',
-      zh: 'Windows 桌面 AI 工作台：走 OpenAI 相容端點的多會話聊天、Claude Code／Codex／Antigravity／OpenCode／Grok 的額度儀錶板、檔案轉錄、擷取電腦正在播的聲音做即時字幕，以及翻譯與 Edge TTS 朗讀。ASR 跑本地 Qwen3-ASR-0.6B、翻譯用自己微調的 LinguaForge，語音那半條流程 CPU 就能全離線。',
+      tags: ['Electron', 'llama.cpp', 'Quota dashboard', 'sherpa-onnx'],
+      en: 'A Windows desktop AI workbench. Multi-session chat over any OpenAI-compatible endpoint, terminals that keep coding agents running after the window closes, GGUF models pulled straight from Hugging Face and auto-tuned against measured VRAM, a quota dashboard for seven CLI subscriptions, and a local reverse proxy that turns Antigravity credentials into a standard API. Hold right Alt anywhere in Windows to dictate; file transcription, live captions and translation run on Qwen3-ASR and my own fine-tuned LinguaForge, so the voice half stays offline on CPU.',
+      zh: 'Windows 桌面 AI 工作台：走 OpenAI 相容端點的多會話聊天、關掉視窗也繼續跑代理的終端機、直接從 Hugging Face 抓 GGUF 並依實測顯存自動調參、七家 CLI 訂閱的額度儀錶板，還有把 Antigravity 憑證轉成標準 API 的本機反向代理。在任何程式裡按住右 Alt 就能口述；檔案轉錄、即時字幕與翻譯跑 Qwen3-ASR 與自己微調的 LinguaForge，語音那半條流程 CPU 就能全離線。',
     },
     {
       name: 'ESP32-CAM Remote Monitor',
@@ -199,9 +199,9 @@ const DATA = {
       repo: 'https://github.com/rx5950xt/LLM-Arena',
       demo: 'https://llm-arena-opal.vercel.app',
       lang: 'TypeScript',
-      tags: ['OpenRouter', 'Streaming', 'LLM-as-judge'],
-      en: 'Put the same question to 2–4 models and watch them stream side by side. A judge model scores every answer across five dimensions, and debate mode runs pro-versus-con for up to ten rounds before four judges call it.',
-      zh: '同一題丟給 2–4 個模型並排串流，再由裁判模型從五個維度打分。辯論模式讓正反方最多打十回合，最後交給四位裁判評判。',
+      tags: ['OpenRouter', 'Streaming', 'LLM-as-judge', 'Provider compare'],
+      en: 'Fan the same question out to as many as fifteen models at once, each answering up to five times, and watch every stream land side by side before a judge model scores them. A provider page pins one model to specific OpenRouter endpoints so you can see who is actually cheaper or faster, and debate mode runs pro-versus-con for up to ten rounds before three specialist judges and a summarising one call it — exported as PDF. Runs entirely in the browser; the key never leaves localStorage.',
+      zh: '同一題最多同時丟給 15 個模型、每個可重複答 5 次，並排串流完再由裁判模型打分。供應商比較頁把同一顆模型鎖到指定的 OpenRouter endpoint，看誰真的比較便宜或比較快；辯論模式讓正反方最多打十回合，交給三位專科裁判加一位綜合裁判評判，可下載 PDF。全部跑在瀏覽器裡，金鑰只留在 localStorage。',
     },
     {
       name: 'Qwen-35B-A3B × RTX 3070 Ti',
@@ -273,6 +273,13 @@ const DATA = {
       lang: 'C++',
       en: 'Native Windows daemon for Surface Pro 7 — CPU power scheduling, memory trimming and runaway-process control',
       zh: 'Surface Pro 7 原生 Windows 守護程式——CPU 能耗調度、記憶體修剪與失控進程抑制',
+    },
+    {
+      name: 'AgentCAD_MCP',
+      repo: 'https://github.com/RX5950XT/AgentCAD_MCP',
+      lang: 'Python',
+      en: 'FreeCAD as an AI modelling engine — 22 MCP tools, humans just look and measure',
+      zh: '把 FreeCAD 變成 AI 建模引擎——22 個 MCP 工具，人只負責看和量',
     },
   ],
 

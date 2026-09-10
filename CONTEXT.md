@@ -29,7 +29,7 @@
 ## 左邊 plate
 - **bio**：並列列表（含 quant research／量化研究）+ Agent + TAD 連結
 - **taste**（`DATA.taste`）：bio 下方，無標題，沿用 `.rig-list` 兩列（喜歡／不喜歡）
-- **rig**（`DATA.rig`）：CPU Ryzen 7 5700X · GPU 一鍵兩行（上 5060 Ti 16GB、下 3070 Ti FE）· RAM DDR4 3200 64GB  
+- **rig**（`DATA.rig`）：CPU Ryzen 7 5700X · GPU 三行（5060 Ti 16GB／3060 Ti 8GB／3070 Ti FE）· RAM DDR4 96GB  
   許願句 en/zh 在 `DATA.ui.rigWish`（DGX Spark）
 - **tools**（標題「使用它們」／`Use them`）：對話四鈕同一排 Grok→Claude→ChatGPT→Gemini；安裝 4 項無編號（CC→Codex→Grok Build→Antigravity）
 - Profile links 2×2：GitHub | HF / X | Discord
