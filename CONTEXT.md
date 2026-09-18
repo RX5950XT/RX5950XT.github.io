@@ -61,8 +61,9 @@ Qwen-35B-A3B → PCPriceProxy → 0050 Buy-Point → **3DP-MATX（最後一張�
 - 其餘（just-a-submarine、LLM Wiki、ESP32-CAM、LLM Arena、Qwen-35B-A3B、chimera、rolling-around、FJU-TronClass-MCP）比對 README 後描述仍準確，未動。
 
 ## models 順序
-1. silicon-based-girlfriend（文末註 V2 準備中）→ 2. digital-twin → 3. LinguaForge-Qwen3.5-0.8B
-- 下載數截至 2026/8/26：silicon-based-girlfriend 1200 · digital-twin 71 · LinguaForge 213
+1. silicon-based-girlfriend-v2（雙鈕：GGUF + LoRA）→ 2. silicon-based-girlfriend（第一代）→ 3. digital-twin → 4. LinguaForge-Qwen3.5-0.8B
+- 下載數截至 2026/8/26：silicon-based-girlfriend 1200 · digital-twin 71 · LinguaForge 213（v2 尚未記入）
+- v2 卡片兩個 Hugging Face 鈕（`m.links`）：GGUF 開箱即用、LoRA 三段 adapter
 - LinguaForge 卡片並列 Hugging Face 模型與 GitHub 訓練／評測程式碼
 
 ## 品牌 icon 規則
@@ -82,9 +83,10 @@ Qwen-35B-A3B → PCPriceProxy → 0050 Buy-Point → **3DP-MATX（最後一張�
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDDx`（當日序 a/b/c…）；詳見 `CLAUDE.md` / `AGENTS.md`「靜態資源版號」
-- 目前：`20260910a`
+- 目前：`20260918a`
 
 ## 近期
+- **2026/09/18 矽基女友 v2**：Models 最上方新增 `silicon-based-girlfriend-v2` 卡，兩個 Hugging Face 鈕（GGUF／LoRA）；第一代說明改為「第一代」並拿掉「V2 準備中」。快取版號 `20260918a`。
 - **2026/09/10 分支合併與本機配置／專案更新**：合併 `worktree-rig-and-copy-refresh` 分支。本機配置 GPU 調整為 3060 Ti 8GB；更新 VoiceInk、LLM Arena 專案文案；more 專案新增 `AgentCAD_MCP`；快取版號升至 `20260910a`；`.gitignore` 排除 `.claude/`。
 - **主題切換過場（View Transitions）**：`setTheme()` 走 `document.startViewTransition`，新主題以圓形從 `#themeToggle` 中心擴散（clip-path 動畫掛在 `::view-transition-new(root)`，easing `cubic-bezier(.22,1,.36,1)` 起手快、尾巴柔）。**時長隨視窗縮放**：`reach / 2.6` clamp 到 320–620ms，讓手機與大螢幕的邊緣推進速度一致（390×844→327ms、1280×800→549ms、1080p 以上→620ms）。CSS 端在 styles.css「Theme transition」關掉預設 cross-fade 並排 z-index。不支援、`prefers-reduced-motion`、或瀏覽器跳過 transition（例如視窗失焦）→ `.catch` 直接套用，主題照樣切換。
 - **Console ASCII 頭貼**：`printBanner()` 於 boot 尾端印出頭貼的 ASCII 版（`ASCII_AVATAR`，66 字寬 × 30 行，樣式 10px / line-height 1.1）＋ handle 與 GitHub 連結。生成的三個關鍵點：

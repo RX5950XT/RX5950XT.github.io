@@ -496,6 +496,16 @@ function modelCard(m, i) {
            <span class="dl-date">${s.asOf} ${m.downloadsDate}</span>
          </div>`
       : '';
+  const links = m.links || [
+    { label: 'Hugging Face', url: m.url, icon: 'Hugging Face' },
+    ...(m.repo ? [{ label: 'GitHub', url: m.repo, icon: 'GitHub' }] : []),
+  ];
+  const foot = links
+    .map(
+      (l) =>
+        `<a class="card-link" href="${l.url}" target="_blank" rel="noopener">${linkIcon(l.icon)}<span>${l.label}</span>${arrow}</a>`
+    )
+    .join('');
   return `<article class="card reveal" style="--i:${i}; --lang:#ffd21e">
     <div class="card-head">
       <span class="dot" aria-hidden="true"></span>
@@ -504,10 +514,7 @@ function modelCard(m, i) {
     <p class="card-desc">${m[lang]}</p>
     <ul class="tags">${m.tags.map((x) => `<li class="tag">${x}</li>`).join('')}</ul>
     ${dlBadge}
-    <div class="card-foot">
-      <a class="card-link" href="${m.url}" target="_blank" rel="noopener">${linkIcon('Hugging Face')}<span>Hugging Face</span>${arrow}</a>
-      ${m.repo ? `<a class="card-link" href="${m.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>GitHub</span>${arrow}</a>` : ''}
-    </div>
+    <div class="card-foot">${foot}</div>
   </article>`;
 }
 

@@ -285,13 +285,31 @@ const DATA = {
 
   models: [
     {
+      name: 'silicon-based-girlfriend-v2',
+      links: [
+        {
+          label: 'GGUF',
+          url: 'https://huggingface.co/RX5950XT/silicon-based-girlfriend-v2-GGUF',
+          icon: 'Hugging Face',
+        },
+        {
+          label: 'LoRA',
+          url: 'https://huggingface.co/RX5950XT/silicon-based-girlfriend-v2',
+          icon: 'Hugging Face',
+        },
+      ],
+      tags: ['Qwen3.5-9B', 'SFT + GRPO', 'GGUF'],
+      en: 'Second-generation Traditional Chinese roleplay model on a 9B Huihui-Qwen3.5 abliterated base. SFT then two rounds of GRPO — in-character and persona consistency beat the untuned base, zero self-copy across turns. GGUF for llama.cpp / Ollama, plus a three-stage LoRA stack.',
+      zh: '第二代繁體中文角色扮演模型，9B 基底為 Huihui-Qwen3.5-abliterated。SFT 再兩輪 GRPO——入戲與人設一致都勝過未微調基底，跨輪抄自己為 0。提供 llama.cpp／Ollama 用的 GGUF，以及給想接續訓練的三段 LoRA。',
+    },
+    {
       name: 'silicon-based-girlfriend',
       url: 'https://huggingface.co/RX5950XT/silicon-based-girlfriend',
       downloads: 1200,
       downloadsDate: '2026/8/26',
       tags: ['Qwen3.5-4B', 'QLoRA r=32', 'GGUF'],
-      en: 'A roleplay adapter for immersive Traditional Chinese conversation. Rank 32 across every linear layer, 8K context, nineteen hours on an A6000. Ships as both LoRA weights and a Q8_0 GGUF for llama.cpp. Silicon-based girlfriend V2, the next generation, is in preparation.',
-      zh: '沉浸式繁體中文角色扮演 adapter。rank 32、全線性層、8K context，在 A6000 上訓了約 19 小時。同時提供 LoRA 權重與 Q8_0 GGUF，可直接餵給 llama.cpp。Silicon-based girlfriend V2 下一代模型正在準備中。',
+      en: 'The first-generation roleplay adapter for immersive Traditional Chinese conversation. Rank 32 across every linear layer, 8K context, nineteen hours on an A6000. Ships as both LoRA weights and a Q8_0 GGUF for llama.cpp.',
+      zh: '第一代沉浸式繁體中文角色扮演 adapter。rank 32、全線性層、8K context，在 A6000 上訓了約 19 小時。同時提供 LoRA 權重與 Q8_0 GGUF，可直接餵給 llama.cpp。',
     },
     {
       name: 'rx5950xt-digital-twin',
