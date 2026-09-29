@@ -313,21 +313,6 @@ img {
   animation: drift-b 44s var(--ease) infinite alternate;
 }
 
-/* Dark: slightly larger soft pools so the wash feels continuous, like light mode. */
-:root[data-theme="dark"] .field-a {
-  width: 70vw;
-  height: 70vw;
-  min-width: 520px;
-  min-height: 520px;
-}
-
-:root[data-theme="dark"] .field-b {
-  width: 62vw;
-  height: 62vw;
-  min-width: 460px;
-  min-height: 460px;
-}
-
 /* The signature: the pointer is the page's light source.
    One shape for both themes — only --light-pointer* and --pointer-blend change. */
 .field-pointer {
@@ -366,28 +351,73 @@ img {
   }
 }
 
-/* --- Starfield ------------------------------------------------------------ */
+/* --- Sky ------------------------------------------------------------------ */
 
-/* Off by default; the chrome toggle adds html.starry. Stars are tiled radial
-   gradients (no canvas, no live blur), meteors are three rotated streaks. */
+/* One sky, two skies: dark is the night (stars + meteors), light is the day
+   (sun glow + drifting clouds). Stars are tiled radial gradients (no canvas,
+   no live blur); clouds are a few soft ellipses translated across the page.
+   Whatever belongs to the other theme is display:none, so it costs nothing. */
 .sky {
-  display: none;
-}
-
-html.starry .sky {
-  display: block;
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
   contain: strict;
+}
+
+:root[data-theme="dark"] .sky {
   background: radial-gradient(125% 95% at 50% 0%, #16203a 0%, #070a16 55%, #03040a 100%);
 }
 
-html.starry .field-a,
-html.starry .field-b {
+:root[data-theme="light"] .sky {
+  background: linear-gradient(180deg, #c6dcf4 0%, #d9e8f7 50%, #e9f1f9 100%);
+}
+
+:root[data-theme="dark"] .field-a,
+:root[data-theme="dark"] .field-b,
+:root[data-theme="dark"] .sun,
+:root[data-theme="dark"] .cloud,
+:root[data-theme="light"] .stars,
+:root[data-theme="light"] .meteor {
   display: none;
+}
+
+/* Warm glow from the upper right, the daytime answer to the moonless dark. */
+.sun {
+  position: absolute;
+  top: -22vmax;
+  right: -14vmax;
+  width: 52vmax;
+  height: 52vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 238, 196, 0.85) 0%, rgba(255, 238, 196, 0.32) 34%, transparent 66%);
+}
+
+/* A cloud is three overlapping soft ellipses; --y height, --s scale, --t one
+   crossing, --d a negative delay so they start scattered, not in a row. */
+.cloud {
+  position: absolute;
+  top: var(--y);
+  left: 0;
+  width: 420px;
+  height: 130px;
+  background:
+    radial-gradient(closest-side, rgba(255, 255, 255, 1), transparent 88%) 0% 62% / 46% 70% no-repeat,
+    radial-gradient(closest-side, rgba(255, 255, 255, 1), transparent 88%) 34% 30% / 56% 92% no-repeat,
+    radial-gradient(closest-side, rgba(255, 255, 255, 1), transparent 88%) 78% 60% / 42% 66% no-repeat;
+  opacity: 0.95;
+  will-change: transform;
+  animation: cloud-drift var(--t, 180s) linear var(--d, 0s) infinite;
+}
+
+@keyframes cloud-drift {
+  from {
+    transform: translate3d(-480px, 0, 0) scale(var(--s, 1));
+  }
+  to {
+    transform: translate3d(calc(100vw + 60px), 0, 0) scale(var(--s, 1));
+  }
 }
 
 /* Three tiles of different sizes and offsets — the periods never line up,
@@ -509,7 +539,8 @@ html.starry .field-b {
 
 @media (prefers-reduced-motion: reduce) {
   .stars,
-  .meteor {
+  .meteor,
+  .cloud {
     animation: none;
   }
 
@@ -905,6 +936,68 @@ html.pointing .cursor-ring {
   background: var(--surface-hi);
 }
 
+/* Live portrait (main.js). Hidden until it has actually drawn, so a failed
+   image or missing canvas simply leaves the plain avatar in place. */
+.portrait {
+  display: none;
+  flex: 0 0 auto;
+  width: 128px;
+  aspect-ratio: 1;
+  margin: -12px 0 -8px -12px;
+  touch-action: manipulation;
+}
+
+html.has-portrait .portrait {
+  display: block;
+}
+
+html.has-portrait .avatar {
+  display: none;
+}
+
+/* Wide screens: the plate splits. Words on the left; the portrait gets its own
+   column, with the clock stamped above it like a plate's serial line. */
+@media (min-width: 960px) {
+  html.has-portrait .plate-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(300px, 30vw, 380px);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "main clock"
+      "main portrait";
+    column-gap: clamp(28px, 4vw, 56px);
+  }
+
+  html.has-portrait .plate-head {
+    display: contents;
+  }
+
+  html.has-portrait .plate-main {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  html.has-portrait .plate-main > .handle {
+    margin-top: 0;
+  }
+
+  html.has-portrait .plate-clock {
+    grid-area: clock;
+    max-width: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  html.has-portrait .portrait {
+    grid-area: portrait;
+    align-self: start;
+    width: 100%;
+    margin: 8px 0 0;
+    position: relative;
+    z-index: 1;
+  }
+}
+
 .plate-clock {
   flex: 0 1 auto;
   min-width: 0;
@@ -959,7 +1052,8 @@ html.pointing .cursor-ring {
   display: inline-block;
   margin: 22px 0 0;
   font-family: var(--font-mono);
-  font-size: 1.5rem;
+  /* The part number is the headline: stamped large, like a die marking. */
+  font-size: clamp(1.625rem, 1.1rem + 2.2vw, 2.5rem);
   font-weight: 600;
   letter-spacing: 0.02em; /* a part number wants air between characters */
   line-height: 1.2;
@@ -1024,8 +1118,8 @@ html.pointing .cursor-ring {
 }
 
 .tagline {
-  margin: 10px 0 0;
-  font-size: 0.9375rem;
+  margin: 8px 0 0;
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.45;
   letter-spacing: -0.01em;
@@ -1038,23 +1132,6 @@ html.pointing .cursor-ring {
   line-height: 1.7;
   color: var(--text-2);
   max-width: 82ch;
-}
-
-.bio a {
-  color: var(--text);
-  border-bottom: 1.5px solid var(--action-stroke);
-  transition:
-    border-color var(--dur) var(--ease),
-    background-color var(--dur) var(--ease),
-    box-shadow var(--dur) var(--ease);
-  border-radius: 2px;
-}
-
-.bio a:hover,
-.bio a:focus-visible {
-  border-bottom-color: var(--text);
-  background: color-mix(in srgb, var(--action-bg-hover) 55%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--action-bg-hover) 55%, transparent);
 }
 
 /* Likes / dislikes with thumbs icons. */
@@ -1094,69 +1171,49 @@ html.pointing .cursor-ring {
   color: #ef4444;
 }
 
-/* --- Plate Menu & Panels (Exclusive Accordion / Switcher) ------------------ */
+/* --- Plate tabs: hover a tab to switch its panel ---------------------------- */
 
 .plate-menu {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  gap: 2px;
   margin-top: 22px;
-  align-items: center;
+  border-bottom: 1px solid var(--stroke);
 }
 
 .plate-menu-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 14px;
-  border: 1px solid var(--action-stroke);
-  border-radius: 999px;
-  background: var(--action-bg);
-  color: var(--text-2);
+  margin-bottom: -1px;
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--text-3);
   font-family: inherit;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: -0.01em;
-  box-shadow:
-    inset 0 1px 0 0 var(--edge-soft),
-    var(--action-shadow);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  backdrop-filter: blur(16px) saturate(140%);
   cursor: pointer;
-  transition:
-    transform 0.15s var(--ease-out),
-    border-color var(--dur) var(--ease),
-    background-color var(--dur) var(--ease),
-    box-shadow var(--dur) var(--ease),
-    color var(--dur) var(--ease);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
   user-select: none;
 }
 
 .plate-menu-btn:hover,
 .plate-menu-btn:focus-visible {
-  border-color: var(--action-stroke-hover);
-  background: var(--action-bg-hover);
   color: var(--text);
-  box-shadow:
-    inset 0 1px 0 0 var(--edge-soft),
-    var(--action-shadow-hover);
-  transform: translateY(-1px);
   outline: none;
-}
-
-.plate-menu-btn:active {
-  transform: scale(0.97);
-  transition-duration: 0.1s;
 }
 
 .plate-menu-btn.is-active {
   color: var(--text);
-  background: var(--surface-hi);
-  border-color: color-mix(in srgb, var(--text) 32%, var(--stroke));
-  box-shadow:
-    inset 0 1px 0 0 var(--edge),
-    0 2px 8px -2px rgba(0, 0, 0, 0.2);
+  border-bottom-color: var(--text);
   font-weight: 600;
+}
+
+.plate-menu-btn:focus-visible {
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 0 0 2px var(--stroke);
 }
 
 .plate-menu-ico {
@@ -1164,54 +1221,49 @@ html.pointing .cursor-ring {
   height: 13px;
   flex: 0 0 auto;
   opacity: 0.8;
-  transition: opacity var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 
-.plate-menu-btn:hover .plate-menu-ico,
 .plate-menu-btn.is-active .plate-menu-ico {
   opacity: 1;
-}
-
-.plate-menu-chevron {
-  display: inline-block;
-  font-size: 0.65rem;
-  line-height: 1;
-  opacity: 0.55;
-  margin-left: 2px;
-  transition: transform 0.2s var(--ease), opacity var(--dur) var(--ease);
-}
-
-.plate-menu-btn.is-active .plate-menu-chevron {
-  transform: rotate(180deg);
-  opacity: 0.9;
 }
 
 .plate-panels {
   margin-top: 14px;
 }
 
-.plate-panel {
-  display: none;
-  opacity: 0;
-  transform: translateY(-3px);
-  transition:
-    opacity 0.2s var(--ease),
-    transform 0.2s var(--ease);
+.plate-panel:not([hidden]) {
+  animation: panel-in 0.2s var(--ease);
 }
 
-.plate-panel.is-open {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .plate-panel {
-    transition: none;
-    transform: none;
+  .plate-panel:not([hidden]) {
+    animation: none;
   }
-  .plate-menu-chevron {
-    transition: none;
+}
+
+.plate-menu-btn {
+  white-space: nowrap;
+}
+
+/* Phones: tabs share the row evenly and get a thumb-sized target. */
+@media (max-width: 480px) {
+  .plate-menu-btn {
+    flex: 1 1 0;
+    justify-content: center;
+    padding: 11px 4px;
+  }
+}
+
+@media (max-width: 359px) {
+  .plate-menu-ico {
+    display: none;
   }
 }
 
@@ -1418,7 +1470,6 @@ html.pointing .cursor-ring {
 }
 
 .link:hover .arrow,
-.row:hover .arrow,
 .card-link:hover .arrow {
   transform: translate(2px, -2px);
   color: var(--text);
@@ -1655,28 +1706,133 @@ html.pointing .cursor-ring {
   transition-duration: 0.1s;
 }
 
-/* --- Sections ------------------------------------------------------------- */
+/* --- Topic filter --------------------------------------------------------- */
 
-.section + .section {
-  margin-top: 72px;
+/* One bar over the whole grid. It sticks under the top edge so the topic can
+   change from anywhere in the list; on narrow screens it scrolls sideways. */
+.topics {
+  position: sticky;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  z-index: 40;
+  display: flex;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 28px;
+  padding: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  background: var(--surface);
+  background-image: var(--glass-shine);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 10px 24px -10px rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
 }
 
-/* A rule that reaches across the column, not a decorative divider. */
-.section-title {
+.topics::-webkit-scrollbar {
+  display: none;
+}
+
+.topic {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--action-stroke);
+  border-radius: 999px;
+  background: var(--action-bg);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-2);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    transform 0.15s var(--ease-out);
+}
+
+.topic:hover {
+  color: var(--text);
+  border-color: var(--action-stroke-hover);
+  background: var(--action-bg-hover);
+  box-shadow:
+    inset 0 1px 0 0 var(--edge-soft),
+    var(--action-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.topic:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 1px;
+}
+
+.topic:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+/* The group being read is ink on the page, not another shade of glass. */
+.topic[aria-current="true"] {
+  border-color: var(--text);
+  background: var(--text);
+  box-shadow: none;
+  color: var(--void);
+}
+
+.topic-n {
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+
+/* Each topic opens with a label and a hairline across the whole grid.
+   scroll-margin keeps it clear of the stuck bar when a chip jumps here. */
+.group-title {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 0 0 24px;
-  font-size: inherit;
-  font-weight: inherit;
+  gap: 10px;
+  margin: 28px 0 -4px;
+  scroll-margin-top: 84px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
 }
 
-.section-title::after {
-  content: "";
+.group-title:first-child {
+  margin-top: 0;
+}
+
+.group-title::after {
+  content: '';
   flex: 1;
   height: 1px;
-  background: var(--hairline);
+  background: var(--stroke);
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* --- Work grid ------------------------------------------------------------ */
 
 .grid {
   display: grid;
@@ -1796,6 +1952,19 @@ html.pointing .cursor-ring {
   outline: none;
 }
 
+/* Last push, from the GitHub API; empty until it answers. */
+.card-pushed {
+  align-self: center;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-3);
+}
+
+.card-pushed:empty {
+  display: none;
+}
+
 .card-link:active {
   transform: scale(0.97);
   transition-duration: 0.1s;
@@ -1828,81 +1997,10 @@ html.pointing .cursor-ring {
   opacity: 0.7;
 }
 
-.dl-date {
-  margin-left: auto;
-  opacity: 0.45;
-  font-size: 0.68rem;
-}
-
-/* --- The compact list ----------------------------------------------------- */
-
-.list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--hairline);
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 8px;
-  margin: 0 -4px;
-  border-bottom: 1px solid var(--hairline);
-  border-radius: 8px;
-  transition:
-    background-color 0.25s var(--ease),
-    padding-left 0.25s var(--ease-out),
-    box-shadow 0.25s var(--ease),
-    border-color 0.25s var(--ease);
-}
-
-.row:hover,
-.row:focus-visible {
-  background: var(--action-bg-hover);
-  padding-left: 14px;
-  box-shadow: inset 0 0 0 1px var(--action-stroke);
-  outline: none;
-}
-
-.row-name {
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.row-desc {
-  flex: 1;
-  min-width: 0;
-  font-size: 0.8125rem;
-  color: var(--text-3);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.row-lang {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--text-3);
-}
-
 .foot {
   margin-top: 72px;
   font-size: 0.75rem;
   color: var(--text-3);
-}
-
-@media (max-width: 559px) {
-  .row {
-    flex-wrap: wrap;
-  }
-
-  .row-desc {
-    flex-basis: 100%;
-    white-space: normal;
-  }
 }
 
 /* --- Entrance ------------------------------------------------------------- */
@@ -2070,7 +2168,8 @@ html.ctx-open .trail {
   .plate-inner,
   .card,
   .ctx,
-  .chrome-panel {
+  .chrome-panel,
+  .topics {
     -webkit-backdrop-filter: blur(12px) saturate(120%);
     backdrop-filter: blur(12px) saturate(120%);
     background-color: color-mix(in srgb, var(--surface-solid) 78%, transparent);
@@ -2084,8 +2183,7 @@ html.ctx-open .trail {
   .link,
   .chip,
   .copy-btn,
-  .card-link,
-  .row:hover {
+  .card-link {
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     background: color-mix(in srgb, var(--surface-solid) 82%, transparent);

@@ -15,7 +15,7 @@
 | 說法 | 指什麼 | DOM / 程式 |
 |------|--------|------------|
 | **上面（或左邊）** | 個人資料那一塊（Hero Plate） | `.plate`：頭貼、時鐘、handle、tagline、bio、taste、links、**本機配置**（`#rig`）、**工具**（`#tools`） |
-| **下面（或右邊）** | 作品輸出那一塊 | `.output`：Projects 卡、More 列表、Models 卡、footer |
+| **下面（或右邊）** | 作品輸出那一塊 | `.output`：頂端 sticky 主題篩選列 `#topics`＋單一作品 grid `#work`（依 `DATA.ui.topics` 順序分組，每組前有 `.group-title`）、footer |
 
 補充：
 
@@ -39,13 +39,12 @@
 | 區塊 | 選擇器 | 資料來源 |
 |------|--------|----------|
 | 上方 plate | `.plate` / `#links` `#bio` `#taste`… | `DATA` + `DATA.ui[lang]` |
-| plate 選單 | `#plateMenu` / `.plate-panels` 展開切換選單 | 包裹 `#panelLinks`、`#panelRig`、`#panelTools` |
+| plate 選單 | `#plateMenu` / `.plate-panels` 三個小分頁（滑鼠移過去／聚焦／點擊即切換，不收合） | 包裹 `#panelLinks`、`#panelRig`、`#panelTools` |
 | 本機配置 rig | `#rig` 本機規格＋ DGX 許願 | `DATA.rig` + `DATA.ui` 文案 |
 | 工具 tools | `#tools` 對話四鈕同一排＋安裝指令複製 | `DATA.tools` + `DATA.ui` 文案 |
-| 右上 chrome | `#chrome` 星空／theme／lang | `DATA.ui` + clock JS |
-| 下方 projects | `#projects` | `DATA.projects` |
-| 下方 more | `#more` | `DATA.more` |
-| 下方 models | `#models` | `DATA.models`（模型可用 `repo` 並列 GitHub） |
+| 右上 chrome | `#chrome` 白天／星空（theme）＋ lang | `DATA.ui` + clock JS |
+| 主題導航 | `#topics` | 跳轉錨點（`#t-<topic>`）＋捲動時亮起目前分組；各筆 `topic`（ai / infra / hw / 3dp / money / apps；models 固定為 models），順序與名稱照 `DATA.ui.topics` |
+| 作品 grid | `#work` | 依主題分組；組內 `DATA.projects` 在前、`DATA.more` 在後，models 組為 `DATA.models`（可用 `repo` 並列 GitHub）；下載數與「N 天前更新」走 HF／GitHub API 即時覆蓋 |
 | 右鍵選單 | `#ctx` | `DATA.links` + `LINK_ICONS` |
 
 - 主題：`data-theme` + `localStorage.theme`

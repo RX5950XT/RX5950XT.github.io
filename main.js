@@ -45,6 +45,7 @@ function applyTheme(theme) {
   $('#themeToggle').setAttribute('aria-pressed', String(theme === 'light'));
   readPointerColors();
   paintControls();
+  paintPortrait();
 }
 
 function setTheme(theme) {
@@ -110,20 +111,8 @@ function paintPlate() {
   const foot = $('#foot');
   foot.textContent = s.footer;
   foot.hidden = !s.footer;
-  $('#h-projects .label').textContent = s.projects;
-  $('#h-more .label').textContent = s.more;
-  $('#h-models .label').textContent = s.models;
 
-  // The bio carries one link, so it is assembled rather than assigned.
-  const bio = $('#bio');
-  bio.textContent = '';
-  const [before, after] = s.bio.split('{tad}');
-  const a = document.createElement('a');
-  a.href = DATA.tad;
-  a.target = '_blank';
-  a.rel = 'noopener';
-  a.textContent = s.tadLabel;
-  bio.append(before, a, after);
+  $('#bio').textContent = s.bio;
 
   // Vertical list stack of profile links
   $('#links').innerHTML = DATA.links
@@ -316,29 +305,9 @@ const ICON_SUN =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
 const ICON_MOON =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"/></svg>';
-/* Shooting star: a four-point sparkle with a streak behind it. */
-const ICON_STARS =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3.5c.6 2.4 1.6 3.4 4 4-2.4.6-3.4 1.6-4 4-.6-2.4-1.6-3.4-4-4 2.4-.6 3.4-1.6 4-4z"/><path d="M6.5 12.5c.35 1.35.9 1.9 2.25 2.25-1.35.35-1.9.9-2.25 2.25-.35-1.35-.9-1.9-2.25-2.25 1.35-.35 1.9-.9 2.25-2.25z"/><path d="M20 14 14 20M12 4 9.5 6.5"/></svg>';
-
 /* --- Starfield ------------------------------------------------------------ */
 
-/* Stars force the dark palette, so the appearance toggle tucks away while on
-   and the stored preference comes back when it is switched off. */
-function storedTheme() {
-  return (
-    localStorage.getItem('theme') ||
-    (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
-  );
-}
-
-function applySky(on) {
-  root.classList.toggle('starry', on);
-  $('#skyToggle').setAttribute('aria-pressed', String(on));
-  $('#themeToggle').hidden = on;
-  applyTheme(on ? 'dark' : storedTheme());
-}
-
-/* While the sky is out, a click throws one more streak from the pointer. */
+/* At night, a click throws one more streak from the pointer. */
 function startSkyClicks() {
   const sky = $('#sky');
   if (!sky) return;
@@ -346,7 +315,7 @@ function startSkyClicks() {
     'pointerdown',
     (e) => {
       if (e.button !== 0) return;
-      if (!root.classList.contains('starry') || reduced.matches) return;
+      if (root.dataset.theme !== 'dark' || reduced.matches) return;
       const shot = document.createElement('span');
       shot.className = 'meteor meteor-shot';
       // Right edge = the streak's head; park it on the cursor.
@@ -359,31 +328,21 @@ function startSkyClicks() {
   );
 }
 
-function setSky(on) {
-  localStorage.setItem('sky', on ? 'stars' : 'off');
-  applySky(on);
-}
-
 function paintControls() {
   const s = ui();
   const dark = root.dataset.theme === 'dark';
-  const starry = root.classList.contains('starry');
   const chrome = $('#chrome');
   if (chrome) chrome.setAttribute('aria-label', s.chromeLabel || 'Site controls');
-  $('#themeText').textContent = dark ? (lang === 'zh' ? '淺色' : 'Light') : lang === 'zh' ? '深色' : 'Dark';
+  $('#themeText').textContent = dark ? s.dayText : s.nightText;
   $('#themeToggle').setAttribute('aria-label', dark ? s.themeLabel : s.themeLabelDark);
   $('#langText').textContent = lang === 'zh' ? 'English' : '中文';
   $('#langToggle').setAttribute('aria-label', s.langLabel);
-  $('#skyText').textContent = s.skyText;
-  $('#skyToggle').setAttribute('aria-label', starry ? s.skyLabelOff : s.skyLabel);
 
   // Icon buttons: show the target mode / language, not the current one.
   const themeGlyph = $('#themeGlyph');
   if (themeGlyph) themeGlyph.innerHTML = dark ? ICON_SUN : ICON_MOON;
   const langGlyph = $('#langGlyph');
   if (langGlyph) langGlyph.textContent = lang === 'zh' ? 'EN' : '中';
-  const skyGlyph = $('#skyGlyph');
-  if (skyGlyph) skyGlyph.innerHTML = ICON_STARS;
 }
 
 /* --- Clock ---------------------------------------------------------------- */
@@ -452,10 +411,39 @@ let firstRender = true;
 
 const arrow = '<span class="arrow" aria-hidden="true">↗</span>';
 
+/* data.js holds a snapshot; startLiveStats() fills these when the Hugging Face
+   and GitHub APIs answer, and the snapshot stays if they don't. */
+const live = { downloads: {}, pushed: {} };
+
+const repoKey = (url) => (url || '').replace(/^https:\/\/github\.com\//i, '').toLowerCase();
+
+// Every Hugging Face model repo a card points at (datasets are not counted).
+const hfIds = (m) =>
+  (m.links || [{ url: m.url }])
+    .map((l) => l.url.replace('https://huggingface.co/', '').toLowerCase())
+    .filter((id) => !id.startsWith('datasets/'));
+
+function relTime(iso) {
+  const sec = (Date.parse(iso) - Date.now()) / 1000;
+  const rtf = new Intl.RelativeTimeFormat(lang === 'zh' ? 'zh-Hant' : 'en', { numeric: 'auto' });
+  const units = [['year', 31536000], ['month', 2592000], ['week', 604800], ['day', 86400], ['hour', 3600]];
+  for (const [unit, n] of units) {
+    if (Math.abs(sec) >= n) return rtf.format(Math.round(sec / n), unit);
+  }
+  return rtf.format(Math.round(sec / 60), 'minute');
+}
+
+function pushedText(repo) {
+  const iso = live.pushed[repoKey(repo)];
+  return iso ? ui().pushed.replace('{t}', relTime(iso)) : '';
+}
+
+/* Projects and the smaller 'more' entries share one card; the latter just
+   have no tags and a one-line description. */
 function projectCard(p, i) {
   const color = LANG_COLOR[p.lang] || 'var(--text-3)';
   const s = ui();
-  return `<article class="card reveal" style="--i:${i}; --lang:${color}">
+  return `<article class="card reveal" data-topic="${p.topic}" data-repo="${repoKey(p.repo)}" style="--i:${i}; --lang:${color}">
     <div class="card-head">
       <span class="dot" aria-hidden="true"></span>
       <h3 class="card-name">${p.name}</h3>
@@ -463,37 +451,25 @@ function projectCard(p, i) {
     <p class="card-desc">${p[lang]}</p>
     <ul class="tags">
       <li class="tag">${p.lang}</li>
-      ${p.tags.map((x) => `<li class="tag">${x}</li>`).join('')}
+      ${(p.tags || []).map((x) => `<li class="tag">${x}</li>`).join('')}
     </ul>
     <div class="card-foot">
       <a class="card-link" href="${p.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>${s.code}</span>${arrow}</a>
       ${p.demo ? `<a class="card-link" href="${p.demo}" target="_blank" rel="noopener">${s.demo}${arrow}</a>` : ''}
+      <span class="card-pushed">${pushedText(p.repo)}</span>
     </div>
   </article>`;
 }
 
-function moreRow(p, i) {
-  const color = LANG_COLOR[p.lang] || 'var(--text-3)';
-  return `<li class="reveal" style="--i:${i}">
-    <a class="row" href="${p.demo || p.repo}" target="_blank" rel="noopener" style="--lang:${color}">
-      <span class="dot" aria-hidden="true"></span>
-      <span class="row-name">${p.name}</span>
-      <span class="row-desc">${p[lang]}</span>
-      <span class="row-lang">${p.lang}</span>
-      <span class="arrow" aria-hidden="true">↗</span>
-    </a>
-  </li>`;
-}
-
 function modelCard(m, i) {
   const s = DATA.ui[lang];
+  const count = live.downloads[m.name] ?? m.downloads;
   const dlBadge =
-    m.downloads != null
-      ? `<div class="model-downloads" title="${s.asOf} ${m.downloadsDate}">
+    count != null
+      ? `<div class="model-downloads" data-model="${m.name}">
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-           <span class="dl-count" data-count="${m.downloads}">${m.downloads.toLocaleString()}</span>
+           <span class="dl-count" data-count="${count}">${count.toLocaleString()}</span>
            <span class="dl-label">${s.downloads}</span>
-           <span class="dl-date">${s.asOf} ${m.downloadsDate}</span>
          </div>`
       : '';
   const links = m.links || [
@@ -506,7 +482,7 @@ function modelCard(m, i) {
         `<a class="card-link" href="${l.url}" target="_blank" rel="noopener">${linkIcon(l.icon)}<span>${l.label}</span>${arrow}</a>`
     )
     .join('');
-  return `<article class="card reveal" style="--i:${i}; --lang:#ffd21e">
+  return `<article class="card reveal" data-topic="models" style="--i:${i}; --lang:#ffd21e">
     <div class="card-head">
       <span class="dot" aria-hidden="true"></span>
       <h3 class="card-name">${m.name}</h3>
@@ -518,10 +494,77 @@ function modelCard(m, i) {
   </article>`;
 }
 
+/* --- Topics --------------------------------------------------------------- */
+
+/* The grid is laid out topic by topic, in the order of DATA.ui.topics; the
+   bar above it jumps to each group and lights the one being read.
+   Models are their own topic, so they carry none in data.js. */
+
+function groups() {
+  const cards = [...DATA.projects, ...DATA.more];
+  return Object.keys(ui().topics).map((k) =>
+    k === 'models'
+      ? { k, html: DATA.models.map(modelCard) }
+      : { k, html: cards.filter((p) => p.topic === k).map(projectCard) }
+  );
+}
+
+function renderWork() {
+  const s = ui();
+  const list = groups().filter((g) => g.html.length);
+  const nav = $('#topics');
+  nav.setAttribute('aria-label', s.topicsLabel);
+  nav.innerHTML = list
+    .map(
+      (g) =>
+        `<a class="topic" href="#t-${g.k}" data-pick="${g.k}">${s.topics[g.k]}<span class="topic-n">${g.html.length}</span></a>`
+    )
+    .join('');
+  $('#work').innerHTML = list
+    .map(
+      (g) =>
+        `<h2 class="group-title reveal" id="t-${g.k}">${s.topics[g.k]}<span class="topic-n">${g.html.length}</span></h2>${g.html.join('')}`
+    )
+    .join('');
+  spyTopics();
+}
+
+// Light the chip of the group under the stuck bar, and keep it in view on narrow screens.
+function spyTopics() {
+  const nav = $('#topics');
+  const line = nav.getBoundingClientRect().bottom + 48; // a jump lands a title 30px under the bar
+  const titles = [...document.querySelectorAll('.group-title')];
+  const atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+  const current = atEnd ? titles.at(-1) : titles.filter((t) => t.getBoundingClientRect().top <= line).at(-1);
+  nav.querySelectorAll('.topic').forEach((a) => {
+    const on = a.dataset.pick === current?.id.slice(2);
+    if (on === (a.getAttribute('aria-current') === 'true')) return;
+    if (!on) return a.removeAttribute('aria-current');
+    a.setAttribute('aria-current', 'true');
+    nav.scrollTo({ left: a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2 });
+  });
+}
+
+function startTopics() {
+  let queued = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        spyTopics();
+      });
+    },
+    { passive: true }
+  );
+  // The groups are drawn by script, so a shared #t-… link lands after they exist.
+  if (location.hash.startsWith('#t-')) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+}
+
 function render() {
-  $('#projects').innerHTML = DATA.projects.map(projectCard).join('');
-  $('#more').innerHTML = DATA.more.map(moreRow).join('');
-  $('#models').innerHTML = DATA.models.map(modelCard).join('');
+  renderWork();
 
   document.querySelectorAll('.card').forEach(trackSheen);
 
@@ -534,19 +577,74 @@ function render() {
   }
 }
 
+/* --- Live stats ----------------------------------------------------------- */
+
+async function getJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${res.status} ${url}`);
+  const body = await res.json();
+  if (!Array.isArray(body)) throw new Error(`unexpected payload from ${url}`);
+  return body;
+}
+
+function patchDownloads() {
+  document.querySelectorAll('.model-downloads[data-model]').forEach((el) => {
+    const n = live.downloads[el.dataset.model];
+    if (n == null) return;
+    const c = el.querySelector('.dl-count');
+    c.dataset.count = n; // a running countUp() reads this every frame
+    c.textContent = n.toLocaleString();
+  });
+}
+
+function patchPushed() {
+  document.querySelectorAll('.card[data-repo]').forEach((card) => {
+    card.querySelector('.card-pushed').textContent = pushedText(card.dataset.repo);
+  });
+}
+
+function startLiveStats() {
+  getJSON('https://huggingface.co/api/models?author=RX5950XT&expand[]=downloadsAllTime')
+    .then((list) => {
+      const byId = new Map(
+        list
+          .filter((x) => typeof x.id === 'string' && Number.isFinite(x.downloadsAllTime))
+          .map((x) => [x.id.toLowerCase(), x.downloadsAllTime])
+      );
+      DATA.models.forEach((m) => {
+        const ids = hfIds(m).filter((id) => byId.has(id));
+        if (ids.length) live.downloads[m.name] = ids.reduce((n, id) => n + byId.get(id), 0);
+      });
+      patchDownloads();
+    })
+    .catch((err) => console.warn('[live stats] Hugging Face:', err.message));
+
+  getJSON('https://api.github.com/users/RX5950XT/repos?per_page=100')
+    .then((list) => {
+      list.forEach((r) => {
+        if (typeof r.full_name === 'string' && typeof r.pushed_at === 'string') {
+          live.pushed[r.full_name.toLowerCase()] = r.pushed_at;
+        }
+      });
+      patchPushed();
+    })
+    .catch((err) => console.warn('[live stats] GitHub:', err.message));
+}
+
 /* --- Entrance ------------------------------------------------------------- */
 
 /* A download count is the one number on the page worth watching arrive. */
 
 function countUp(el) {
-  const target = Number(el.dataset.count);
-  if (!target || reduced.matches) return;
+  // Read the target every frame: live stats may land mid-count.
+  const target = () => Number(el.dataset.count);
+  if (!target() || reduced.matches) return;
 
   const start = performance.now();
   const step = (now) => {
     const p = Math.min(1, (now - start) / 1100);
     const eased = 1 - Math.pow(1 - p, 4);
-    el.textContent = Math.round(target * eased).toLocaleString();
+    el.textContent = Math.round(target() * eased).toLocaleString();
     if (p < 1) requestAnimationFrame(step);
   };
 
@@ -670,7 +768,7 @@ function startPointer() {
         light.classList.add('lit');
         root.classList.add('pointing');
       }
-      ring.classList.toggle('near', !!e.target.closest('a, button'));
+      ring.classList.toggle('near', !!e.target.closest('a, button, .portrait'));
       kick();
     },
     { passive: true }
@@ -741,6 +839,240 @@ function startPointer() {
       running = false;
     }
   };
+}
+
+/* --- Portrait ------------------------------------------------------------- */
+
+/* The avatar is a 1-bit dither, so it is rebuilt as one: a few thousand
+   particles that start as noise and settle into the face, the way a diffusion
+   model denoises. The pointer pushes them aside; a click sends a shockwave. */
+
+let paintPortrait = () => {};
+
+function startPortrait() {
+  const canvas = $('#portrait');
+  const ctx = canvas && canvas.getContext && canvas.getContext('2d');
+  if (!ctx) return;
+
+  const img = new Image();
+  img.src = 'favicon.png'; // same-origin copy of the avatar, so pixels are readable
+  img.onload = () => {
+    root.classList.add('has-portrait');
+    boot();
+  };
+
+  const LEVELS = 5; // alpha buckets: one fill per bucket keeps a frame to ~5 draw calls
+  let parts = [];
+  let size = 0;
+  let color = '255,255,255';
+  let invert = false; // light theme: ink the dark parts, so the figure is not a photographic negative
+  let running = false;
+  let visible = true;
+  let born = false;
+  let px = -1e4;
+  let py = -1e4;
+  let burstAt = -1e9; // last click: the spring goes slack, then tightens again
+
+  function build(scatter) {
+    const rect = canvas.getBoundingClientRect();
+    size = rect.width;
+    if (!size) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = canvas.height = Math.round(size * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Big portrait → finer grain; the small one keeps enough cells to read.
+    const gap = size > 200 ? 3.4 : 2.6;
+    const n = Math.floor(size / gap);
+    const probe = document.createElement('canvas');
+    probe.width = probe.height = n;
+    const pctx = probe.getContext('2d', { willReadFrequently: true });
+    pctx.imageSmoothingQuality = 'high';
+    pctx.drawImage(img, 0, 0, n, n); // downscaling averages the dither into grey
+    const px8 = pctx.getImageData(0, 0, n, n).data;
+    // Averaging greys the dither down; stretch back so the brightest cell is white.
+    let peak = 0;
+    for (let k = 0; k < px8.length; k += 4) peak = Math.max(peak, px8[k + 1]);
+    const gain = 255 / Math.max(peak, 1);
+
+    const next = [];
+    for (let j = 0; j < n; j++) {
+      for (let i = 0; i < n; i++) {
+        const dx = i + 0.5 - n / 2;
+        const dy = j + 0.5 - n / 2;
+        if (dx * dx + dy * dy > (n / 2) * (n / 2)) continue; // round like the avatar
+        const k = (j * n + i) * 4;
+        const raw = (px8[k] * 0.3 + px8[k + 1] * 0.59 + px8[k + 2] * 0.11) / 255;
+        const bright = Math.min(1, raw * gain);
+        const lum = Math.pow(invert ? 1 - bright : bright, 0.85);
+        if (lum < 0.14) continue;
+        const hx = (i + 0.5) * gap;
+        const hy = (j + 0.5) * gap;
+        next.push({
+          hx,
+          hy,
+          x: scatter ? Math.random() * size : hx,
+          y: scatter ? Math.random() * size : hy,
+          vx: 0,
+          vy: 0,
+          lvl: Math.min(LEVELS - 1, Math.floor(lum * LEVELS)),
+          s: gap * (0.42 + 0.5 * lum),
+          // Brightest features resolve first, like coarse structure before detail.
+          wait: scatter ? (1 - lum) * 900 + Math.random() * 350 : 0,
+        });
+      }
+    }
+    parts = next;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, size, size);
+    const buckets = Array.from({ length: LEVELS + 1 }, () => []);
+    for (const p of parts) {
+      // A displaced particle catches the light for as long as it is out of place.
+      const off = Math.abs(p.x - p.hx) + Math.abs(p.y - p.hy);
+      buckets[off > 3 ? Math.min(LEVELS, p.lvl + 2) : p.lvl].push(p);
+    }
+    buckets.forEach((list, b) => {
+      if (!list.length) return;
+      ctx.fillStyle = `rgba(${color}, ${0.18 + (0.82 * b) / LEVELS})`;
+      ctx.beginPath();
+      for (const p of list) ctx.rect(p.x - p.s / 2, p.y - p.s / 2, p.s, p.s);
+      ctx.fill();
+    });
+  }
+
+  let t0 = 0;
+  function frame(now) {
+    if (!t0) t0 = now;
+    const age = now - t0;
+    const R = size * 0.22;
+    const calm = Math.min(1, (now - burstAt) / 1200);
+    const k = 0.008 + 0.047 * calm * calm;
+    const damp = 0.9 - 0.1 * calm;
+    let energy = 0;
+
+    for (const p of parts) {
+      if (age < p.wait) {
+        // Still noise: shimmer in place until this particle's turn comes.
+        p.x += (Math.random() - 0.5) * 1.6;
+        p.y += (Math.random() - 0.5) * 1.6;
+        energy += 1;
+        continue;
+      }
+      p.vx += (p.hx - p.x) * k;
+      p.vy += (p.hy - p.y) * k;
+      const dx = p.x - px;
+      const dy = p.y - py;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < R * R) {
+        const d = Math.sqrt(d2) || 1;
+        const f = (1 - d / R) * 2.4;
+        p.vx += (dx / d) * f;
+        p.vy += (dy / d) * f;
+      }
+      p.vx *= damp;
+      p.vy *= damp;
+      p.x += p.vx;
+      p.y += p.vy;
+      energy += Math.abs(p.vx) + Math.abs(p.vy) + Math.abs(p.hx - p.x) * 0.1;
+    }
+    draw();
+
+    // Settled: stop, like the rest of the page does. The next pointermove restarts it.
+    if (energy / (parts.length || 1) > 0.02 && visible && !document.hidden) {
+      requestAnimationFrame(frame);
+    } else {
+      running = false;
+    }
+  }
+
+  function kick() {
+    if (running || reduced.matches || !visible || document.hidden) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+
+  function readColor() {
+    invert = root.dataset.theme === 'light';
+    const c = getComputedStyle(root).getPropertyValue('--text').trim();
+    const m = c.match(/^#([0-9a-f]{6})$/i);
+    color = m
+      ? [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)).join(',')
+      : '255,255,255';
+  }
+
+  function boot() {
+    readColor();
+    build(!reduced.matches);
+    draw();
+    born = true;
+    kick();
+
+    paintPortrait = () => {
+      const was = invert;
+      readColor();
+      if (invert !== was) build(false);
+      draw();
+    };
+
+    new ResizeObserver(() => {
+      if (Math.round(canvas.getBoundingClientRect().width) === Math.round(size)) return;
+      build(false);
+      draw();
+    }).observe(canvas);
+
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible) kick();
+    }).observe(canvas);
+    // Opened in a background tab: the loop parks itself, so resume on return.
+    document.addEventListener('visibilitychange', kick);
+
+    addEventListener(
+      'pointermove',
+      (e) => {
+        const r = canvas.getBoundingClientRect();
+        px = e.clientX - r.left;
+        py = e.clientY - r.top;
+        const R = size * 0.22;
+        if (px > -R && py > -R && px < size + R && py < size + R) kick();
+      },
+      { passive: true }
+    );
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if (reduced.matches) return;
+      const r = canvas.getBoundingClientRect();
+      const cx = e.clientX - r.left;
+      const cy = e.clientY - r.top;
+      for (const p of parts) {
+        const dx = p.x - cx;
+        const dy = p.y - cy;
+        const d = Math.hypot(dx, dy) || 1;
+        // Uneven kick, so it bursts into dust rather than a clean ring.
+        const f = (size * 0.035 * (0.4 + Math.random())) / (1 + d / (size * 0.3));
+        p.vx += (dx / d) * f;
+        p.vy += (dy / d) * f;
+      }
+      burstAt = performance.now();
+      kick();
+    });
+
+    // Pointer left the window: let the face close back up.
+    addEventListener('pointerout', (e) => {
+      if (e.relatedTarget) return;
+      px = py = -1e4;
+      kick();
+    });
+  }
+
+  // Reduced motion can be switched on mid-visit: snap everything home.
+  reduced.addEventListener('change', () => {
+    if (!born) return;
+    build(false);
+    draw();
+  });
 }
 
 /* --- Context menu --------------------------------------------------------- */
@@ -851,50 +1183,30 @@ function startPlateMenu() {
   if (!menu || menu.dataset.bound) return;
   menu.dataset.bound = '1';
 
-  const buttons = menu.querySelectorAll('.plate-menu-btn');
-  const panels = {
-    links: $('#panelLinks'),
-    rig: $('#panelRig'),
-    tools: $('#panelTools'),
-  };
+  const tabs = [...menu.querySelectorAll('.plate-menu-btn')];
 
-  let activePanelKey = 'links';
-
-  function setActivePanel(key) {
-    activePanelKey = key;
-    buttons.forEach((btn) => {
-      const panelKey = btn.dataset.panel;
-      const isActive = panelKey === key;
-      btn.classList.toggle('is-active', isActive);
-      btn.setAttribute('aria-expanded', String(isActive));
-    });
-
-    Object.entries(panels).forEach(([pKey, el]) => {
-      if (!el) return;
-      const isOpen = pKey === key;
-      if (isOpen) {
-        el.hidden = false;
-        requestAnimationFrame(() => {
-          el.classList.add('is-open');
-        });
-      } else {
-        el.classList.remove('is-open');
-        el.hidden = true;
-      }
+  // Tabs switch on hover, focus or tap; the panel is never collapsed.
+  function select(tab) {
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      $('#' + t.getAttribute('aria-controls')).hidden = !on;
     });
   }
 
-  menu.addEventListener('click', (e) => {
-    const btn = e.target.closest('.plate-menu-btn');
-    if (!btn) return;
-    const targetKey = btn.dataset.panel;
-    if (!targetKey) return;
+  tabs.forEach((tab) => {
+    tab.addEventListener('pointerenter', () => select(tab));
+    tab.addEventListener('focus', () => select(tab));
+    tab.addEventListener('click', () => select(tab));
+  });
 
-    if (activePanelKey === targetKey) {
-      setActivePanel(null);
-    } else {
-      setActivePanel(targetKey);
-    }
+  menu.addEventListener('keydown', (e) => {
+    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    tabs[(tabs.indexOf(document.activeElement) + step + tabs.length) % tabs.length].focus();
   });
 }
 
@@ -993,24 +1305,25 @@ $('#themeToggle').addEventListener('click', () =>
   setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark')
 );
 $('#langToggle').addEventListener('click', () => setLang(lang === 'zh' ? 'en' : 'zh'));
-$('#skyToggle').addEventListener('click', () => setSky(!root.classList.contains('starry')));
 
 // Follow the system appearance until the visitor states a preference.
 matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-  if (!localStorage.getItem('theme') && !root.classList.contains('starry')) {
+  if (!localStorage.getItem('theme')) {
     applyTheme(e.matches ? 'light' : 'dark');
   }
 });
 
 applyTheme(root.dataset.theme);
-applySky(localStorage.getItem('sky') === 'stars');
 root.lang = lang === 'zh' ? 'zh-Hant' : 'en';
 paintPlate();
 paintContextMenu();
 render();
 startClock();
 startPointer();
+startPortrait();
 startContextMenu();
+startTopics();
+startLiveStats();
 startToolsCopy();
 startPlateMenu();
 startHandleEffect();
