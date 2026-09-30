@@ -149,8 +149,13 @@ function paintTaste() {
     dk.setAttribute('aria-label', s.dislikes);
     dk.setAttribute('title', s.dislikes);
   }
-  $('#likesVal').textContent = t.likes[lang] || t.likes.en;
-  $('#dislikesVal').textContent = t.dislikes[lang] || t.dislikes.en;
+  const chips = (v) =>
+    (v[lang] || v.en)
+      .split(' · ')
+      .map((x) => `<span class="taste-chip">${escapeHtml(x)}</span>`)
+      .join('');
+  $('#likesVal').innerHTML = chips(t.likes);
+  $('#dislikesVal').innerHTML = chips(t.dislikes);
 }
 
 function paintRig() {
@@ -441,7 +446,7 @@ function pushedText(repo) {
 /* Projects and the smaller 'more' entries share one card; the latter just
    have no tags and a one-line description. */
 function projectCard(p, i) {
-  const color = LANG_COLOR[p.lang] || 'var(--text-3)';
+  const color = TOPIC_COLOR[p.topic];
   const s = ui();
   return `<article class="card reveal" data-topic="${p.topic}" data-repo="${repoKey(p.repo)}" style="--i:${i}; --lang:${color}">
     <div class="card-head">
@@ -456,8 +461,32 @@ function projectCard(p, i) {
     <div class="card-foot">
       <a class="card-link" href="${p.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>${s.code}</span>${arrow}</a>
       ${p.demo ? `<a class="card-link" href="${p.demo}" target="_blank" rel="noopener">${s.demo}${arrow}</a>` : ''}
+      ${(p.extra || []).map((x) => `<a class="card-link" href="${x.url}" target="_blank" rel="noopener">${x[lang]}${arrow}</a>`).join('')}
       <span class="card-pushed">${pushedText(p.repo)}</span>
     </div>
+  </article>`;
+}
+
+/* Two repos that only make sense together: one card, one box per repo. */
+function pairCard(p, i) {
+  const s = ui();
+  const part = (x) => `<div class="part" data-repo="${repoKey(x.repo)}" style="--lang:${TOPIC_COLOR[p.topic]}">
+      <div class="card-head">
+        <span class="dot" aria-hidden="true"></span>
+        <h4 class="card-name">${x.name}</h4>
+        <span class="part-role">${x.role[lang]}</span>
+      </div>
+      <p class="card-desc">${x[lang]}</p>
+      <ul class="tags"><li class="tag">${x.lang}</li></ul>
+      <div class="card-foot">
+        <a class="card-link" href="${x.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>${s.code}</span>${arrow}</a>
+        <span class="card-pushed">${pushedText(x.repo)}</span>
+      </div>
+    </div>`;
+  return `<article class="card card-pair reveal" data-topic="${p.topic}" style="--i:${i}; --lang:${TOPIC_COLOR[p.topic]}">
+    <div class="card-head"><h3 class="card-name">${p.name[lang] ?? p.name}</h3><span class="part-role">${s.pair}</span></div>
+    <p class="card-desc">${p[lang]}</p>
+    <div class="parts">${p.parts.map(part).join('')}</div>
   </article>`;
 }
 
@@ -482,7 +511,7 @@ function modelCard(m, i) {
         `<a class="card-link" href="${l.url}" target="_blank" rel="noopener">${linkIcon(l.icon)}<span>${l.label}</span>${arrow}</a>`
     )
     .join('');
-  return `<article class="card reveal" data-topic="models" style="--i:${i}; --lang:#ffd21e">
+  return `<article class="card reveal" data-topic="models" style="--i:${i}; --lang:${TOPIC_COLOR.models}">
     <div class="card-head">
       <span class="dot" aria-hidden="true"></span>
       <h3 class="card-name">${m.name}</h3>
@@ -505,7 +534,10 @@ function groups() {
   return Object.keys(ui().topics).map((k) =>
     k === 'models'
       ? { k, html: DATA.models.map(modelCard) }
-      : { k, html: cards.filter((p) => p.topic === k).map(projectCard) }
+      : { k, html: cards
+          .filter((p) => p.topic === k)
+          .sort((a, b) => !!b.parts - !!a.parts) // a wide pair card first, so it never leaves a hole in the row
+          .map((p, i) => (p.parts ? pairCard(p, i) : projectCard(p, i))) }
   );
 }
 
@@ -523,7 +555,7 @@ function renderWork() {
   $('#work').innerHTML = list
     .map(
       (g) =>
-        `<h2 class="group-title reveal" id="t-${g.k}">${s.topics[g.k]}<span class="topic-n">${g.html.length}</span></h2>${g.html.join('')}`
+        `<h2 class="group-title reveal" id="t-${g.k}" style="--lang:${TOPIC_COLOR[g.k]}">${s.topics[g.k]}<span class="topic-n">${g.html.length}</span></h2>${g.html.join('')}`
     )
     .join('');
   spyTopics();
@@ -598,7 +630,7 @@ function patchDownloads() {
 }
 
 function patchPushed() {
-  document.querySelectorAll('.card[data-repo]').forEach((card) => {
+  document.querySelectorAll('[data-repo]').forEach((card) => {
     card.querySelector('.card-pushed').textContent = pushedText(card.dataset.repo);
   });
 }

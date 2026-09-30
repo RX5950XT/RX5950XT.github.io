@@ -1138,10 +1138,36 @@ html.has-portrait .avatar {
 .taste .rig-row {
   grid-template-columns: 1.5rem 1fr;
   gap: 10px;
-  align-items: center;
+  align-items: start;
+}
+
+/* Each item is its own chip, tinted to match its thumb, so a long list reads as a list. */
+.taste .rig-val {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.taste-chip {
+  padding: 3px 10px;
+  border: 1px solid color-mix(in srgb, var(--chip) 38%, var(--stroke));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--chip) 9%, transparent);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+#likesVal {
+  --chip: #3b82f6;
+}
+
+#dislikesVal {
+  --chip: #ef4444;
 }
 
 .taste-key {
+  height: 1.875rem; /* one chip tall, so the thumb sits beside the first row */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1815,6 +1841,15 @@ html.has-portrait .avatar {
   color: var(--text-2);
 }
 
+.group-title::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lang);
+}
+
 .group-title:first-child {
   margin-top: 0;
 }
@@ -1846,6 +1881,108 @@ html.has-portrait .avatar {
   }
 }
 
+/* Two repos that belong together: one wide card, one inset box per repo. */
+.card-pair {
+  grid-column: span 2;
+}
+
+@media (max-width: 719px) {
+  .card-pair {
+    grid-column: auto;
+  }
+}
+
+.card-pair {
+  container-type: inline-size;
+}
+
+/* One card, two repos: a hairline between them with a "+" on it, no boxes. */
+.parts {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 18px;
+  border-top: 1px solid var(--stroke);
+}
+
+.part {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+}
+
+.part + .part {
+  margin-top: 16px;
+}
+
+.part + .part {
+  padding-top: 28px;
+}
+
+/* The "+" is what tells you the two belong together, so it is big and solid. */
+.part + .part::before {
+  content: '+';
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  translate: -50% 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--stroke-hi);
+  border-radius: 50%;
+  background: var(--surface-solid);
+  box-shadow: var(--action-shadow);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 33px;
+  text-align: center;
+  color: var(--text);
+}
+
+@container (min-width: 560px) {
+  .part {
+    padding-right: 26px;
+  }
+
+  .part + .part {
+    margin-top: 0;
+    padding-top: 16px;
+    padding-right: 0;
+    padding-left: 26px;
+  }
+
+  /* centred between the two columns, halfway down the card */
+  .part + .part::before {
+    top: 50%;
+    left: 0;
+    translate: -50% -50%;
+  }
+
+  .parts {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.part .card-name {
+  font-size: 0.9375rem;
+}
+
+.part .tags {
+  margin-top: 14px;
+}
+
+.part .card-foot {
+  padding-top: 16px;
+}
+
+.part-role {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-3);
+}
+
 /* --- Project cards -------------------------------------------------------- */
 
 .card {
@@ -1860,7 +1997,7 @@ html.has-portrait .avatar {
   gap: 9px;
 }
 
-/* Colour on this page comes only from the languages actually written. */
+/* Colour on this page comes from the topic a card belongs to. */
 .dot {
   flex: none;
   width: 8px;

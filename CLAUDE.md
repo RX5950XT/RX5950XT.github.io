@@ -36,13 +36,13 @@
 
 | 區塊 | 選擇器 | 資料來源 |
 |------|--------|----------|
-| 上方 plate | `.plate` / `#links` `#bio` `#taste`… | `DATA` + `DATA.ui[lang]` |
+| 上方 plate | `.plate` / `#links` `#bio` `#taste`（項目以 ` · ` 分隔，畫成膠囊）… | `DATA` + `DATA.ui[lang]` |
 | plate 選單 | `#plateMenu` / `.plate-panels` 三個小分頁（滑鼠移過去／聚焦／點擊即切換，不收合） | 包裹 `#panelLinks`、`#panelRig`、`#panelTools` |
 | 本機配置 rig | `#rig` 本機規格＋ DGX 許願 | `DATA.rig` + `DATA.ui` 文案 |
 | 工具 tools | `#tools` 對話四鈕同一排＋安裝指令複製 | `DATA.tools` + `DATA.ui` 文案 |
 | 右上 chrome | `#chrome` 白天／星空（theme）＋ lang | `DATA.ui` + clock JS |
-| 主題導航 | `#topics` | 跳轉錨點（`#t-<topic>`）＋捲動時亮起目前分組；各筆 `topic`（ai / infra / hw / 3dp / money / apps；models 固定為 models），順序與名稱照 `DATA.ui.topics` |
-| 作品 grid | `#work` | 依主題分組；組內 `DATA.projects` 在前、`DATA.more` 在後，models 組為 `DATA.models`（可用 `repo` 並列 GitHub）；下載數與「N 天前更新」走 HF／GitHub API 即時覆蓋 |
+| 主題導航 | `#topics` | 跳轉錨點（`#t-<topic>`）＋捲動時亮起目前分組；各筆 `topic`（tools / agent / infra / hw / 3dp / money / apps / games；models 固定為 models），順序與名稱照 `DATA.ui.topics` |
+| 作品 grid | `#work` | 依主題分組；組內 `parts` 寬卡最前、`DATA.projects` 次之、`DATA.more` 最後，models 組為 `DATA.models`（可用 `repo` 並列 GitHub）；`parts:[…]`＝雙倉庫卡（`pairCard()`）、`extra:[{url,en,zh}]`＝額外連結鈕；標籤數不設上限，一排放得下、兩排時不留孤兒；下載數與「N 天前更新」走 HF／GitHub API 即時覆蓋 |
 | 右鍵選單 | `#ctx` | `DATA.links` + `LINK_ICONS` |
 
 - 主題：`data-theme` + `localStorage.theme`
@@ -53,7 +53,7 @@
 
 ## 設計慣例
 
-- 無彩度底；語系標籤可帶色；ambient 近中性（深色避免偏紫）。
+- 無彩度底；卡片顏色依「分類」（`TOPIC_COLOR`）；ambient 近中性（深色避免偏紫）。
 - Glass：`backdrop-filter` + 頂緣高光 + rim；`prefers-reduced-transparency` 要有可讀 fallback。
 - 可點元素：`--action-*` 深淺色 token；rest 可辨、hover 抬升＋邊框＋陰影。
 - 選取：`::selection` 半透明洗色，非瀏覽器藍。
@@ -84,7 +84,7 @@
 | 規則 | 說明 |
 |------|------|
 | **何時 bump** | 只要改了 `styles.css` / `data.js` / `main.js` 任一檔（或三者），**推送前**必 bump |
-| **格式** | `YYYYMMDD` + 當日序字母（`a`→`b`→…）；跨日重從 `a` |
+| **格式** | `YYYYMMDD` + 當日序字母（`a`→…→`z`→`za`→`zb`…）；跨日重從 `a` |
 | **範圍** | 三處 `?v=` 必須完全一致，不可只改一處 |
 | **不 bump 的後果** | 訪客仍吃舊 CDN／瀏覽器快取，畫面與資料不同步 |
 
