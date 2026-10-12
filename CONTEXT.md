@@ -35,11 +35,11 @@
 
 ## 右邊作品（`#work` 單一 grid）
 - 順序照 `DATA.ui.topics`，每組前有 `.group-title`：
-  **工具**（VoiceInk → LLM Wiki → LLM Arena）→ **給 Hermes Agent 用**（PCPriceProxy → FJU-TronClass-MCP）→ **AI Infra**（Strata → Qwen-3.8-27B-DualGPUs → Qwen-35B-A3B → Laguna-S2.1）→ **模型** → **硬體**（just-a-submarine → ESP32-CAM）→ **3D 列印**（AI 驅動的 3D 建模 → 3DP-MATX → 3DP-TV-SpeakerHanger → 3dp-bedside-table）→ **理財**（Portfolio Visualizer → 0050 → Taiwan Lottery）→ **小工具**（calcrux → surface_optimizer）→ **小遊戲**（rolling-around）
+  **工具**（AxonDeck → LLM Wiki → LLM Arena）→ **給 Hermes Agent 用**（PCPriceProxy → FJU-TronClass-MCP）→ **AI Infra**（Strata → Miroxen → Qwen-3.8-27B-DualGPUs → Qwen-35B-A3B → Laguna-S2.1）→ **模型** → **硬體**（just-a-submarine → ESP32-CAM）→ **3D 列印**（AI 驅動的 3D 建模 → 3DP-MATX → 3DP-TV-SpeakerHanger → 3dp-bedside-table）→ **理財**（Portfolio Visualizer → 0050 → Taiwan Lottery）→ **小工具**（calcrux → surface_optimizer）→ **小遊戲**（rolling-around）
 - 組內順序：寬卡（`parts`）最前 → `DATA.projects` → `DATA.more`；要調整就搬動 `data.js` 裡的條目（例：Strata 放 projects 才排得進 Qwen 前）
 - 主題 key：tools / agent / infra / hw / 3dp / money / apps / games；models 固定為 models
 - **雙倉庫卡**：`more` 一筆 `parts:[{name,repo,lang,role,en,zh}]`，`pairCard()` 渲染；`name` 可為 `{en,zh}`；桌面兩欄、中間一顆「+」，<560px 上下疊；各自 GitHub 鈕與更新時間
-- **額外連結鈕**：`extra:[{url,en,zh}]`（VoiceInk「安裝」、LLM Wiki／calcrux「APK」，指向 `releases/latest`）；`demo` 鈕文字＝Demo／展示
+- **額外連結鈕**：`extra:[{url,en,zh}]`（AxonDeck「安裝」、LLM Wiki／calcrux「APK」，指向 `releases/latest`）；`demo` 鈕文字＝Demo／展示
 - **標籤**：語言標籤自動加；自訂標籤數不設上限，依版面決定——一排放得下，或兩排時最後一排至少 2 個，不留孤兒
 - **模型卡**：v2（GGUF＋LoRA＋Dataset 鈕）→ 第一代 → digital-twin → LinguaForge（並列 HF 與 GitHub）
 - 即時數據：HF `downloadsAllTime` 覆蓋下載數（快照 2026/9/29：v2 GGUF 617、第一代 1628、digital-twin 123、LinguaForge 388）；GitHub `pushed_at` 顯示「N 天前更新」；API 失敗就留 `data.js` 快照
@@ -60,9 +60,10 @@
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDD` + 當日序字母（a…z，z 之後 za、zb…）；詳見 `CLAUDE.md` / `AGENTS.md`
-- 目前：`20260930zd`（未 push，最後推送版為 `7de27b7`）
+- 目前：`20261012a`
 
 ## 近期
+- **2026/10/12**：VoiceInk 卡片改為 AxonDeck，更新 GitHub／安裝連結與中英文介紹；AI Infra 在 Strata 後新增 Miroxen，中英文說明依兩個專案目前 README 撰寫。
 - **2026/09/30（未 push）**：移除 Token-Anxiety-Dashboard；`ai` 改名 `tools`、新增 `agent`／`games` 分類；AgentCAD_MCP＋FreeCAD 合成雙倉庫卡；Strata／FreeCAD／Laguna 說明依實際內容重寫；卡片顏色改依分類；新增 `extra` 連結鈕與 Taiwan Lottery 展示連結；標籤重整；taste 改膠囊並加「蔚藍檔案」「官僚主義」。
 - **2026/09/30（已 push `7de27b7`）**：文案全面改成白話；主題列改跳轉導航（`#t-<topic>`、`spyTopics()`）；plate 改分頁；星空取代深色、淺色白天天空；淺色頭貼改墨點畫暗部。
 - **2026/09/29**：粒子肖像、作品區合一、HF／GitHub 即時數據、OG meta。
