@@ -4,7 +4,7 @@
 檔案：`index.html` · `styles.css` · `main.js` · `data.js` · `favicon.png`  
 內容資料一律改 `data.js`；樣式／互動分別在 `styles.css` / `main.js`。
 
-> 本檔與 `CLAUDE.md` 對齊；改一邊時同步另一邊。
+> 本檔為規則正文；`CLAUDE.md` 僅作相容入口。
 
 ---
 
@@ -14,12 +14,12 @@
 
 | 說法 | 指什麼 | DOM / 程式 |
 |------|--------|------------|
-| **上面（或左邊）** | 個人資料那一塊（Hero Plate） | `.plate`：頭貼、時鐘、handle、tagline、bio、taste、links、**本機配置**（`#rig`）、**工具**（`#tools`） |
+| **上面（或左邊）** | 個人資料那一塊（Hero Plate） | `.plate`：頭貼、時鐘、handle、tagline、bio、taste、links、**本機配置**（`#rig`） |
 | **下面（或右邊）** | 作品輸出那一塊 | `.output`：頂端 sticky 主題篩選列 `#topics`＋單一作品 grid `#work`（依 `DATA.ui.topics` 順序分組，每組前有 `.group-title`）、footer |
 
 補充：
 
-- **版面**＝全頁單一滾輪上下流動（無雙滾輪）；寬螢幕下 `#rig` 與 `#tools` 透過 `.plate-grid` 兩欄對稱展開。
+- **版面**＝全頁單一滾輪上下流動（無雙滾輪）；plate 下方以分頁切換連結與本機配置。
 - **右鍵選單**＝自訂玻璃選單 `#ctx`。
 - **右上 chrome**＝`#chrome`：星空切換 + 深淺色 + 語言切換（固定浮層，屬全域）。
 - **全域**＝ambient／pointer 光、trail、cursor、背景、選取反白、favicon、`#chrome` 等跨欄元素。
@@ -39,9 +39,8 @@
 | 區塊 | 選擇器 | 資料來源 |
 |------|--------|----------|
 | 上方 plate | `.plate` / `#links` `#bio` `#taste`（項目以 ` · ` 分隔，畫成膠囊）… | `DATA` + `DATA.ui[lang]` |
-| plate 選單 | `#plateMenu` / `.plate-panels` 三個小分頁（滑鼠移過去／聚焦／點擊即切換，不收合） | 包裹 `#panelLinks`、`#panelRig`、`#panelTools` |
+| plate 選單 | `#plateMenu` / `.plate-panels` 兩個小分頁（滑鼠移過去／聚焦／點擊即切換，不收合） | 包裹 `#panelLinks`、`#panelRig` |
 | 本機配置 rig | `#rig` 本機規格＋ DGX 許願 | `DATA.rig` + `DATA.ui` 文案 |
-| 工具 tools | `#tools` 對話四鈕同一排＋安裝指令複製 | `DATA.tools` + `DATA.ui` 文案 |
 | 右上 chrome | `#chrome` 白天／星空（theme）＋ lang | `DATA.ui` + clock JS |
 | 主題導航 | `#topics` | 跳轉錨點（`#t-<topic>`）＋捲動時亮起目前分組；各筆 `topic`（tools / agent / infra / hw / 3dp / money / apps / games；models 固定為 models），順序與名稱照 `DATA.ui.topics` |
 | 作品 grid | `#work` | 依主題分組；組內 `parts` 寬卡最前、`DATA.projects` 次之、`DATA.more` 最後，models 組為 `DATA.models`（可用 `repo` 並列 GitHub）；`parts:[…]`＝雙倉庫卡（`pairCard()`）、`extra:[{url,en,zh}]`＝額外連結鈕；標籤數不設上限，一排放得下、兩排時不留孤兒；下載數與「N 天前更新」走 HF／GitHub API 即時覆蓋 |
@@ -49,7 +48,7 @@
 
 - 主題：`data-theme` + `localStorage.theme`
 - 語系：`lang` en | zh，文案在 `DATA.ui`
-- 品牌 icon：`LINK_ICONS`（GitHub、Hugging Face、Local.ai、X、Discord）
+- 連結 icon：`LINK_ICONS`（GitHub、Hugging Face、Email、X、Discord）
 
 ---
 
@@ -66,7 +65,7 @@
 ## 工作原則
 
 - 改動範圍盡量小；內容只動 `data.js`，行為動 `main.js`，樣式動 `styles.css`。
-- `CLAUDE.md` 與 `AGENTS.md` 內容對齊；任務完成後精簡更新 `CONTEXT.md`（交接用）。
+- 規則正文維護於 `AGENTS.md`，`CLAUDE.md` 只連回本檔；任務完成後精簡更新 `CONTEXT.md`（交接用）。
 - 本專案不建立或維護 `tasks/` 資料夾。
 - Commit：`<type>: <description>`（feat / fix / refactor / docs / chore / perf…）。
 - 預覽：`npx --yes serve -l 8137 .`
@@ -98,6 +97,6 @@
 
 | 檔案 | 用途 |
 |------|------|
-| `CLAUDE.md` | 本專案給 Claude 的規範（與 AGENTS 同步） |
-| `AGENTS.md` | 給其他 AI Agent 的同一套規範 |
+| `CLAUDE.md` | 相容入口，指向 `AGENTS.md` |
+| `AGENTS.md` | 本專案的規則正文 |
 | `CONTEXT.md` | 近期進度／交接，保持短 |

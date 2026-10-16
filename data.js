@@ -16,11 +16,11 @@ const TOPIC_COLOR = {
 const DATA = {
   handle: 'rx5950xt',
 
-  /* Links on plate: GitHub | Hugging Face | Local.ai | X | Discord */
+  /* Links on plate: GitHub | Hugging Face | Email | X | Discord */
   links: [
     { label: 'GitHub', url: 'https://github.com/rx5950xt' },
     { label: 'Hugging Face', url: 'https://huggingface.co/RX5950XT' },
-    { label: 'Local.ai', url: 'https://local.ai/rx5950xt' },
+    { label: 'Email', url: 'mailto:rx.sa.31415926@gmail.com' },
     { label: 'X', url: 'https://x.com/RX5950XT' },
     { label: 'Discord', url: 'https://discord.com/users/876324357893410817' },
   ],
@@ -30,11 +30,13 @@ const DATA = {
   rig: {
     specs: [
       { key: 'CPU', value: 'AMD Ryzen 7 5700X' },
-      { key: 'GPU', value: ['RTX 5060 Ti 16GB', 'RTX 3060 Ti 8GB', 'RTX 3070 Ti FE'] },
+      { key: 'MB', value: 'GIGABYTE X570 Aorus Pro' },
       { key: 'RAM', value: 'DDR4 96GB' },
+      { key: 'GPU', value: ['RTX 5060 Ti 16GB', 'RTX 3060 Ti 8GB', 'RTX 3070 Ti FE'] },
+      { key: 'OS', value: 'Windows + Android' },
       { key: 'AUD', value: 'Sennheiser HD 550 + FiiO KA13' },
-      { key: '3DP', value: 'Bambu Lab A1' },
       { key: 'VR', value: 'Meta Quest 2' },
+      { key: '3DP', value: 'Bambu Lab A1' },
     ],
   },
 
@@ -48,36 +50,6 @@ const DATA = {
       en: 'LINE (worst messenger ever) · Bureaucracy',
       zh: 'LINE（最爛的通訊軟體） · 官僚主義',
     },
-  },
-
-  /* Left plate bottom: chat sites + one-click install commands. */
-  tools: {
-    chats: [
-      { label: 'Grok', url: 'https://grok.com/' },
-      { label: 'Claude', url: 'https://claude.ai' },
-      { label: 'ChatGPT', url: 'https://chatgpt.com' },
-      { label: 'Gemini', url: 'https://gemini.google.com' },
-    ],
-    /* Order fixed: Claude Code → Codex → Grok Build → Antigravity.
-       Windows-first installers where official; npm for Codex. */
-    installs: [
-      {
-        label: 'Claude Code',
-        cmd: 'irm https://claude.ai/install.ps1 | iex',
-      },
-      {
-        label: 'Codex',
-        cmd: 'npm install -g @openai/codex',
-      },
-      {
-        label: 'Grok Build',
-        cmd: 'irm https://x.ai/cli/install.ps1 | iex',
-      },
-      {
-        label: 'Antigravity CLI',
-        cmd: 'irm https://antigravity.google/cli/install.ps1 | iex',
-      },
-    ],
   },
 
   ui: {
@@ -99,15 +71,12 @@ const DATA = {
       likes: 'Like',
       dislikes: 'Nope',
       linksTitle: 'Links',
+      copied: 'Copied',
+      copyEmail: 'Copy email address',
+      copyFailed: 'Failed',
       rigTitle: 'Rig',
       rigWish:
         'Urgently seeking a DGX Spark for local deploy, fine-tunes, and development!',
-      toolsTitle: 'Use them',
-      toolsChats: 'Chat',
-      toolsInstalls: 'Install',
-      copy: 'Copy',
-      copied: 'Copied',
-      copyAria: 'Copy install command',
       downloads: 'Downloads',
       topicsLabel: 'Jump to a topic',
       topics: { tools: 'Tools', agent: 'For Hermes Agent', infra: 'AI Infra', models: 'Models', hw: 'Hardware', '3dp': '3D printing', money: 'Money', apps: 'Utilities', games: 'Games' },
@@ -133,14 +102,11 @@ const DATA = {
       likes: '喜歡',
       dislikes: '不喜歡',
       linksTitle: '連結',
+      copied: '已複製',
+      copyEmail: '複製電子郵件地址',
+      copyFailed: '未複製',
       rigTitle: '本機配置',
       rigWish: '急需一臺 DGX Spark 用於本地部署、微調與開發！',
-      toolsTitle: '使用它們',
-      toolsChats: '對話',
-      toolsInstalls: '安裝',
-      copy: '複製',
-      copied: '已複製',
-      copyAria: '複製安裝指令',
       downloads: '下載次數',
       topicsLabel: '跳到主題',
       topics: { tools: '工具', agent: '給 Hermes Agent 用', infra: 'AI Infra', models: '模型', hw: '硬體', '3dp': '3D 列印', money: '理財', apps: '小工具', games: '小遊戲' },
@@ -167,8 +133,8 @@ const DATA = {
       lang: 'JavaScript',
       topic: 'tools',
       tags: ['Electron', 'llama.cpp'],
-      en: 'My everyday AI workbench for Windows. Chat, project files and Claude Code / Codex terminals share one app, with provider switching, subscription quotas and usage tracking. Download and run local models from Hugging Face, dictate into other apps, transcribe recordings, show live captions, translate text and generate speech. Includes system monitoring; speech recognition and translation can run offline.',
-      zh: '我每天用的 Windows AI 工作台。聊天、專案檔案和 Claude Code／Codex 終端機收在同一個 App，也能切換模型供應商、查看訂閱額度與用量。從 Hugging Face 下載模型在本機跑，用講的打字、把錄音轉成逐字稿、看即時字幕，還能翻譯和生成語音。內建系統監控，語音辨識與翻譯可離線使用。',
+      en: 'The Windows command center I built for my own work and use every day. ChatGPT, Claude, Grok and Gemini, Claude Code and Codex, and local models share one workbench, bringing cloud AI, coding agents and local GPU power together. Open a project to work across files, an editor, Git, terminals and a browser, with provider switching, CLI installation and updates, quotas and usage in one place. Miroxen image and video generation, dictation, transcription, live captions, document translation, speech generation, media playback and system monitoring carry the same workflow from development into creative and everyday work.',
+      zh: '我為自己打造的 Windows 工作中樞，也是每天使用的主力工具。從 ChatGPT、Claude、Grok、Gemini，到 Claude Code／Codex 和本機模型，把雲端 AI、Agent 與本機算力接在同一個工作台。開一個專案，就能接著看檔案、改程式、管 Git、跑終端機和查網頁；供應商切換、CLI 安裝更新、額度與用量也集中管理。再整合 Miroxen 圖片影音生成、語音輸入、轉錄、即時字幕、文件翻譯、語音生成、媒體播放與系統監控，讓開發、創作和日常工作連成一套。',
     },
     {
       name: 'LLM Wiki',
@@ -186,10 +152,10 @@ const DATA = {
       repo: 'https://github.com/rx5950xt/portfolio-visualizer',
       demo: 'https://portfolio-visualizer-roan.vercel.app/',
       lang: 'TypeScript',
-      topic: 'money',
-      tags: ['Next.js', 'XIRR'],
-      en: 'A holdings dashboard for long-term investors, Taiwan and US stocks alike. It works out your real return and worst drop, opens up ETFs to show what you actually own, and replays the same buys into the S&P 500 for comparison. An AI check-up flags over-concentration, ETF overlap and fees. Log in with "demo" to get a sandbox of your own.',
-      zh: '給長期投資的人用的持股儀表板，台股美股都能放。算出真實報酬和最大跌幅，拆開 ETF 看你實際持有哪些公司，再把同樣的買點換成 S&P 500 比一比。AI 健診會指出押太集中、ETF 重疊和費用。密碼輸入 demo 就有一個自己的試玩空間。',
+      topic: 'agent',
+      tags: ['Next.js', 'MCP', 'XIRR'],
+      en: 'A portfolio website for Taiwan and US stocks, with MCP access for AI tools such as Hermes Agent. Track holdings, cash, dividends and returns, look through ETFs to spot overlapping holdings, and compare performance with the S&P 500. An AI can read the same investment data, record buys and sells, edit holdings and set cash balances. Log in with "demo" to get a sandbox of your own.',
+      zh: '台股、美股的投資組合網站，也能透過 MCP 接給 Hermes Agent 等 AI 使用。網頁可追蹤持股、現金、配息與損益，分析真實報酬、ETF 重疊，並和 S&P 500 比較績效。AI 能讀取同一份投資資料，也能幫你記錄買進、賣出、修改持股與設定現金。輸入 demo 就有自己的試玩空間。',
     },
     {
       name: 'ESP32-CAM Remote Monitor',

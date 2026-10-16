@@ -26,8 +26,8 @@ const LINK_ICONS = {
     '<svg class="link-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.6 7.6 0 0 1 8 4.77c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>',
   'Hugging Face':
     '<svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.025 1.13c-5.77 0-10.449 4.647-10.449 10.378 0 1.112.178 2.181.503 3.185.064-.222.203-.444.416-.577a.96.96 0 0 1 .524-.15c.293 0 .584.124.84.284.278.173.48.408.71.694.226.282.458.611.684.951v-.014c.017-.324.106-.622.264-.874s.403-.487.762-.543c.3-.047.596.06.787.203s.31.313.4.467c.15.257.212.468.233.542.01.026.653 1.552 1.657 2.54.616.605 1.01 1.223 1.082 1.912.055.537-.096 1.059-.38 1.572.637.121 1.294.187 1.967.187.657 0 1.298-.063 1.921-.178-.287-.517-.44-1.041-.384-1.581.07-.69.465-1.307 1.081-1.913 1.004-.987 1.647-2.513 1.657-2.539.021-.074.083-.285.233-.542.09-.154.208-.323.4-.467a1.08 1.08 0 0 1 .787-.203c.359.056.604.29.762.543s.247.55.265.874v.015c.225-.34.457-.67.683-.952.23-.286.432-.52.71-.694.257-.16.547-.284.84-.285a.97.97 0 0 1 .524.151c.228.143.373.388.43.625l.006.04a10.3 10.3 0 0 0 .534-3.273c0-5.731-4.678-10.378-10.449-10.378M8.327 6.583a1.5 1.5 0 0 1 .713.174 1.487 1.487 0 0 1 .617 2.013c-.183.343-.762-.214-1.102-.094-.38.134-.532.914-.917.71a1.487 1.487 0 0 1 .69-2.803m7.486 0a1.487 1.487 0 0 1 .689 2.803c-.385.204-.536-.576-.916-.71-.34-.12-.92.437-1.103.094a1.487 1.487 0 0 1 .617-2.013 1.5 1.5 0 0 1 .713-.174m-10.68 1.55a.96.96 0 1 1 0 1.921.96.96 0 0 1 0-1.92m13.838 0a.96.96 0 1 1 0 1.92.96.96 0 0 1 0-1.92M8.489 11.458c.588.01 1.965 1.157 3.572 1.164 1.607-.007 2.984-1.155 3.572-1.164.196-.003.305.12.305.454 0 .886-.424 2.328-1.563 3.202-.22-.756-1.396-1.366-1.63-1.32q-.011.001-.02.006l-.044.026-.01.008-.03.024q-.018.017-.035.036l-.032.04a1 1 0 0 0-.058.09l-.014.025q-.049.088-.11.19a1 1 0 0 1-.083.116 1.2 1.2 0 0 1-.173.18q-.035.029-.075.058a1.3 1.3 0 0 1-.251-.243 1 1 0 0 1-.076-.107c-.124-.193-.177-.363-.337-.444-.034-.016-.104-.008-.2.022q-.094.03-.216.087-.06.028-.125.063l-.13.074q-.067.04-.136.086a3 3 0 0 0-.135.096 3 3 0 0 0-.26.219 2 2 0 0 0-.12.121 2 2 0 0 0-.106.128l-.002.002a2 2 0 0 0-.09.132l-.001.001a1.2 1.2 0 0 0-.105.212q-.013.036-.024.073c-1.139-.875-1.563-2.317-1.563-3.203 0-.334.109-.457.305-.454m.836 10.354c.824-1.19.766-2.082-.365-3.194-1.13-1.112-1.789-2.738-1.789-2.738s-.246-.945-.806-.858-.97 1.499.202 2.362c1.173.864-.233 1.45-.685.64-.45-.812-1.683-2.896-2.322-3.295s-1.089-.175-.938.647 2.822 2.813 2.562 3.244-1.176-.506-1.176-.506-2.866-2.567-3.49-1.898.473 1.23 2.037 2.16c1.564.932 1.686 1.178 1.464 1.53s-3.675-2.511-4-1.297c-.323 1.214 3.524 1.567 3.287 2.405-.238.839-2.71-1.587-3.216-.642-.506.946 3.49 2.056 3.522 2.064 1.29.33 4.568 1.028 5.713-.624m5.349 0c-.824-1.19-.766-2.082.365-3.194 1.13-1.112 1.789-2.738 1.789-2.738s-.246-.945.806-.858.97 1.499-.202 2.362c-1.173.864.233 1.45.685.64.451-.812 1.683-2.896 2.322-3.295s1.089-.175.938.647-2.822 2.813-2.562 3.244 1.176-.506 1.176-.506 2.866-2.567 3.49-1.898-.473 1.23-2.037 2.16c-1.564.932-1.686 1.178-1.464 1.53s3.675-2.511 4-1.297c.323 1.214-3.524 1.567-3.287 2.405.238.839 2.71-1.587 3.216-.642.506.946 3.49 2.056 3.522 2.064-1.29.33 4.568 1.028 5.713-.624"/></svg>',
-  'Local.ai':
-    '<svg class="link-ico" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M14.5 15.52 V50.52 H49.5" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 43.52 C26.5 43.52 34 36.52 39.5 27.02" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><circle cx="45.31" cy="16.98" r="6" fill="#37903f"/></svg>',
+  Email:
+    '<svg class="link-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg>',
   X: '<svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
   Discord:
     '<svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.317 4.37a19.8 19.8 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.3 18.3 0 0 0-5.487 0 12.6 12.6 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.7 19.7 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.08.08 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14 14 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.8 19.8 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.03M8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418m7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418"/></svg>',
@@ -117,7 +117,7 @@ function paintPlate() {
   // Vertical list stack of profile links
   $('#links').innerHTML = DATA.links
     .map(
-      (l) => `<a class="link" href="${l.url}" target="_blank" rel="noopener me">
+      (l) => l.label === 'Email' ? emailContact(l) : `<a class="link" href="${l.url}" target="_blank" rel="noopener me">
         <span class="link-main">${linkIcon(l.label)}<span class="link-label">${l.label}</span></span>
         <span class="arrow" aria-hidden="true">↗</span></a>`
     )
@@ -127,12 +127,9 @@ function paintPlate() {
   if (btnLinksText) btnLinksText.textContent = s.linksTitle || 'Links';
   const btnRigText = $('#btnRigText');
   if (btnRigText) btnRigText.textContent = s.rigTitle || 'Rig';
-  const btnToolsText = $('#btnToolsText');
-  if (btnToolsText) btnToolsText.textContent = s.toolsTitle || 'Use them';
 
   paintTaste();
   paintRig();
-  paintTools();
 }
 
 function paintTaste() {
@@ -200,53 +197,6 @@ function paintRig() {
   if (wish) wish.textContent = s.rigWish || '';
 }
 
-const COPY_SVG =
-  '<svg class="copy-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>';
-const CHECK_SVG =
-  '<svg class="copy-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0z"/></svg>';
-
-function paintTools() {
-  const s = ui();
-  const tools = DATA.tools;
-  if (!tools) return;
-
-  const title = $('#toolsTitle .label');
-  if (title) title.textContent = s.toolsTitle;
-  const chatsLabel = $('#toolsChatsLabel');
-  if (chatsLabel) chatsLabel.textContent = s.toolsChats;
-  const installsLabel = $('#toolsInstallsLabel');
-  if (installsLabel) installsLabel.textContent = s.toolsInstalls;
-
-  const chatsEl = $('#toolsChats');
-  if (chatsEl) {
-    chatsEl.innerHTML = tools.chats
-      .map(
-        (c) =>
-          `<a class="link tools-link" href="${c.url}" target="_blank" rel="noopener">` +
-          `<span class="link-label">${c.label}</span>` +
-          `<span class="arrow" aria-hidden="true">↗</span></a>`
-      )
-      .join('');
-  }
-
-  const list = $('#toolsInstalls');
-  if (!list) return;
-  list.innerHTML = tools.installs
-    .map(
-      (item) => `<li class="tools-row">
-        <div class="tools-row-top">
-          <span class="tools-name">${item.label}</span>
-          <button type="button" class="copy-btn" data-cmd="${escapeAttr(item.cmd)}"
-            aria-label="${s.copyAria}: ${item.label}">
-            ${COPY_SVG}<span class="copy-label">${s.copy}</span>
-          </button>
-        </div>
-        <code class="tools-cmd" title="${escapeAttr(item.cmd)}">${escapeHtml(item.cmd)}</code>
-      </li>`
-    )
-    .join('');
-}
-
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -255,53 +205,48 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-function escapeAttr(str) {
-  return escapeHtml(str).replace(/'/g, '&#39;');
+const EMAIL_COPY_ICON = '<svg class="email-copy-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
+const EMAIL_COPIED_ICON = '<svg class="email-copy-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+const EMAIL_COPY_FAILED_ICON = '<svg class="email-copy-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/></svg>';
+
+function emailContact(link, context = false) {
+  const address = escapeHtml(link.url.slice('mailto:'.length));
+  const prefix = context ? 'ctx-item' : 'link';
+  const role = context ? 'role="menuitem"' : '';
+  return `<div class="email-contact" ${context ? 'role="none"' : ''}>
+    <a class="${prefix}" ${role} href="${link.url}">
+      <span class="${prefix}-main">${linkIcon('Email')}<span class="${prefix}-label">${address}</span></span>
+    </a>
+    <button type="button" class="link email-copy" ${role} data-copy-email="${address}"
+      aria-label="${ui().copyEmail}: ${address}" title="${ui().copyEmail}" aria-live="polite">${EMAIL_COPY_ICON}</button>
+  </div>`;
 }
 
-async function copyText(text) {
-  if (navigator.clipboard && window.isSecureContext) {
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-  // Fallback for file:// or older browsers.
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  ta.setAttribute('readonly', '');
-  ta.style.cssText = 'position:fixed;left:-9999px;top:0';
-  document.body.appendChild(ta);
-  ta.select();
-  document.execCommand('copy');
-  ta.remove();
-}
-
-function startToolsCopy() {
-  const list = $('#toolsInstalls');
-  if (!list || list.dataset.copyBound) return;
-  list.dataset.copyBound = '1';
-
-  list.addEventListener('click', async (e) => {
-    const btn = e.target.closest('.copy-btn');
-    if (!btn) return;
-    const cmd = btn.getAttribute('data-cmd');
-    if (!cmd) return;
-
+function startEmailCopy() {
+  document.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-copy-email]');
+    if (!button || button.disabled) return;
+    button.disabled = true;
+    let feedback = ui().copied;
+    let icon = EMAIL_COPIED_ICON;
     try {
-      await copyText(cmd);
-      const s = ui();
-      btn.classList.add('is-copied');
-      btn.setAttribute('aria-label', s.copied);
-      btn.innerHTML = `${CHECK_SVG}<span class="copy-label">${s.copied}</span>`;
-
-      clearTimeout(btn._copyTimer);
-      btn._copyTimer = setTimeout(() => {
-        btn.classList.remove('is-copied');
-        btn.setAttribute('aria-label', s.copyAria);
-        btn.innerHTML = `${COPY_SVG}<span class="copy-label">${s.copy}</span>`;
-      }, 1600);
-    } catch (_) {
-      /* clipboard denied — leave button as-is */
+      await navigator.clipboard.writeText(button.dataset.copyEmail);
+    } catch (error) {
+      console.warn('Email copy failed:', error);
+      feedback = ui().copyFailed;
+      icon = EMAIL_COPY_FAILED_ICON;
+    } finally {
+      button.disabled = false;
     }
+    button.innerHTML = icon;
+    button.setAttribute('aria-label', feedback);
+    button.title = feedback;
+    clearTimeout(button.copyTimer);
+    button.copyTimer = setTimeout(() => {
+      button.innerHTML = EMAIL_COPY_ICON;
+      button.setAttribute('aria-label', `${ui().copyEmail}: ${button.dataset.copyEmail}`);
+      button.title = ui().copyEmail;
+    }, 1800);
   });
 }
 
@@ -1121,6 +1066,7 @@ function paintContextMenu() {
   $('#ctxHandle').textContent = DATA.handle;
   $('#ctxList').innerHTML = DATA.links
     .map((l) => {
+      if (l.label === 'Email') return emailContact(l, true);
       return `<a class="ctx-item" role="menuitem" href="${l.url}" target="_blank" rel="noopener me">
         <span class="ctx-item-main">${linkIcon(l.label)}<span class="ctx-item-label">${l.label}</span></span>
         <span class="ctx-item-go" aria-hidden="true">↗</span>
@@ -1354,9 +1300,9 @@ startClock();
 startPointer();
 startPortrait();
 startContextMenu();
+startEmailCopy();
 startTopics();
 startLiveStats();
-startToolsCopy();
 startPlateMenu();
 startHandleEffect();
 startSkyClicks();
