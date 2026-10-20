@@ -16,13 +16,14 @@ const TOPIC_COLOR = {
 const DATA = {
   handle: 'rx5950xt',
 
-  /* Links on plate: GitHub | Hugging Face | Email | X | Discord */
+  /* Links on plate: GitHub | Hugging Face | Email | X | Discord | Android Testers */
   links: [
     { label: 'GitHub', url: 'https://github.com/rx5950xt' },
     { label: 'Hugging Face', url: 'https://huggingface.co/RX5950XT' },
     { label: 'Email', url: 'mailto:rx.sa.31415926@gmail.com' },
     { label: 'X', url: 'https://x.com/RX5950XT' },
     { label: 'Discord', url: 'https://discord.com/users/876324357893410817' },
+    { label: 'Android Testers', url: 'https://groups.google.com/g/rx5950xt-testers' },
   ],
 
   /* Plate: machine specs (values with en/zh only when they differ).
@@ -34,6 +35,7 @@ const DATA = {
       { key: 'RAM', value: 'DDR4 96GB' },
       { key: 'GPU', value: ['RTX 5060 Ti 16GB', 'RTX 3060 Ti 8GB', 'RTX 3070 Ti FE'] },
       { key: 'OS', value: 'Windows + Android' },
+      { key: 'PHONE', value: 'Google Pixel 6a' },
       { key: 'AUD', value: 'Sennheiser HD 550 + FiiO KA13' },
       { key: 'VR', value: 'Meta Quest 2' },
       { key: '3DP', value: 'Bambu Lab A1' },
