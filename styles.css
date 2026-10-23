@@ -887,12 +887,24 @@ html.pointing .cursor-ring {
   }
 }
 
-/* Avatar top-left · local time top-right of the plate (not tight beside). */
+/* Avatar + handle on the left · local time top-right of the plate. */
 .plate-head {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-width: 0;
+}
+
+/* The avatar always sits left of the handle, at every width. */
+.ident {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.ident-text {
   min-width: 0;
 }
 
@@ -910,9 +922,9 @@ html.pointing .cursor-ring {
 .portrait {
   display: none;
   flex: 0 0 auto;
-  width: 128px;
+  width: clamp(96px, 72px + 6vw, 136px);
   aspect-ratio: 1;
-  margin: -12px 0 -8px -12px;
+  margin: -8px;
   touch-action: manipulation;
 }
 
@@ -924,46 +936,21 @@ html.has-portrait .avatar {
   display: none;
 }
 
-/* Wide screens: the plate splits. Words on the left; the portrait gets its own
-   column, with the clock stamped above it like a plate's serial line. */
-@media (min-width: 960px) {
-  html.has-portrait .plate-inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(200px, 20vw, 240px);
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "main clock"
-      "main portrait";
-    column-gap: clamp(28px, 4vw, 56px);
+/* Phones: not enough room for clock beside the identity, so it moves above. */
+@media (max-width: 520px) {
+  .plate-head {
+    flex-wrap: wrap;
   }
 
-  html.has-portrait .plate-head {
-    display: contents;
-  }
-
-  html.has-portrait .plate-main {
-    grid-area: main;
-    min-width: 0;
-  }
-
-  html.has-portrait .plate-main > .handle {
-    margin-top: 0;
-  }
-
-  html.has-portrait .plate-clock {
-    grid-area: clock;
+  .plate-head .plate-clock {
+    order: -1;
+    flex-basis: 100%;
     max-width: none;
-    position: relative;
-    z-index: 1;
   }
 
-  html.has-portrait .portrait {
-    grid-area: portrait;
-    align-self: start;
-    width: 100%;
-    margin: 8px 0 0;
-    position: relative;
-    z-index: 1;
+  .avatar {
+    width: 72px;
+    height: 72px;
   }
 }
 
@@ -1019,7 +1006,7 @@ html.has-portrait .avatar {
 
 .handle {
   display: inline-block;
-  margin: 22px 0 0;
+  margin: 0;
   font-family: var(--font-mono);
   /* The part number is the headline: stamped large, like a die marking. */
   font-size: clamp(1.625rem, 1.1rem + 2.2vw, 2.5rem);
@@ -1087,7 +1074,7 @@ html.has-portrait .avatar {
 }
 
 .tagline {
-  margin: 8px 0 0;
+  margin: 4px 0 0;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.45;
@@ -1197,6 +1184,25 @@ html.has-portrait .avatar {
 .links .link-label {
   min-width: 0;
   white-space: nowrap;
+}
+
+/* Short "what is this" hint inside a pill (e.g. Android Testers). */
+.links .link-note {
+  padding-left: 7px;
+  border-left: 1px solid var(--stroke);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* Phones: the hint may wrap instead of pushing the pill off-screen. */
+@media (max-width: 520px) {
+  .links .link {
+    max-width: 100%;
+  }
+
+  .links .link-note {
+    white-space: normal;
+  }
 }
 
 .links .arrow {
@@ -1327,6 +1333,15 @@ html.has-portrait .avatar {
   margin-top: 18px;
   padding-top: 14px;
   border-top: 1px solid var(--hairline);
+}
+
+@media (min-width: 900px) {
+  .plate-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 20px;
+    align-items: start;
+  }
 }
 
 .rig-title {
@@ -1805,6 +1820,96 @@ html.has-portrait .avatar {
   font-size: 0.8125rem;
   line-height: 1.65;
   color: var(--text-2);
+}
+
+/* README picture on a card; a click opens it full size (#zoom). */
+.card-shot {
+  display: block;
+  width: 100%;
+  margin: 12px 0 0;
+  padding: 0;
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff; /* README renders are drawn on white */
+  cursor: zoom-in;
+}
+
+.card-shot img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.card-shot:hover img {
+  transform: scale(1.03);
+}
+
+.card-shot:focus-visible {
+  outline: 2px solid var(--lang, var(--text));
+  outline-offset: 2px;
+}
+
+/* Short line always shown; the rest folds open. */
+.card-more summary {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: var(--text-3);
+  cursor: pointer;
+  list-style: none;
+}
+
+.card-more summary::-webkit-details-marker {
+  display: none;
+}
+
+.card-more summary::after {
+  content: " ▾";
+}
+
+.card-more[open] summary::after {
+  content: " ▴";
+}
+
+.card-more summary:hover {
+  color: var(--text);
+}
+
+.card-more .more-close,
+.card-more[open] .more-open {
+  display: none;
+}
+
+.card-more[open] .more-close {
+  display: inline;
+}
+
+.card-more .card-desc {
+  margin-top: 6px;
+}
+
+.zoom {
+  max-width: min(92vw, 1200px);
+  max-height: 92vh;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #fff;
+  cursor: zoom-out;
+}
+
+.zoom::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.zoom img {
+  display: block;
+  max-width: 100%;
+  max-height: 92vh;
+  object-fit: contain;
 }
 
 .tags {

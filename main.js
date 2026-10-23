@@ -120,7 +120,7 @@ function paintPlate() {
   $('#links').innerHTML = DATA.links
     .map(
       (l) => l.label === 'Email' ? emailContact(l) : `<a class="link" href="${l.url}" target="_blank" rel="noopener me">
-        <span class="link-main">${linkIcon(l.label)}<span class="link-label">${l.label}</span></span>
+        <span class="link-main">${linkIcon(l.label)}<span class="link-label">${l.label}</span>${l.note ? `<span class="link-note">${escapeHtml(l.note[lang])}</span>` : ''}</span>
         <span class="arrow" aria-hidden="true">↗</span></a>`
     )
     .join('');
@@ -392,7 +392,11 @@ function projectCard(p, i) {
       <span class="dot" aria-hidden="true"></span>
       <h3 class="card-name">${p.name}</h3>
     </div>
-    <p class="card-desc">${p[lang]}</p>
+    ${p.img ? `<button type="button" class="card-shot" aria-label="${s.zoom}"><img src="${p.img}" alt="${p.name}" loading="lazy" decoding="async"></button>` : ''}
+    ${p.short
+      ? `<p class="card-desc">${p.short[lang]}</p>
+    <details class="card-more"><summary><span class="more-open">${s.more}</span><span class="more-close">${s.less}</span></summary><p class="card-desc">${p[lang]}</p></details>`
+      : `<p class="card-desc">${p[lang]}</p>`}
     <ul class="tags">
       <li class="tag">${p.lang}</li>
       ${(p.tags || []).map((x) => `<li class="tag">${x}</li>`).join('')}
@@ -546,6 +550,21 @@ function render() {
     // A language switch is a deliberate action: swap it instantly.
     document.querySelectorAll('.output .reveal').forEach((el) => el.classList.add('in'));
   }
+}
+
+/* Click a card's picture to see it full size; click anywhere or Esc to close. */
+function startZoom() {
+  const box = $('#zoom');
+  if (!box?.showModal) return;
+  const img = box.querySelector('img');
+  $('#work').addEventListener('click', (e) => {
+    const pic = e.target.closest('.card-shot')?.querySelector('img');
+    if (!pic) return;
+    img.src = pic.src;
+    img.alt = pic.alt;
+    box.showModal();
+  });
+  box.addEventListener('click', () => box.close());
 }
 
 /* --- Live stats ----------------------------------------------------------- */
@@ -1264,6 +1283,7 @@ startPortrait();
 startContextMenu();
 startEmailCopy();
 startTopics();
+startZoom();
 startLiveStats();
 startHandleEffect();
 startSkyClicks();

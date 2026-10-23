@@ -14,7 +14,7 @@
 
 ## 溝通（使用者約定）
 - **左邊／上面**＝`.plate` 個人資料（含 `#rig`）；**右邊／下面**＝`.output` 作品
-- **時鐘**＝`.plate-clock`，plate 頭列右上，與頭貼（左上）對稱
+- **頭貼**＝`.ident`，任何寬度都在 handle（id）左邊，tagline 在 handle 下；**時鐘**＝`.plate-clock` 頭列右上，≤520px 移到頭列上方
 - **chrome**＝`#chrome` 右下角固定圓形鈕（日/月、中/EN）；theme 鈕文字＝目標主題（白天／星空）
 - **右鍵選單**＝`#ctx`（≠ 右邊）
 - **天空**＝`.sky` 依 `data-theme`：dark＝三層星點＋流星（點擊生成 `.meteor-shot`）；light＝淺藍漸層＋`.sun`＋4 朵 `.cloud`。無獨立星空開關
@@ -27,7 +27,7 @@
 
 ## 左邊 plate
 - **bio**：並列列表＋Agent 連結；bio 與 `index.html` meta description 都列「由 Agent 驅動的 3D 列印參數化建模」
-- 順序：bio → 連結 → taste → rig
+- 順序：bio → 連結 → taste｜rig（`.plate-split`，≥900px 左右並排，窄螢幕上下疊）
 - **taste**（`DATA.taste`）：喜歡（藍）／不喜歡（紅），項目以 ` · ` 分隔、畫成膠囊（`paintTaste()`）
 - **rig**（`DATA.rig`）：taste 下方獨立一塊、無標題；順序 CPU → MB → RAM → GPU → OS → PHONE → AUD → VR → 3DP；許願句 `DATA.ui.rigWish`
 - **連結**（`DATA.links`）：bio 正下方一排膠囊按鈕（`.links` flex-wrap），Email 膠囊旁有複製鈕；舊的「連結／本機配置」分頁已移除。「使用它們」已移除，這些入口整合於 AxonDeck。
@@ -35,7 +35,7 @@
 
 ## 右邊作品（`#work` 單一 grid）
 - 順序照 `DATA.ui.topics`，每組前有 `.group-title`：
-  **工具**（AxonDeck → LLM Wiki → LLM Arena）→ **給 Hermes Agent 用**（Portfolio Visualizer → PCPriceProxy → FJU-TronClass-MCP）→ **AI Infra**（Strata → Miroxen → Qwen-3.8-27B-DualGPUs → Qwen-35B-A3B → Laguna-S2.1）→ **模型** → **硬體**（just-a-submarine → ESP32-CAM）→ **3D 列印**（AI 驅動的 3D 建模 → 3DP-MATX → 3DP-TV-SpeakerHanger → 3dp-bedside-table）→ **理財**（0050 → Taiwan Lottery）→ **小工具**（calcrux → surface_optimizer）→ **小遊戲**（rolling-around）
+  **工具**（AxonDeck → LLM Wiki → LLM Arena）→ **給 Hermes Agent 用**（Portfolio Visualizer → PCPriceProxy → FJU-TronClass-MCP）→ **AI Infra**（Strata → Miroxen → Qwen-3.8-27B-DualGPUs → Qwen-35B-A3B → Laguna-S2.1）→ **模型** → **硬體**（just-a-submarine → ESP32-CAM）→ **3D 列印**（AI 驅動的 3D 建模 → 3DP-MATX → 3DP-TV-SpeakerHanger → 3dp-bedside-table → 3DP-Toothbrush_shaver_holder）→ **理財**（0050 → Taiwan Lottery）→ **小工具**（calcrux → surface_optimizer）→ **小遊戲**（rolling-around）
 - 組內順序：寬卡（`parts`）最前 → `DATA.projects` → `DATA.more`；要調整就搬動 `data.js` 裡的條目（例：Strata 放 projects 才排得進 Qwen 前）
 - 主題 key：tools / agent / infra / hw / 3dp / money / apps / games；models 固定為 models
 - **雙倉庫卡**：`more` 一筆 `parts:[{name,repo,lang,role,en,zh}]`，`pairCard()` 渲染；`name` 可為 `{en,zh}`；桌面兩欄、中間一顆「+」，<560px 上下疊；各自 GitHub 鈕與更新時間
@@ -60,9 +60,11 @@
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDD` + 當日序字母（a…z，z 之後 za、zb…）；詳見 `CLAUDE.md` / `AGENTS.md`
-- 目前：`20261017k`
+- 目前：`20261024c`
 
 ## 近期
+- **2026/10/24（未 push）**：3D 列印四張作品卡（MATX、喇叭籃、床邊架、新增牙刷刮鬍刀架）改成 README 圖＋一句話，`short:{en,zh}` 常駐、原 `en/zh` 收在「展開／收起」（`<details class="card-more">`）；`img` 圖點擊用 `<dialog id="zoom">` 放大（`startZoom()`）。
+- **2026/10/24（未 push）**：頭貼固定在 id 左邊（拿掉寬螢幕右欄肖像）；bio 中英改寫；`DATA.links` 可加 `note:{en,zh}`，Android Testers 膠囊內顯示說明（`.link-note`）；taste 移除「最爛的通訊軟體」。
 - **2026/10/17**：AxonDeck 中英文改以「每天使用的 Windows 工作中樞」定位，強調雲端 AI、Agent、本機算力、專案開發與影音創作的整合工作流程。
 - **2026/10/17**：兩處複製按鈕均為純圖示（成功勾號／失敗提示），含 tooltip 與中英文無障礙名稱。右鍵選單信箱字較小、圖示同為 16px、按鈕 24px；信封、文字欄位與上下項目對齊。上方信箱一般字級，僅窄螢幕縮排以保留單行。
 - **2026/10/17**：Email 改為直接顯示完整信箱且固定單行；上方連結與右鍵選單皆附並排的複製按鈕，中英文顯示成功／失敗狀態，保留 `mailto:`。

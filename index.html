@@ -16,7 +16,7 @@
 <link rel="icon" href="favicon.png" type="image/png" sizes="256x256">
 <link rel="apple-touch-icon" href="favicon.png">
 <!-- Cache-bust: bump ?v= when styles.css / data.js / main.js change. -->
-<link rel="stylesheet" href="styles.css?v=20261020a">
+<link rel="stylesheet" href="styles.css?v=20261024c">
 <script>
   /* Resolve the appearance before first paint so the page never flashes. */
   (function () {
@@ -99,11 +99,17 @@
   <!-- Top Hero Plate: rx5950xt spec plate -->
   <header class="plate">
     <div class="plate-inner">
-      <!-- Avatar top-left · local time top-right of this plate (symmetric). -->
+      <!-- Avatar left of the handle · local time top-right of this plate. -->
       <div class="plate-head reveal">
-        <img class="avatar" src="https://github.com/rx5950xt.png" alt="" width="88" height="88" fetchpriority="high">
-        <!-- Live portrait: the avatar denoised out of scattered particles (main.js). -->
-        <canvas class="portrait" id="portrait" aria-hidden="true"></canvas>
+        <div class="ident">
+          <img class="avatar" src="https://github.com/rx5950xt.png" alt="" width="88" height="88" fetchpriority="high">
+          <!-- Live portrait: the avatar denoised out of scattered particles (main.js). -->
+          <canvas class="portrait" id="portrait" aria-hidden="true"></canvas>
+          <div class="ident-text">
+            <h1 class="handle" id="handle">rx5950xt</h1>
+            <p class="tagline" id="tagline"></p>
+          </div>
+        </div>
         <div class="plate-clock" id="plateClock">
           <span class="label" id="clockLabel">Local time</span>
           <span class="date" id="date"></span>
@@ -113,12 +119,12 @@
       </div>
 
       <div class="plate-main">
-      <h1 class="handle reveal" id="handle">rx5950xt</h1>
-      <p class="tagline reveal" id="tagline"></p>
       <p class="bio reveal" id="bio"></p>
 
       <nav class="links reveal" id="links" aria-label="Profile links"></nav>
 
+      <!-- Taste and rig sit side by side on wide screens. -->
+      <div class="plate-split">
       <!-- Likes / dislikes with thumbs up / thumbs down icons. -->
       <section class="rig taste reveal" id="taste">
         <dl class="rig-list">
@@ -142,6 +148,7 @@
         <p class="rig-wish" id="rigWish"></p>
       </section>
       </div>
+      </div>
     </div>
   </header>
 
@@ -161,6 +168,9 @@
 
 </main>
 
+<!-- Full-size view of a card picture (main.js startZoom()). -->
+<dialog class="zoom" id="zoom" aria-label="Image"><img alt=""></dialog>
+
 <!-- Custom context menu (Shift+right-click keeps the browser default). -->
 <div class="ctx" id="ctx" role="menu" hidden aria-hidden="true" aria-label="Site menu">
   <div class="ctx-head">
@@ -170,7 +180,7 @@
   <div class="ctx-list" id="ctxList"></div>
 </div>
 
-<script src="data.js?v=20261020a"></script>
-<script src="main.js?v=20261020a"></script>
+<script src="data.js?v=20261024c"></script>
+<script src="main.js?v=20261024c"></script>
 </body>
 </html>

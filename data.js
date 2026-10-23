@@ -23,7 +23,12 @@ const DATA = {
     { label: 'Email', url: 'mailto:rx.sa.31415926@gmail.com' },
     { label: 'X', url: 'https://x.com/RX5950XT' },
     { label: 'Discord', url: 'https://discord.com/users/876324357893410817' },
-    { label: 'Android Testers', url: 'https://groups.google.com/g/rx5950xt-testers' },
+    {
+      label: 'Android Testers',
+      url: 'https://groups.google.com/g/rx5950xt-testers',
+      // Shown inside the pill: why you would click it.
+      note: { en: 'Join to install my Play beta apps', zh: '加入後可安裝 Play 測試版 App' },
+    },
   ],
 
   /* Plate: machine specs (values with en/zh only when they differ).
@@ -49,15 +54,15 @@ const DATA = {
       zh: '開源 AI · GPU · VRAM · token · 深色模式 · 蔚藍檔案 · 滾動 X 首頁',
     },
     dislikes: {
-      en: 'LINE (worst messenger ever) · Bureaucracy',
-      zh: 'LINE（最爛的通訊軟體） · 官僚主義',
+      en: 'LINE · Bureaucracy',
+      zh: 'LINE · 官僚主義',
     },
   },
 
   ui: {
     en: {
       tagline: 'Vibe coder. Builds everything with agents.',
-      bio: 'I build web and Android apps, push big models as fast as they will go on my own GPUs, fine-tune small models of my own, write ESP32 firmware, have AI draw parts for my 3D printer, and backtest investing and the lottery. Most of it grew out of handing a problem to an agent and seeing what came back.',
+      bio: 'I build web and Android apps, squeeze big models to full speed on my own GPUs, and fine-tune small models of my own. On the side: ESP32 firmware, AI-drawn parts for my 3D printer, and backtests of investing and the lottery. The method never changes: hand the problem to an agent, see what comes back, and keep fixing until it actually works.',
       localTime: 'Local time',
       demo: 'Demo',
       code: 'GitHub',
@@ -83,10 +88,13 @@ const DATA = {
       // {t} is a relative time from the GitHub API ("3 days ago").
       pushed: 'pushed {t}',
       pair: '2 repos, used together',
+      more: 'More',
+      less: 'Less',
+      zoom: 'Enlarge image',
     },
     zh: {
       tagline: 'Vibe Coder。用 Agent 建造一切。',
-      bio: '做網頁和 Android App，在自己的顯卡上把大模型跑到最快，微調自己的小模型，寫 ESP32 韌體，讓 AI 畫 3D 列印的零件，也拿資料回測投資和樂透。這些大多是把問題丟給 Agent，看它長出什麼來。',
+      bio: '做網頁和 Android App，在自己的幾張顯卡上把大模型壓到最快，也微調自己的小模型。另外寫 ESP32 韌體、讓 AI 幫 3D 印表機畫零件、拿資料回測投資和樂透。做法始終一樣：把問題丟給 Agent，看它長出什麼，再一路修到真的能用。',
       localTime: '當地時間',
       demo: '展示',
       code: 'GitHub',
@@ -110,6 +118,9 @@ const DATA = {
       topics: { tools: '工具', agent: '給 Hermes Agent 用', infra: 'AI Infra', models: '模型', hw: '硬體', '3dp': '3D 列印', money: '理財', apps: '小工具', games: '小遊戲' },
       pushed: '{t}更新',
       pair: '2 個倉庫，配套使用',
+      more: '展開',
+      less: '收起',
+      zoom: '放大圖片',
     },
   },
 
@@ -244,6 +255,8 @@ const DATA = {
       lang: 'Python',
       topic: '3dp',
       tags: ['FreeCAD', 'Bambu Lab A1'],
+      img: 'https://raw.githubusercontent.com/RX5950XT/3DP-MATX/main/%E8%A6%8F%E6%A0%BC/%E7%B8%BD%E6%88%90%E8%A6%96%E5%9C%96_iso.png',
+      short: { en: 'A microATX NAS case for four 3.5-inch drives, printed whole — not one sheet-metal part.', zh: '全 3D 列印的 microATX NAS 機殼，裝 4 顆 3.5 吋硬碟，一片鈑金都沒有。' },
       en: 'A fully 3D-printed microATX NAS case for four 3.5-inch drives. Every dimension is computed in code, then AI drives FreeCAD to build it and checks it against the spec line by line. Twenty-four printed pieces, 13.8 litres; the shell locks together with slide rails and snap catches, and even the motherboard screws are printed.',
       zh: '全 3D 列印的 microATX NAS 機殼，裝得下 4 顆 3.5 吋硬碟。每個尺寸都用程式算出來，再讓 AI 操作 FreeCAD 建模、逐條對照規格驗證。共 24 個列印件、13.8 公升；外殼靠滑槽和卡榫扣在一起，連鎖主機板的螺絲都是印的。',
     },
@@ -318,8 +331,10 @@ const DATA = {
       lang: 'Python',
       topic: '3dp',
       tags: ['FreeCAD', 'Bambu Lab A1'],
-      en: 'A speaker basket for a TV wall mount — its hooks are only 4mm thick, thin enough for the 8.6mm gap behind the TV. No drilling, no glue',
-      zh: '掛在電視壁掛架上的喇叭籃：掛鉤只有 4mm 厚，塞得進電視背後 8.6mm 的縫，不用鑽孔也不用黏',
+      img: 'https://raw.githubusercontent.com/RX5950XT/3DP-TV-SpeakerHanger/main/cad/screenshots/v3_iso.png',
+      short: { en: 'A speaker basket that hooks onto a TV wall mount — no drilling, no glue.', zh: '掛在電視壁掛架上的喇叭籃，不用鑽孔也不用黏。' },
+      en: 'Its hooks are only 4mm thick, thin enough for the 8.6mm gap behind the TV, and slip through the slots the mount already has. Sized for a 200 × 50 × 70mm speaker; the model is a parametric script, so a few numbers at the top fit it to your own mount.',
+      zh: '掛鉤只有 4mm 厚，塞得進電視背後 8.6mm 的縫，直接穿過壁掛架原本的橢圓孔勾住。照 200 × 50 × 70mm 的喇叭設計；模型是參數化腳本，改開頭幾個數字就能配你自己的壁掛架。',
     },
     {
       name: '3dp-bedside-table',
@@ -327,8 +342,21 @@ const DATA = {
       lang: 'Python',
       topic: '3dp',
       tags: ['FreeCAD', 'Bambu Lab A1'],
-      en: 'A bedside shelf that clips onto the bed board, printed in one piece — no screws, nothing to assemble',
-      zh: '直接夾在床板上的床邊置物架，整件一次印完，不用螺絲也不用組裝',
+      img: 'https://raw.githubusercontent.com/RX5950XT/3dp-bedside-table/main/previews/current/isometric_v3.png',
+      short: { en: 'A bedside shelf that clips onto the bed board.', zh: '直接夾在床板上的床邊置物架。' },
+      en: 'Printed in one piece — no screws, nothing to assemble. A 250 × 200mm top, a 28.9mm clip for a 28.7mm board, and four triangular braces underneath. About 342g of PETG and 11 hours on a Bambu Lab A1. Not printed yet, so the fit and the load it takes are still untested.',
+      zh: '整件一次印完，不用螺絲也不用組裝。平臺 250 × 200mm，夾槽 28.9mm 配 28.7mm 床板，底下四片三角支撐。PETG 約 342g、A1 印 11 小時。還沒實際印過，鬆緊和承重都還沒驗證。',
+    },
+    {
+      name: '3DP-Toothbrush_shaver_holder',
+      repo: 'https://github.com/RX5950XT/3DP-Toothbrush_shaver_holder',
+      lang: 'Python',
+      topic: '3dp',
+      tags: ['FreeCAD', 'Bambu Lab A1'],
+      img: 'https://raw.githubusercontent.com/RX5950XT/3DP-Toothbrush_shaver_holder/main/previews/isometric.png',
+      short: { en: 'A one-piece stand for a toothbrush and a razor — printed, and a perfect fit.', zh: '一體成形的牙刷與刮鬍刀架，實際印過，大小剛剛好。' },
+      en: 'A toothbrush slot on one side, two hooks for the razor on the other, and a drip tray with a drain hole and a 2mm lip. 70 × 50 × 104mm; an AI modelled it in FreeCAD through AgentCAD MCP, and the ready-to-print Bambu Studio file comes to 58g of PETG and about three hours. Printed for real: the toothbrush and razor fit just right.',
+      zh: '一側是牙刷槽，另一側兩支掛鉤放刮鬍刀，底下是有排水孔、外緣 2mm 擋邊的接水托。70 × 50 × 104mm，由 AI 透過 AgentCAD MCP 在 FreeCAD 建模；附可直接開印的 Bambu Studio 檔，PETG 約 58g、3 小時。已實際印出，牙刷和刮鬍刀放上去剛剛好。',
     },
     {
       name: 'Laguna-S2.1',
