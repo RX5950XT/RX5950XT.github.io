@@ -929,7 +929,7 @@ html.has-portrait .avatar {
 @media (min-width: 960px) {
   html.has-portrait .plate-inner {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(300px, 30vw, 380px);
+    grid-template-columns: minmax(0, 1fr) clamp(200px, 20vw, 240px);
     grid-template-rows: auto 1fr;
     grid-template-areas:
       "main clock"
@@ -1166,19 +1166,19 @@ html.has-portrait .avatar {
   color: #ef4444;
 }
 
-/* Profile links: one wrapping row of pills under the bio */
+/* Profile links: one wrapping row of compact pills under the bio */
 .links {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 18px;
+  gap: 6px;
+  margin-top: 14px;
 }
 
 .links .link {
-  padding: 7px 12px;
-  font-size: 0.8125rem;
+  padding: 5px 10px;
+  font-size: 0.75rem;
   letter-spacing: -0.01em;
-  gap: 6px;
+  gap: 5px;
 }
 
 .links .link-main {
@@ -1189,8 +1189,8 @@ html.has-portrait .avatar {
 }
 
 .links .link-ico {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
   flex: 0 0 auto;
 }
 
@@ -1225,14 +1225,47 @@ html.has-portrait .avatar {
 }
 
 .email-contact > a.link {
-  padding: 7px 12px;
-  font-size: 0.8125rem;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+}
+
+/* Plate email: address and copy button share one pill, split by a hairline.
+   The wrapper only clips the corners; each half keeps the normal .link fill. */
+.links .email-contact {
+  gap: 0;
+  border-radius: 999px;
+  box-shadow: var(--action-shadow);
+  overflow: hidden;
+}
+
+.links .email-contact > .link {
+  border-radius: 0;
+  box-shadow: inset 0 1px 0 0 var(--edge-soft);
+  transform: none;
+}
+
+.links .email-contact > a.link {
+  border-right: 0;
+  border-radius: 999px 0 0 999px;
+}
+
+.links .email-contact > .link:hover,
+.links .email-contact > .link:focus-visible {
+  transform: none;
 }
 
 .links .email-contact .email-copy {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
+  align-self: stretch;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  padding: 0 9px;
+  border-radius: 0 999px 999px 0;
+}
+
+.links .email-copy-ico {
+  width: 13px;
+  height: 13px;
 }
 
 .email-contact .link-main {
@@ -1271,7 +1304,7 @@ html.has-portrait .avatar {
 
 @media (max-width: 420px) {
   .email-contact > a.link {
-    padding: 9px 8px;
+    padding: 5px 8px;
     font-size: 0.75rem;
   }
 
@@ -1279,11 +1312,6 @@ html.has-portrait .avatar {
     gap: 6px;
   }
 
-  .links .email-contact .email-copy {
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-  }
 }
 
 /* --- Rig (machine specs on the plate) ------------------------------------- */
