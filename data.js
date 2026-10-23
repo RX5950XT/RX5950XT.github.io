@@ -16,7 +16,7 @@ const TOPIC_COLOR = {
 const DATA = {
   handle: 'rx5950xt',
 
-  /* Links on plate: GitHub | Hugging Face | Email | X | Discord | Android Testers */
+  /* Pill links under the bio: GitHub | Hugging Face | Email | X | Discord | Android Testers */
   links: [
     { label: 'GitHub', url: 'https://github.com/rx5950xt' },
     { label: 'Hugging Face', url: 'https://huggingface.co/RX5950XT' },
@@ -45,8 +45,8 @@ const DATA = {
   /* Left plate: likes / dislikes, straight under the bio. Items are split on ' · ' and shown as chips. */
   taste: {
     likes: {
-      en: 'Open-source AI · GPUs · VRAM · tokens · dark mode · Blue Archive · scrolling the X timeline',
-      zh: '開源 AI · GPU · VRAM · token · 深色模式 · 蔚藍檔案 · 滾動 X 時間軸',
+      en: 'Open-source AI · GPUs · VRAM · tokens · dark mode · Blue Archive · scrolling the X home feed',
+      zh: '開源 AI · GPU · VRAM · token · 深色模式 · 蔚藍檔案 · 滾動 X 首頁',
     },
     dislikes: {
       en: 'LINE (worst messenger ever) · Bureaucracy',
@@ -72,11 +72,9 @@ const DATA = {
       chromeLabel: 'Site controls',
       likes: 'Like',
       dislikes: 'Nope',
-      linksTitle: 'Links',
       copied: 'Copied',
       copyEmail: 'Copy email address',
       copyFailed: 'Failed',
-      rigTitle: 'Rig',
       rigWish:
         'Urgently seeking a DGX Spark for local deploy, fine-tunes, and development!',
       downloads: 'Downloads',
@@ -103,11 +101,9 @@ const DATA = {
       chromeLabel: '網站控制列',
       likes: '喜歡',
       dislikes: '不喜歡',
-      linksTitle: '連結',
       copied: '已複製',
       copyEmail: '複製電子郵件地址',
       copyFailed: '未複製',
-      rigTitle: '本機配置',
       rigWish: '急需一臺 DGX Spark 用於本地部署、微調與開發！',
       downloads: '下載次數',
       topicsLabel: '跳到主題',
@@ -146,8 +142,8 @@ const DATA = {
       lang: 'TypeScript',
       topic: 'tools',
       tags: ['Next.js', 'Android'],
-      en: 'A wiki that keeps itself organised. Drop in a link or a document and an LLM writes it into linked notes — one source usually touches ten or more pages, and it flags where two sources disagree. Everything is plain Markdown in your own Google Drive, on the web and on Android.',
-      zh: '會自己整理的 wiki。丟進網址或文件，LLM 會把它寫進互相連結的筆記：一份資料通常會改到十幾頁，兩份資料說法打架也會標出來。檔案都是 Markdown，放在你自己的 Google Drive，有網頁版和 Android 版。',
+      en: 'A wiki that keeps itself organised. Drop in a link or a document and an LLM writes it into linked notes — one source usually touches ten or more pages, and it flags where two sources disagree. Everything is plain Markdown in your own Google Drive, on the web and on Android, with a knowledge graph of how the pages link. Bring your own API key, or sign in with ChatGPT and run on your ChatGPT plan.',
+      zh: '會自己整理的 wiki。丟進網址或文件，LLM 會把它寫進互相連結的筆記：一份資料通常會改到十幾頁，兩份資料說法打架也會標出來。檔案都是 Markdown，放在你自己的 Google Drive，有網頁版和 Android 版，也能用知識圖譜看頁面怎麼互相連。可以自備 API 金鑰，也能直接用 ChatGPT 帳號登入、吃 ChatGPT 方案的額度。',
     },
     {
       name: 'Portfolio Visualizer',
@@ -164,9 +160,9 @@ const DATA = {
       repo: 'https://github.com/rx5950xt/ESP-32-CAM_remote_monitor',
       lang: 'C++',
       topic: 'hw',
-      tags: ['ESP32-CAM', 'Telegram Bot'],
-      en: 'An ESP32-CAM that watches a room over Telegram: ask for a photo or one every few seconds, and with person detection on, it sends you a shot as soon as someone walks in. Spotting people runs on the tiny board itself — no cloud, no API key — and the exposure is tuned for low light.',
-      zh: '用 ESP32-CAM 顧房間，全靠 Telegram 操作：傳指令就拍照，也能每隔幾秒回傳一張；開了人物偵測，看到有人就自動傳照片給你。認人在小小的板子上就做完，不用雲端也不用 API 金鑰，光線暗也調過曝光。',
+      tags: ['ESP32-CAM', 'Telegram Bot', 'MCP'],
+      en: 'An ESP32-CAM that watches a room over Telegram: ask for a photo or one every few seconds, and with person detection on, it sends you a shot as soon as someone walks in. Spotting people runs on the tiny board itself — no cloud, no API key — and the exposure is tuned for low light. An AI agent on the same network can do all of it too, through eight MCP tools; each board names itself, so several cameras can run side by side, and settings survive a reboot.',
+      zh: '用 ESP32-CAM 顧房間，全靠 Telegram 操作：傳指令就拍照，也能每隔幾秒回傳一張；開了人物偵測，看到有人就自動傳照片給你。認人在小小的板子上就做完，不用雲端也不用 API 金鑰，光線暗也調過曝光。同一個區網的 AI Agent 也能透過 8 個 MCP 工具做一樣的事；每塊板子會自己取名，好幾台可以同時接，設定重開機也還在。',
     },
     {
       name: 'LLM Arena',
@@ -193,8 +189,8 @@ const DATA = {
       lang: 'C++',
       topic: 'infra',
       tags: ['CUDA', 'Qwen-Image-2.1', 'MiniMax-H3'],
-      en: 'A local image and video generation engine written in C++ / CUDA. Qwen-Image-2.1 creates and edits images; MiniMax-H3 makes videos with audio from text or reference media. A browser workbench handles models, LoRAs and generation settings, with a CLI and HTTP API for other tools. Inference needs no Python, PyTorch or ComfyUI, and supports single or dual NVIDIA GPUs.',
-      zh: '用 C++／CUDA 寫的本機圖片與影音生成引擎。Qwen-Image-2.1 負責生圖和改圖，MiniMax-H3 用文字或參考素材生成帶聲音的影片。瀏覽器工作台可以切換模型、安裝 LoRA 和調整生成設定，也有命令列與 HTTP API 給其他工具接。推論不需要 Python、PyTorch 或 ComfyUI，支援單張或雙張 NVIDIA 顯卡。',
+      en: 'A local image and video generation engine written in C++ / CUDA. Qwen-Image-2.1 creates and edits images, with a Turbo model that needs only 8 steps; MiniMax-H3 makes videos with audio from text or reference media. A browser workbench handles models, LoRAs and generation settings, with a CLI and HTTP API for other tools. Inference needs no Python, PyTorch or ComfyUI, and runs on two NVIDIA cards or a single 16GB or even 8GB one. It can also boot on a Google Colab GPU in one go, run by a Telegram bot that shuts it down when idle.',
+      zh: '用 C++／CUDA 寫的本機圖片與影音生成引擎。Qwen-Image-2.1 負責生圖和改圖，還有只要 8 步的 Turbo 版；MiniMax-H3 用文字或參考素材生成帶聲音的影片。瀏覽器工作台可以切換模型、安裝 LoRA 和調整生成設定，也有命令列與 HTTP API 給其他工具接。推論不需要 Python、PyTorch 或 ComfyUI，雙張 NVIDIA 顯卡、單張 16GB 甚至 8GB 都能跑。也能一鍵在 Google Colab 的 GPU 上開起來，用 Telegram bot 操作，閒置會自己關機。',
     },
     {
       name: 'Qwen-3.8-27B-DualGPUs',
@@ -257,12 +253,12 @@ const DATA = {
     {
       name: 'calcrux',
       repo: 'https://github.com/rx5950xt/calcrux',
-      extra: [{ url: 'https://github.com/RX5950XT/calcrux/releases/latest', en: 'APK', zh: 'APK' }],
+      extra: [{ url: 'https://play.google.com/apps/testing/com.calcrux', en: 'Google Play beta', zh: 'Google Play 測試' }],
       lang: 'Rust',
       topic: 'apps',
       tags: ['Android', 'Kotlin'],
-      en: 'An Android calculator with a Rust core that keeps exact fractions — it also converts units, works out loans and checks exchange rates',
-      zh: '核心用 Rust 寫的 Android 計算機，分數算到底都不失真，還會換單位、算貸款、查匯率',
+      en: 'An Android calculator with a Rust core that keeps exact fractions — it also converts units, works out loans and converts currencies at live rates. In closed testing on Google Play: join the Android Testers group first',
+      zh: '核心用 Rust 寫的 Android 計算機，分數算到底都不失真，還會換單位、算貸款、用即時匯率換多國幣別。Google Play 封閉測試中，先加入 Android Testers 群組就能裝',
     },
     {
       name: 'FJU-TronClass-MCP',
@@ -280,8 +276,8 @@ const DATA = {
       lang: 'TypeScript',
       topic: 'games',
       tags: ['Three.js', 'Vite'],
-      en: 'A 3D browser game: roll a ball and swallow the world, from flowers up to skyscrapers, through day, night and rain. Built with Kimi K2.6 as a test of that model — the result is rough and unfinished',
-      zh: '瀏覽器裡的 3D 小遊戲：滾著球把世界吞掉，從花草一路吃到大樓，還有日夜和下雨。用 Kimi K2.6 做的，拿來測試這個模型；效果還很粗糙、沒做完整',
+      en: 'A 3D browser game: roll a ball and swallow the world — shops, sheep, houses, then whole cities and mountains, with no size limit. Towns are generated endlessly with roads and buildings you can roll inside, through day, night and rain, and it plays on phones too. Started as a test of Kimi K2.6',
+      zh: '瀏覽器裡的 3D 小遊戲：滾著球把世界吞掉，從商店、羊群、房子一路吃到整座城市和山，大小沒有上限。城鎮無限生成，有道路、能滾進去的建築，還有日夜和下雨，手機也能玩。一開始是拿來測試 Kimi K2.6 做的',
     },
     {
       name: 'surface_optimizer',

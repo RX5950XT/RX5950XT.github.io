@@ -116,7 +116,7 @@ function paintPlate() {
 
   $('#bio').textContent = s.bio;
 
-  // Vertical list stack of profile links
+  // Row of pill links under the bio
   $('#links').innerHTML = DATA.links
     .map(
       (l) => l.label === 'Email' ? emailContact(l) : `<a class="link" href="${l.url}" target="_blank" rel="noopener me">
@@ -124,11 +124,6 @@ function paintPlate() {
         <span class="arrow" aria-hidden="true">↗</span></a>`
     )
     .join('');
-
-  const btnLinksText = $('#btnLinksText');
-  if (btnLinksText) btnLinksText.textContent = s.linksTitle || 'Links';
-  const btnRigText = $('#btnRigText');
-  if (btnRigText) btnRigText.textContent = s.rigTitle || 'Rig';
 
   paintTaste();
   paintRig();
@@ -161,9 +156,6 @@ function paintRig() {
   const s = ui();
   const rig = DATA.rig;
   if (!rig) return;
-
-  const title = $('#rigTitle .label');
-  if (title) title.textContent = s.rigTitle;
 
   const list = $('#rigList');
   if (list) {
@@ -1158,38 +1150,6 @@ function startContextMenu() {
   });
 }
 
-function startPlateMenu() {
-  const menu = $('#plateMenu');
-  if (!menu || menu.dataset.bound) return;
-  menu.dataset.bound = '1';
-
-  const tabs = [...menu.querySelectorAll('.plate-menu-btn')];
-
-  // Tabs switch on hover, focus or tap; the panel is never collapsed.
-  function select(tab) {
-    tabs.forEach((t) => {
-      const on = t === tab;
-      t.classList.toggle('is-active', on);
-      t.setAttribute('aria-selected', String(on));
-      t.tabIndex = on ? 0 : -1;
-      $('#' + t.getAttribute('aria-controls')).hidden = !on;
-    });
-  }
-
-  tabs.forEach((tab) => {
-    tab.addEventListener('pointerenter', () => select(tab));
-    tab.addEventListener('focus', () => select(tab));
-    tab.addEventListener('click', () => select(tab));
-  });
-
-  menu.addEventListener('keydown', (e) => {
-    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-    if (!step) return;
-    e.preventDefault();
-    tabs[(tabs.indexOf(document.activeElement) + step + tabs.length) % tabs.length].focus();
-  });
-}
-
 function startHandleEffect() {
   const handle = $('#handle');
   if (!handle) return;
@@ -1305,7 +1265,6 @@ startContextMenu();
 startEmailCopy();
 startTopics();
 startLiveStats();
-startPlateMenu();
 startHandleEffect();
 startSkyClicks();
 printBanner();

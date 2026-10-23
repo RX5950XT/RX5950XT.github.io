@@ -27,9 +27,10 @@
 
 ## 左邊 plate
 - **bio**：並列列表＋Agent 連結；bio 與 `index.html` meta description 都列「由 Agent 驅動的 3D 列印參數化建模」
+- 順序：bio → 連結 → taste → rig
 - **taste**（`DATA.taste`）：喜歡（藍）／不喜歡（紅），項目以 ` · ` 分隔、畫成膠囊（`paintTaste()`）
-- **rig**（`DATA.rig`）：順序 CPU → MB → RAM → GPU → OS → AUD → VR → 3DP；Ryzen 7 5700X · GIGABYTE X570 Aorus Pro · DDR4 96GB · 5060 Ti 16GB／3060 Ti 8GB／3070 Ti FE · Windows + Android；許願句 `DATA.ui.rigWish`
-- **plate 分頁**：連結／本機配置，hover／聚焦／點擊切換（tablist）；≤480px 平均分寬。「使用它們」已移除，這些入口整合於 AxonDeck。
+- **rig**（`DATA.rig`）：taste 下方獨立一塊、無標題；順序 CPU → MB → RAM → GPU → OS → PHONE → AUD → VR → 3DP；許願句 `DATA.ui.rigWish`
+- **連結**（`DATA.links`）：bio 正下方一排膠囊按鈕（`.links` flex-wrap），Email 膠囊旁有複製鈕；舊的「連結／本機配置」分頁已移除。「使用它們」已移除，這些入口整合於 AxonDeck。
 - 頭貼 URL 在 `index.html`（非 DATA）；`DATA.handle` 只給右鍵選單標題
 
 ## 右邊作品（`#work` 單一 grid）

@@ -117,6 +117,8 @@
       <p class="tagline reveal" id="tagline"></p>
       <p class="bio reveal" id="bio"></p>
 
+      <nav class="links reveal" id="links" aria-label="Profile links"></nav>
+
       <!-- Likes / dislikes with thumbs up / thumbs down icons. -->
       <section class="rig taste reveal" id="taste">
         <dl class="rig-list">
@@ -135,33 +137,10 @@
         </dl>
       </section>
 
-      <!-- Section Switcher: Links / Rig -->
-      <nav class="plate-menu reveal" id="plateMenu" role="tablist" aria-label="Profile sections">
-        <button type="button" class="plate-menu-btn is-active" id="btnLinks" role="tab" aria-selected="true" aria-controls="panelLinks" data-panel="links">
-          <svg class="plate-menu-ico" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          <span class="plate-menu-text" id="btnLinksText">Links</span>
-        </button>
-        <button type="button" class="plate-menu-btn" id="btnRig" role="tab" aria-selected="false" aria-controls="panelRig" data-panel="rig" tabindex="-1">
-          <svg class="plate-menu-ico" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/></svg>
-          <span class="plate-menu-text" id="btnRigText">Rig</span>
-        </button>
-      </nav>
-
-      <!-- Panels: hovering a tab above switches to its panel -->
-      <div class="plate-panels reveal" id="platePanels">
-        <!-- 1. Profile Links (Vertical Stack) -->
-        <div class="plate-panel" id="panelLinks" role="tabpanel" aria-labelledby="btnLinks">
-          <nav class="links" id="links" aria-label="Profile links"></nav>
-        </div>
-
-        <!-- 2. Machine Specs (Rig) - title omitted to prevent duplication -->
-        <div class="plate-panel" id="panelRig" role="tabpanel" aria-labelledby="btnRig" hidden>
-          <section class="rig" id="rig">
-            <dl class="rig-list" id="rigList"></dl>
-            <p class="rig-wish" id="rigWish"></p>
-          </section>
-        </div>
-      </div>
+      <section class="rig rig-block reveal" id="rig">
+        <dl class="rig-list" id="rigList"></dl>
+        <p class="rig-wish" id="rigWish"></p>
+      </section>
       </div>
     </div>
   </header>
