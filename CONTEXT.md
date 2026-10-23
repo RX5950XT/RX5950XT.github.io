@@ -60,11 +60,11 @@
 ## 版號（cache-bust）
 - `index.html` 三處 `?v=` 同號；改 css/data/main 後、**push 前**必 bump
 - 格式 `YYYYMMDD` + 當日序字母（a…z，z 之後 za、zb…）；詳見 `CLAUDE.md` / `AGENTS.md`
-- 目前：`20261024c`
+- 目前：`20261024d`
 
 ## 近期
-- **2026/10/24（未 push）**：3D 列印四張作品卡（MATX、喇叭籃、床邊架、新增牙刷刮鬍刀架）改成 README 圖＋一句話，`short:{en,zh}` 常駐、原 `en/zh` 收在「展開／收起」（`<details class="card-more">`）；`img` 圖點擊用 `<dialog id="zoom">` 放大（`startZoom()`）。
-- **2026/10/24（未 push）**：頭貼固定在 id 左邊（拿掉寬螢幕右欄肖像）；bio 中英改寫；`DATA.links` 可加 `note:{en,zh}`，Android Testers 膠囊內顯示說明（`.link-note`）；taste 移除「最爛的通訊軟體」。
+- **2026/10/24**：3D 列印四張作品卡（MATX、喇叭籃、床邊架、新增牙刷刮鬍刀架）改成 README 圖＋一句話，`short:{en,zh}` 常駐、原 `en/zh` 收在「展開／收起」（`<details class="card-more">`）；`img` 圖點擊用 `<dialog id="zoom">` 放大（`startZoom()`）。
+- **2026/10/24**：頭貼固定在 id 左邊（拿掉寬螢幕右欄肖像）；bio 中英改寫；`DATA.links` 可加 `note:{en,zh}`，Android Testers 膠囊內顯示說明（`.link-note`）；taste 移除「最爛的通訊軟體」。
 - **2026/10/17**：AxonDeck 中英文改以「每天使用的 Windows 工作中樞」定位，強調雲端 AI、Agent、本機算力、專案開發與影音創作的整合工作流程。
 - **2026/10/17**：兩處複製按鈕均為純圖示（成功勾號／失敗提示），含 tooltip 與中英文無障礙名稱。右鍵選單信箱字較小、圖示同為 16px、按鈕 24px；信封、文字欄位與上下項目對齊。上方信箱一般字級，僅窄螢幕縮排以保留單行。
 - **2026/10/17**：Email 改為直接顯示完整信箱且固定單行；上方連結與右鍵選單皆附並排的複製按鈕，中英文顯示成功／失敗狀態，保留 `mailto:`。
@@ -72,6 +72,6 @@
 - **2026/10/17**：Portfolio Visualizer 移至「給 Hermes Agent 用」，中英文補上 MCP 查詢與持股／現金紀錄操作、移除過時 AI 健診介紹；AxonDeck 突顯每日主力與整合工具定位；移除 plate「使用它們」及專用資料、程式、樣式。
 - 本次驗證：`node --check data.js`、`node --check main.js`、`git diff --check` 通過；Playwright／Edge 檢查 1440px／375px、中英文、深淺色、分頁鍵盤與語言／主題切換，無文字裁切、水平溢出或 JS 執行錯誤；信箱複製已實測，成功／失敗圖示及重設另經自我檢查通過。
 - **2026/10/12**：VoiceInk 卡片改為 AxonDeck，更新 GitHub／安裝連結與中英文介紹；AI Infra 在 Strata 後新增 Miroxen，中英文說明依兩個專案目前 README 撰寫。
-- **2026/09/30（未 push）**：移除 Token-Anxiety-Dashboard；`ai` 改名 `tools`、新增 `agent`／`games` 分類；AgentCAD_MCP＋FreeCAD 合成雙倉庫卡；Strata／FreeCAD／Laguna 說明依實際內容重寫；卡片顏色改依分類；新增 `extra` 連結鈕與 Taiwan Lottery 展示連結；標籤重整；taste 改膠囊並加「蔚藍檔案」「官僚主義」。
+- **2026/09/30**：移除 Token-Anxiety-Dashboard；`ai` 改名 `tools`、新增 `agent`／`games` 分類；AgentCAD_MCP＋FreeCAD 合成雙倉庫卡；Strata／FreeCAD／Laguna 說明依實際內容重寫；卡片顏色改依分類；新增 `extra` 連結鈕與 Taiwan Lottery 展示連結；標籤重整；taste 改膠囊並加「蔚藍檔案」「官僚主義」。
 - **2026/09/30（已 push `7de27b7`）**：文案全面改成白話；主題列改跳轉導航（`#t-<topic>`、`spyTopics()`）；plate 改分頁；星空取代深色、淺色白天天空；淺色頭貼改墨點畫暗部。
 - **2026/09/29**：粒子肖像、作品區合一、HF／GitHub 即時數據、OG meta。

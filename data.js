@@ -54,8 +54,8 @@ const DATA = {
       zh: '開源 AI · GPU · VRAM · token · 深色模式 · 蔚藍檔案 · 滾動 X 首頁',
     },
     dislikes: {
-      en: 'LINE · Bureaucracy',
-      zh: 'LINE · 官僚主義',
+      en: 'LINE · Bureaucracy · Short videos · TikTok',
+      zh: 'LINE · 官僚主義 · 短影片 · TikTok',
     },
   },
 
