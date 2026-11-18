@@ -1,0 +1,1545 @@
+/* rx5950xt.github.io — appearance, language, clock, content, pointer light. */
+
+const $ = (sel) => document.querySelector(sel);
+const root = document.documentElement;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+/* First visit: browser locale starting with zh → Chinese; else English.
+   Manual toggle is stored in localStorage and wins thereafter. */
+function detectLang() {
+  try {
+    const list =
+      navigator.languages && navigator.languages.length
+        ? navigator.languages
+        : [navigator.language || navigator.userLanguage || 'en'];
+    for (const l of list) {
+      if (/^zh\b/i.test(l)) return 'zh';
+    }
+  } catch (_) {}
+  return 'en';
+}
+
+let lang = localStorage.getItem('lang') || detectLang();
+/* Brand marks for profile chips + context menu. */
+const LINK_ICONS = {
+  GitHub:
+    '<svg class="link-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.6 7.6 0 0 1 8 4.77c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>',
+  'Hugging Face':
+    '<svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.025 1.13c-5.77 0-10.449 4.647-10.449 10.378 0 1.112.178 2.181.503 3.185.064-.222.203-.444.416-.577a.96.96 0 0 1 .524-.15c.293 0 .584.124.84.284.278.173.48.408.71.694.226.282.458.611.684.951v-.014c.017-.324.106-.622.264-.874s.403-.487.762-.543c.3-.047.596.06.787.203s.31.313.4.467c.15.257.212.468.233.542.01.026.653 1.552 1.657 2.54.616.605 1.01 1.223 1.082 1.912.055.537-.096 1.059-.38 1.572.637.121 1.294.187 1.967.187.657 0 1.298-.063 1.921-.178-.287-.517-.44-1.041-.384-1.581.07-.69.465-1.307 1.081-1.913 1.004-.987 1.647-2.513 1.657-2.539.021-.074.083-.285.233-.542.09-.154.208-.323.4-.467a1.08 1.08 0 0 1 .787-.203c.359.056.604.29.762.543s.247.55.265.874v.015c.225-.34.457-.67.683-.952.23-.286.432-.52.71-.694.257-.16.547-.284.84-.285a.97.97 0 0 1 .524.151c.228.143.373.388.43.625l.006.04a10.3 10.3 0 0 0 .534-3.273c0-5.731-4.678-10.378-10.449-10.378M8.327 6.583a1.5 1.5 0 0 1 .713.174 1.487 1.487 0 0 1 .617 2.013c-.183.343-.762-.214-1.102-.094-.38.134-.532.914-.917.71a1.487 1.487 0 0 1 .69-2.803m7.486 0a1.487 1.487 0 0 1 .689 2.803c-.385.204-.536-.576-.916-.71-.34-.12-.92.437-1.103.094a1.487 1.487 0 0 1 .617-2.013 1.5 1.5 0 0 1 .713-.174m-10.68 1.55a.96.96 0 1 1 0 1.921.96.96 0 0 1 0-1.92m13.838 0a.96.96 0 1 1 0 1.92.96.96 0 0 1 0-1.92M8.489 11.458c.588.01 1.965 1.157 3.572 1.164 1.607-.007 2.984-1.155 3.572-1.164.196-.003.305.12.305.454 0 .886-.424 2.328-1.563 3.202-.22-.756-1.396-1.366-1.63-1.32q-.011.001-.02.006l-.044.026-.01.008-.03.024q-.018.017-.035.036l-.032.04a1 1 0 0 0-.058.09l-.014.025q-.049.088-.11.19a1 1 0 0 1-.083.116 1.2 1.2 0 0 1-.173.18q-.035.029-.075.058a1.3 1.3 0 0 1-.251-.243 1 1 0 0 1-.076-.107c-.124-.193-.177-.363-.337-.444-.034-.016-.104-.008-.2.022q-.094.03-.216.087-.06.028-.125.063l-.13.074q-.067.04-.136.086a3 3 0 0 0-.135.096 3 3 0 0 0-.26.219 2 2 0 0 0-.12.121 2 2 0 0 0-.106.128l-.002.002a2 2 0 0 0-.09.132l-.001.001a1.2 1.2 0 0 0-.105.212q-.013.036-.024.073c-1.139-.875-1.563-2.317-1.563-3.203 0-.334.109-.457.305-.454m.836 10.354c.824-1.19.766-2.082-.365-3.194-1.13-1.112-1.789-2.738-1.789-2.738s-.246-.945-.806-.858-.97 1.499.202 2.362c1.173.864-.233 1.45-.685.64-.45-.812-1.683-2.896-2.322-3.295s-1.089-.175-.938.647 2.822 2.813 2.562 3.244-1.176-.506-1.176-.506-2.866-2.567-3.49-1.898.473 1.23 2.037 2.16c1.564.932 1.686 1.178 1.464 1.53s-3.675-2.511-4-1.297c-.323 1.214 3.524 1.567 3.287 2.405-.238.839-2.71-1.587-3.216-.642-.506.946 3.49 2.056 3.522 2.064 1.29.33 4.568 1.028 5.713-.624m5.349 0c-.824-1.19-.766-2.082.365-3.194 1.13-1.112 1.789-2.738 1.789-2.738s-.246-.945.806-.858.97 1.499-.202 2.362c-1.173.864.233 1.45.685.64.451-.812 1.683-2.896 2.322-3.295s1.089-.175.938.647-2.822 2.813-2.562 3.244 1.176-.506 1.176-.506 2.866-2.567 3.49-1.898-.473 1.23-2.037 2.16c-1.564.932-1.686 1.178-1.464 1.53s3.675-2.511 4-1.297c.323 1.214-3.524 1.567-3.287 2.405.238.839 2.71-1.587 3.216-.642.506.946 3.49 2.056 3.522 2.064-1.29.33 4.568 1.028 5.713-.624"/></svg>',
+  Email:
+    '<svg class="link-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg>',
+  X: '<svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+  'Android Testers':
+    '<svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85a.637.637 0 0 0-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67a.643.643 0 0 0-.87-.2c-.28.18-.37.54-.22.83L6.4 9.48A10.78 10.78 0 0 0 1 18h22a10.78 10.78 0 0 0-5.4-8.52M7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5m10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5"/></svg>',
+};
+
+function linkIcon(label) {
+  return LINK_ICONS[label] || '';
+}
+
+/* --- Appearance ----------------------------------------------------------- */
+
+function applyTheme(theme) {
+  root.dataset.theme = theme;
+  $('meta[name="theme-color"]').content = theme === 'dark' ? '#08080b' : '#f5f5f7';
+  $('#themeToggle').setAttribute('aria-pressed', String(theme === 'light'));
+  readPointerColors();
+  paintControls();
+  paintPortrait();
+}
+
+function setTheme(theme) {
+  localStorage.setItem('theme', theme);
+
+  // The new appearance wipes in as a circle out of the toggle. Browsers without
+  // View Transitions — and anyone asking for less motion — get a plain swap.
+  if (reduced.matches || !document.startViewTransition) {
+    applyTheme(theme);
+    return;
+  }
+
+  const r = $('#themeToggle').getBoundingClientRect();
+  const x = r.left + r.width / 2;
+  const y = r.top + r.height / 2;
+  // Reach the farthest corner, so the circle always clears the viewport.
+  const reach = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  // Hold the edge speed roughly constant: a phone shouldn't feel snappier than a
+  // 4K panel just because the circle has less ground to cover.
+  const duration = Math.min(620, Math.max(320, reach / 2.6));
+
+  document
+    .startViewTransition(() => applyTheme(theme))
+    .ready.then(() => {
+      root.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${reach}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration,
+          easing: 'cubic-bezier(.22, 1, .36, 1)',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    })
+    // A skipped transition rejects; the theme is already applied either way.
+    .catch(() => {});
+}
+
+/* --- Language ------------------------------------------------------------- */
+
+function setLang(next) {
+  lang = next;
+  localStorage.setItem('lang', next);
+  root.lang = next === 'zh' ? 'zh-Hant' : 'en';
+  paintPlate();
+  paintControls();
+  paintContextMenu();
+  render();
+  const dateEl = $('#date');
+  if (dateEl) dateEl.textContent = formatLocalDate(new Date());
+}
+
+const ui = () => DATA.ui[lang];
+
+function paintPlate() {
+  const s = ui();
+  $('#tagline').textContent = s.tagline;
+  $('#clockLabel').textContent = s.localTime;
+  const foot = $('#foot');
+  foot.textContent = s.footer;
+  foot.hidden = !s.footer;
+
+  $('#bio').textContent = s.bio;
+
+  // Pill links (beside the rig on wide screens)
+  $('#links').innerHTML = DATA.links
+    .map(
+      (l) => l.label === 'Email' ? emailContact(l) : `<a class="link" href="${l.url}" target="_blank" rel="noopener me">
+        <span class="link-main">${linkIcon(l.label)}<span class="link-label">${l.label}</span>${l.note ? `<span class="link-note">${escapeHtml(l.note[lang])}</span>` : ''}</span>
+        <span class="arrow" aria-hidden="true">↗</span></a>`
+    )
+    .join('');
+
+  paintRig();
+}
+
+function paintRig() {
+  const s = ui();
+  const rig = DATA.rig;
+  if (!rig) return;
+
+  const list = $('#rigList');
+  if (list) {
+    list.innerHTML = (rig.specs || [])
+      .map((row) => {
+        const raw = row.value;
+        let valHtml;
+        if (Array.isArray(raw)) {
+          // One key, multiple lines (e.g. dual GPU).
+          valHtml = raw
+            .map((item) => {
+              const s =
+                item && typeof item === 'object'
+                  ? item[lang] || item.en || ''
+                  : item;
+              return `<span class="rig-line">${escapeHtml(s)}</span>`;
+            })
+            .join('');
+        } else {
+          const val =
+            raw && typeof raw === 'object' ? raw[lang] || raw.en || '' : raw;
+          valHtml = escapeHtml(val);
+        }
+        return `<div class="rig-row">
+          <dt class="rig-key">${escapeHtml(row.key)}</dt>
+          <dd class="rig-val">${valHtml}</dd>
+        </div>`;
+      })
+      .join('');
+  }
+
+  const wish = $('#rigWish');
+  if (wish) wish.textContent = s.rigWish || '';
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+const EMAIL_COPY_ICON = '<svg class="email-copy-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
+const EMAIL_COPIED_ICON = '<svg class="email-copy-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+const EMAIL_COPY_FAILED_ICON = '<svg class="email-copy-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/></svg>';
+
+function emailContact(link, context = false) {
+  const address = escapeHtml(link.url.slice('mailto:'.length));
+  const prefix = context ? 'ctx-item' : 'link';
+  const role = context ? 'role="menuitem"' : '';
+  return `<div class="email-contact" ${context ? 'role="none"' : ''}>
+    <a class="${prefix}" ${role} href="${link.url}">
+      <span class="${prefix}-main">${linkIcon('Email')}<span class="${prefix}-label">${address}</span></span>
+    </a>
+    <button type="button" class="link email-copy" ${role} data-copy-email="${address}"
+      aria-label="${ui().copyEmail}: ${address}" title="${ui().copyEmail}" aria-live="polite">${EMAIL_COPY_ICON}</button>
+  </div>`;
+}
+
+function startEmailCopy() {
+  document.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-copy-email]');
+    if (!button || button.disabled) return;
+    button.disabled = true;
+    let feedback = ui().copied;
+    let icon = EMAIL_COPIED_ICON;
+    try {
+      await navigator.clipboard.writeText(button.dataset.copyEmail);
+    } catch (error) {
+      console.warn('Email copy failed:', error);
+      feedback = ui().copyFailed;
+      icon = EMAIL_COPY_FAILED_ICON;
+    } finally {
+      button.disabled = false;
+    }
+    button.innerHTML = icon;
+    button.setAttribute('aria-label', feedback);
+    button.title = feedback;
+    clearTimeout(button.copyTimer);
+    button.copyTimer = setTimeout(() => {
+      button.innerHTML = EMAIL_COPY_ICON;
+      button.setAttribute('aria-label', `${ui().copyEmail}: ${button.dataset.copyEmail}`);
+      button.title = ui().copyEmail;
+    }, 1800);
+  });
+}
+
+/* Chrome icons: sun → go light, moon → go dark; monogram for language target. */
+const ICON_SUN =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+const ICON_MOON =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"/></svg>';
+/* --- Starfield ------------------------------------------------------------ */
+
+/* At night, a click throws one more streak from the pointer. */
+function startSkyClicks() {
+  const sky = $('#sky');
+  if (!sky) return;
+  addEventListener(
+    'pointerdown',
+    (e) => {
+      if (e.button !== 0) return;
+      if (root.dataset.theme !== 'dark' || reduced.matches) return;
+      const shot = document.createElement('span');
+      shot.className = 'meteor meteor-shot';
+      // Right edge = the streak's head; park it on the cursor.
+      shot.style.left = `${e.clientX - 190}px`;
+      shot.style.top = `${e.clientY - 1}px`;
+      shot.addEventListener('animationend', () => shot.remove());
+      sky.appendChild(shot);
+    },
+    { passive: true }
+  );
+}
+
+function paintControls() {
+  const s = ui();
+  const dark = root.dataset.theme === 'dark';
+  const chrome = $('#chrome');
+  if (chrome) chrome.setAttribute('aria-label', s.chromeLabel || 'Site controls');
+  $('#themeText').textContent = dark ? s.dayText : s.nightText;
+  $('#themeToggle').setAttribute('aria-label', dark ? s.themeLabel : s.themeLabelDark);
+  $('#langText').textContent = lang === 'zh' ? 'English' : '中文';
+  $('#langToggle').setAttribute('aria-label', s.langLabel);
+
+  // Icon buttons: show the target mode / language, not the current one.
+  const themeGlyph = $('#themeGlyph');
+  if (themeGlyph) themeGlyph.innerHTML = dark ? ICON_SUN : ICON_MOON;
+  const langGlyph = $('#langGlyph');
+  if (langGlyph) langGlyph.textContent = lang === 'zh' ? 'EN' : '中';
+}
+
+/* --- Clock ---------------------------------------------------------------- */
+
+/* The visitor's own timezone, straight from the browser — no lookup needed. */
+
+function gmtOffset() {
+  const mins = -new Date().getTimezoneOffset();
+  const sign = mins < 0 ? '-' : '+';
+  const h = Math.floor(Math.abs(mins) / 60);
+  const m = Math.abs(mins) % 60;
+  return `GMT${sign}${h}${m ? ':' + String(m).padStart(2, '0') : ''}`;
+}
+
+function formatLocalDate(d) {
+  // zh → 2026年7月17日；en → 2026-07-17
+  if (lang === 'zh') {
+    return new Intl.DateTimeFormat('zh-Hant', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(d);
+  }
+  return new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(d);
+}
+
+function formatLocalTime(d) {
+  return new Intl.DateTimeFormat(lang === 'zh' ? 'zh-Hant' : [], {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).format(d);
+}
+
+function startClock() {
+  const timeEl = $('#clock');
+  const dateEl = $('#date');
+  const zoneEl = $('#zone');
+  zoneEl.textContent = `${Intl.DateTimeFormat().resolvedOptions().timeZone} · ${gmtOffset()}`;
+
+  let lastDateKey = '';
+  const tick = () => {
+    const now = new Date();
+    timeEl.textContent = formatLocalTime(now);
+    timeEl.dateTime = now.toISOString();
+
+    // Date string only changes on day/lang flip — skip DOM writes otherwise.
+    const dateKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${lang}`;
+    if (dateKey !== lastDateKey) {
+      lastDateKey = dateKey;
+      dateEl.textContent = formatLocalDate(now);
+    }
+  };
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* --- Content -------------------------------------------------------------- */
+
+let firstRender = true;
+
+const arrow = '<span class="arrow" aria-hidden="true">↗</span>';
+
+/* data.js holds a snapshot; startLiveStats() fills these when the Hugging Face
+   and GitHub APIs answer, and the snapshot stays if they don't. */
+const live = { downloads: {}, pushed: {} };
+
+const repoKey = (url) => (url || '').replace(/^https:\/\/github\.com\//i, '').toLowerCase();
+
+// Every Hugging Face model repo a card points at (datasets are not counted).
+const hfIds = (m) =>
+  (m.links || [{ url: m.url }])
+    .map((l) => l.url.replace('https://huggingface.co/', '').toLowerCase())
+    .filter((id) => !id.startsWith('datasets/'));
+
+function relTime(iso) {
+  const sec = (Date.parse(iso) - Date.now()) / 1000;
+  const rtf = new Intl.RelativeTimeFormat(lang === 'zh' ? 'zh-Hant' : 'en', { numeric: 'auto' });
+  const units = [['year', 31536000], ['month', 2592000], ['week', 604800], ['day', 86400], ['hour', 3600]];
+  for (const [unit, n] of units) {
+    if (Math.abs(sec) >= n) return rtf.format(Math.round(sec / n), unit);
+  }
+  return rtf.format(Math.round(sec / 60), 'minute');
+}
+
+function pushedText(repo) {
+  const iso = live.pushed[repoKey(repo)];
+  return iso ? ui().pushed.replace('{t}', relTime(iso)) : '';
+}
+
+function textWeight(str) {
+  let w = 0;
+  for (const ch of String(str || '')) w += ch.charCodeAt(0) > 127 ? 1.75 : 1;
+  return w;
+}
+
+function cardWeight(item) {
+  const desc = item.short ? item.short[lang] || item.short.en : item[lang] || item.en;
+  return textWeight(desc) + (item.img ? 115 : 0);
+}
+
+function baseSpan(item, weight) {
+  if (item.parts || item.series) return 6;
+  const hi = lang === 'en' ? 300 : 220;
+  const mid = lang === 'en' ? 235 : 175;
+  if (weight > hi) return 4;
+  if (weight > mid) return 3;
+  return 2;
+}
+
+function packGroup(entries) {
+  const rows = [];
+  let row = [];
+  let sum = 0;
+  for (const e of entries) {
+    if (sum + e.span > 6 && row.length) {
+      // Avoid stranding adjacent 3/4-col cards as stacked full-width 6-col slabs.
+      if (row.length === 1 && row[0].span >= 3 && row[0].span < 6 && (e.span === 3 || e.span === 4)) {
+        row[0].span = 3;
+        e.span = 3;
+        sum = 3;
+      } else {
+        rows.push({ items: row, sum });
+        row = [];
+        sum = 0;
+      }
+    }
+    row.push(e);
+    sum += e.span;
+  }
+  if (row.length) rows.push({ items: row, sum });
+
+  if (rows.length >= 2) {
+    const last = rows[rows.length - 1];
+    const prev = rows[rows.length - 2];
+    if (last.items.length === 1 && last.items[0].span < 6) {
+      if (prev.items.length >= 3) {
+        const moved = prev.items.pop();
+        prev.sum -= moved.span;
+        last.items.unshift(moved);
+        last.sum += moved.span;
+      } else if (prev.items.length === 2 && prev.items.every((x) => x.span < 6)) {
+        // Group three trailing cards into one 2+2+2 row instead of stranding a solo 6-col card.
+        const combined = [...prev.items, last.items[0]];
+        combined.forEach((x) => { x.span = 2; });
+        rows.splice(rows.length - 2, 2, { items: combined, sum: 6 });
+      }
+    }
+  }
+
+  for (const r of rows) {
+    if (r.items.length === 2 && r.sum === 6 && r.items[0].span !== r.items[1].span) {
+      const hi = Math.max(r.items[0].weight, r.items[1].weight);
+      const lo = Math.max(1, Math.min(r.items[0].weight, r.items[1].weight));
+      if (hi / lo < 1.4) {
+        r.items[0].span = 3;
+        r.items[1].span = 3;
+      }
+    }
+    let rem = 6 - r.sum;
+    if (rem <= 0) continue;
+    if (r.items.length === 1) {
+      r.items[0].span = 6;
+      continue;
+    }
+    // When one card is clearly longer (>= 1.4x), widen it; otherwise grow the narrower card so siblings balance.
+    const sorted = [...r.items].sort((a, b) => b.weight - a.weight);
+    const ratio = sorted[0].weight / Math.max(1, sorted[sorted.length - 1].weight);
+    const order = ratio >= 1.4 ? sorted : [...r.items].sort((a, b) => a.span - b.span || b.weight - a.weight);
+    for (let k = 0; rem > 0; k++) {
+      const target = order[k % order.length];
+      if (target.span < 6) {
+        target.span += 1;
+        rem -= 1;
+      }
+    }
+  }
+  return entries;
+}
+
+function spanStyle(span) {
+  const spanMd = span >= 5 ? 2 : 1;
+  return `--span:${span}; --span-md:${spanMd};`;
+}
+
+/* Projects and the smaller 'more' entries share one card; the latter just
+   have no tags and a one-line description. */
+function projectCard(p, i, span = 2) {
+  const color = TOPIC_COLOR[p.topic];
+  const s = ui();
+  const codeLink = p.repo ? `<a class="card-link" href="${p.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>${s.code}</span>${arrow}</a>` : '';
+  const demoLink = p.demo ? `<a class="card-link" href="${p.demo}" target="_blank" rel="noopener">${s.demo}${arrow}</a>` : '';
+  const extraLinks = (p.extra || []).map((x) => `<a class="card-link" href="${x.url}" target="_blank" rel="noopener">${x[lang]}${arrow}</a>`).join('');
+  return `<article class="card reveal" data-topic="${p.topic}" ${p.repo ? `data-repo="${repoKey(p.repo)}"` : ''} style="--i:${i}; --lang:${color}; ${spanStyle(span)}">
+    <div class="card-head">
+      <span class="dot" aria-hidden="true"></span>
+      <h3 class="card-name">${p.name}</h3>
+    </div>
+    ${p.img ? `<button type="button" class="card-shot" aria-label="${s.zoom}"><img src="${p.img}" alt="${p.name}" loading="lazy" decoding="async"></button>` : ''}
+    ${p.short
+      ? `<p class="card-desc">${p.short[lang]}</p>
+    <details class="card-more"><summary><span class="more-open">${s.more}</span><span class="more-close">${s.less}</span></summary><p class="card-desc">${p[lang]}</p></details>`
+      : `<p class="card-desc">${p[lang]}</p>`}
+    <ul class="tags">
+      <li class="tag">${p.lang}</li>
+      ${(p.tags || []).map((x) => `<li class="tag">${x}</li>`).join('')}
+    </ul>
+    <div class="card-foot">
+      ${p.repoAfter ? `${demoLink}${extraLinks}${codeLink}` : `${codeLink}${demoLink}${extraLinks}`}
+      ${p.repo ? `<span class="card-pushed">${pushedText(p.repo)}</span>` : ''}
+    </div>
+  </article>`;
+}
+
+/* Two repos that only make sense together: one card, one box per repo. */
+function pairCard(p, i, span = 6) {
+  const s = ui();
+  const part = (x) => `<div class="part" data-repo="${repoKey(x.repo)}" style="--lang:${TOPIC_COLOR[p.topic]}">
+      <div class="card-head">
+        <span class="dot" aria-hidden="true"></span>
+        <h4 class="card-name">${x.name}</h4>
+        <span class="part-role">${x.role[lang]}</span>
+      </div>
+      <p class="card-desc">${x[lang]}</p>
+      <ul class="tags"><li class="tag">${x.lang}</li></ul>
+      <div class="card-foot">
+        <a class="card-link" href="${x.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>${s.code}</span>${arrow}</a>
+        <span class="card-pushed">${pushedText(x.repo)}</span>
+      </div>
+    </div>`;
+  return `<article class="card card-pair reveal" data-topic="${p.topic}" style="--i:${i}; --lang:${TOPIC_COLOR[p.topic]}; ${spanStyle(span)}">
+    <div class="card-head"><h3 class="card-name">${p.name[lang] ?? p.name}</h3><span class="part-role">${s.pair}</span></div>
+    <p class="card-desc">${p[lang]}</p>
+    <div class="parts">${p.parts.map(part).join('')}</div>
+  </article>`;
+}
+
+function modelLinksHtml(entry) {
+  const links = entry.links || [
+    { label: 'Hugging Face', url: entry.url, icon: 'Hugging Face' },
+    ...(entry.repo ? [{ label: 'GitHub', url: entry.repo, icon: 'GitHub' }] : []),
+  ];
+  return links
+    .map(
+      (l) =>
+        `<a class="card-link" href="${l.url}" target="_blank" rel="noopener">${linkIcon(l.icon)}<span>${l.label}</span>${arrow}</a>`
+    )
+    .join('');
+}
+
+function downloadBadgeHtml(key, count, label) {
+  return count != null
+    ? `<div class="model-downloads" data-model="${key}">
+         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+         <span class="dl-count" data-count="${count}">${count.toLocaleString()}</span>
+         <span class="dl-label">${label}</span>
+       </div>`
+    : '';
+}
+
+function modelCard(m, i, span = 2) {
+  const s = ui();
+  const count = live.downloads[m.name] ?? m.downloads;
+  return `<article class="card reveal" data-topic="infra" style="--i:${i}; --lang:${TOPIC_COLOR.infra}; ${spanStyle(span)}">
+    <div class="card-head">
+      <span class="dot" aria-hidden="true"></span>
+      <h3 class="card-name">${m.name}</h3>
+    </div>
+    <p class="card-desc">${m[lang]}</p>
+    <ul class="tags">${m.tags.map((x) => `<li class="tag">${x}</li>`).join('')}</ul>
+    ${downloadBadgeHtml(m.name, count, s.downloads)}
+    <div class="card-foot">${modelLinksHtml(m)}</div>
+  </article>`;
+}
+
+/* Iterative model lineage rendered as one wide connected timeline card. */
+function seriesCard(m, i, span = 6, standalone = false) {
+  const s = ui();
+  const H = standalone ? 'h2' : 'h3';
+  const StepH = standalone ? 'h3' : 'h4';
+  const totalKey = `series:${m.name}`;
+  const fallbackTotal = m.series.reduce((sum, step) => sum + (step.downloads || 0), 0);
+  const totalCount = live.downloads[totalKey] ?? fallbackTotal;
+  const stepHtml = (step) => {
+    const count = live.downloads[step.name] ?? step.downloads;
+    return `<div class="series-step${step.latest ? ' is-latest' : ''}">
+      <div class="card-head">
+        <span class="dot" aria-hidden="true"></span>
+        <${StepH} class="card-name">${step.version}</${StepH}>
+        ${step.role ? `<span class="part-role">${step.role[lang]}</span>` : ''}
+      </div>
+      <p class="card-desc">${step[lang]}</p>
+      ${step.tags?.length ? `<ul class="tags">${step.tags.map((x) => `<li class="tag">${x}</li>`).join('')}</ul>` : ''}
+      ${downloadBadgeHtml(step.name, count, s.downloads)}
+      <div class="card-foot">${modelLinksHtml(step)}</div>
+    </div>`;
+  };
+  return `<article class="card card-series reveal" data-topic="infra" style="--i:${i}; --lang:${m.color || TOPIC_COLOR.infra}; ${standalone ? '' : spanStyle(span)}">
+    <div class="card-head">
+      <span class="dot" aria-hidden="true"></span>
+      <${H} class="card-name">${m.name}</${H}>
+      <span class="part-role">${s.series}</span>
+    </div>
+    <p class="card-desc">${m[lang]}</p>
+    <div class="series-meta">
+      ${m.tags?.length ? `<ul class="tags">${m.tags.map((x) => `<li class="tag">${x}</li>`).join('')}</ul>` : ''}
+      ${downloadBadgeHtml(totalKey, totalCount, s.totalDownloads)}
+    </div>
+    <div class="series-steps">${m.series.map(stepHtml).join('')}</div>
+  </article>`;
+}
+
+function renderSeries() {
+  const host = $('#series');
+  const m = DATA.series;
+  if (!host || !m) return;
+  const s = ui();
+  host.setAttribute('aria-label', s.seriesLabel || 'Featured model series');
+  host.innerHTML = seriesCard(m, 0, 6, true);
+}
+
+/* --- Flagship ------------------------------------------------------------- */
+
+function renderFlagship() {
+  const host = $('#flagship');
+  const f = DATA.flagship;
+  if (!host || !f) return;
+  const s = ui();
+  host.setAttribute('aria-label', s.flagshipLabel || 'Flagship project');
+  const pillars = (f.pillars || [])
+    .map((p) => {
+      const item = p[lang] || p.en;
+      return `<div class="flagship-pillar">
+        <h3 class="flagship-pillar-title">${escapeHtml(item.title)}</h3>
+        <p class="flagship-pillar-body">${escapeHtml(item.body)}</p>
+      </div>`;
+    })
+    .join('');
+
+  host.innerHTML = `<article class="card card-flagship reveal" ${f.repo ? `data-repo="${repoKey(f.repo)}"` : ''} style="--i:0; --lang:${f.color || '#f59e0b'}">
+    <div class="card-head">
+      <span class="dot" aria-hidden="true"></span>
+      <h2 class="card-name flagship-name">${escapeHtml(f.name)}</h2>
+      ${f.role ? `<span class="part-role">${escapeHtml(f.role[lang])}</span>` : ''}
+    </div>
+    <p class="card-desc flagship-desc">${escapeHtml(f[lang])}</p>
+    <ul class="tags">
+      <li class="tag">${escapeHtml(f.lang)}</li>
+      ${(f.tags || []).map((x) => `<li class="tag">${escapeHtml(x)}</li>`).join('')}
+    </ul>
+    ${pillars ? `<div class="flagship-pillars">${pillars}</div>` : ''}
+    <div class="card-foot">
+      ${f.repo ? `<a class="card-link" href="${f.repo}" target="_blank" rel="noopener">${linkIcon('GitHub')}<span>${s.code}</span>${arrow}</a>` : ''}
+      ${(f.extra || []).map((x) => `<a class="card-link" href="${x.url}" target="_blank" rel="noopener">${escapeHtml(x[lang])}${arrow}</a>`).join('')}
+      ${f.repo ? `<span class="card-pushed">${pushedText(f.repo)}</span>` : ''}
+    </div>
+  </article>`;
+}
+
+/* --- Topics --------------------------------------------------------------- */
+
+/* The grid follows DATA.ui.topics; the bar jumps to each group. */
+function groups() {
+  const cards = [...DATA.projects, ...DATA.more];
+  return Object.keys(ui().topics).map((k) => {
+    const projectEntries = cards
+      .filter((p) => p.topic === k)
+      .sort((a, b) => !!b.parts - !!a.parts)
+      .map((p) => {
+        const weight = cardWeight(p);
+        return { item: p, kind: p.parts ? 'pair' : 'project', weight, span: baseSpan(p, weight) };
+      });
+    const modelEntries =
+      k === 'infra'
+        ? DATA.models.map((m) => {
+            const weight = cardWeight(m);
+            return { item: m, kind: m.series ? 'series' : 'model', weight, span: baseSpan(m, weight) };
+          })
+        : [];
+    const packed = packGroup([...projectEntries, ...modelEntries]);
+    return {
+      k,
+      html: packed.map((e, i) =>
+        e.kind === 'pair'
+          ? pairCard(e.item, i, e.span)
+          : e.kind === 'series'
+          ? seriesCard(e.item, i, e.span)
+          : e.kind === 'model'
+          ? modelCard(e.item, i, e.span)
+          : projectCard(e.item, i, e.span)
+      ),
+    };
+  });
+}
+
+let otherOpen = false;
+
+function setOtherOpen(open) {
+  otherOpen = open;
+  const panel = $('#group-other');
+  const btn = $('#t-other .group-toggle');
+  if (!panel || !btn) return;
+  const s = ui();
+  panel.hidden = !open;
+  btn.setAttribute('aria-expanded', String(open));
+  const state = btn.querySelector('.group-state');
+  if (state) state.textContent = open ? `${s.less} ▴` : `${s.more} ▾`;
+  const cards = panel.querySelectorAll('.reveal');
+  if (open) {
+    requestAnimationFrame(() => {
+      cards.forEach((el) => el.classList.add('in'));
+    });
+  } else {
+    cards.forEach((el) => el.classList.remove('in'));
+  }
+  spyTopics();
+}
+
+function renderWork() {
+  const s = ui();
+  const list = groups().filter((g) => g.html.length);
+  const nav = $('#topics');
+  nav.setAttribute('aria-label', s.topicsLabel);
+  nav.innerHTML = list
+    .map(
+      (g) =>
+        `<a class="topic" href="#t-${g.k}" data-pick="${g.k}">${s.topics[g.k]}<span class="topic-n">${g.html.length}</span></a>`
+    )
+    .join('');
+  $('#work').innerHTML = list
+    .map((g) => {
+      if (g.k === 'other') {
+        const stateText = otherOpen ? `${s.less} ▴` : `${s.more} ▾`;
+        return `<section class="topic-group" aria-labelledby="t-${g.k}">
+          <h2 class="group-title is-collapsible reveal" id="t-${g.k}" style="--lang:${TOPIC_COLOR[g.k]}">
+            <button type="button" class="group-toggle" aria-expanded="${otherOpen}" aria-controls="group-other">
+              <span class="group-dot" aria-hidden="true"></span>
+              <span class="group-label">${s.topics[g.k]}<span class="topic-n">${g.html.length}</span></span>
+              <span class="group-rule" aria-hidden="true"></span>
+              <span class="group-state">${stateText}</span>
+            </button>
+          </h2>
+          <div class="group-grid" id="group-other"${otherOpen ? '' : ' hidden'}>${g.html.join('')}</div>
+        </section>`;
+      }
+      return `<section class="topic-group" aria-labelledby="t-${g.k}">
+        <h2 class="group-title reveal" id="t-${g.k}" style="--lang:${TOPIC_COLOR[g.k]}">${s.topics[g.k]}<span class="topic-n">${g.html.length}</span></h2>
+        <div class="group-grid">${g.html.join('')}</div>
+      </section>`;
+    })
+    .join('');
+  spyTopics();
+}
+
+// Light the chip of the group under the stuck bar, and keep it in view on narrow screens.
+function spyTopics() {
+  const nav = $('#topics');
+  const line = nav.getBoundingClientRect().bottom + 48; // a jump lands a title 30px under the bar
+  const titles = [...document.querySelectorAll('.group-title')];
+  const atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+  const current = atEnd ? titles.at(-1) : titles.filter((t) => t.getBoundingClientRect().top <= line).at(-1);
+  nav.querySelectorAll('.topic').forEach((a) => {
+    const on = a.dataset.pick === current?.id.slice(2);
+    if (on === (a.getAttribute('aria-current') === 'true')) return;
+    if (!on) return a.removeAttribute('aria-current');
+    a.setAttribute('aria-current', 'true');
+    nav.scrollTo({ left: a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2 });
+  });
+}
+
+function startTopics() {
+  let queued = false;
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        spyTopics();
+      });
+    },
+    { passive: true }
+  );
+  $('#work').addEventListener('click', (e) => {
+    if (e.target.closest('#t-other .group-toggle')) {
+      setOtherOpen(!otherOpen);
+    }
+  });
+  $('#topics').addEventListener('click', (e) => {
+    const link = e.target.closest('a.topic[data-pick="other"]');
+    if (link && !otherOpen) setOtherOpen(true);
+  });
+  // The groups are drawn by script, so a shared #t-… link lands after they exist.
+  if (location.hash === '#t-other' && !otherOpen) setOtherOpen(true);
+  if (location.hash.startsWith('#t-')) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+}
+
+function render() {
+  renderFlagship();
+  renderSeries();
+  renderWork();
+
+  document.querySelectorAll('.card').forEach(trackSheen);
+
+  if (firstRender) {
+    firstRender = false;
+    observeReveals();
+  } else {
+    // A language switch is a deliberate action: swap it instantly.
+    document.querySelectorAll('.flagship .reveal, .series-showcase .reveal, .output .reveal').forEach((el) => {
+      if (!el.closest('[hidden]')) el.classList.add('in');
+    });
+  }
+}
+
+/* Click a card's picture to see it full size; click anywhere or Esc to close. */
+function startZoom() {
+  const box = $('#zoom');
+  if (!box?.showModal) return;
+  const img = box.querySelector('img');
+  $('#work').addEventListener('click', (e) => {
+    const pic = e.target.closest('.card-shot')?.querySelector('img');
+    if (!pic) return;
+    img.src = pic.src;
+    img.alt = pic.alt;
+    box.showModal();
+  });
+  box.addEventListener('click', () => box.close());
+}
+
+/* --- Live stats ----------------------------------------------------------- */
+
+async function getJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${res.status} ${url}`);
+  const body = await res.json();
+  if (!Array.isArray(body)) throw new Error(`unexpected payload from ${url}`);
+  return body;
+}
+
+function patchDownloads() {
+  document.querySelectorAll('.model-downloads[data-model]').forEach((el) => {
+    const n = live.downloads[el.dataset.model];
+    if (n == null) return;
+    const c = el.querySelector('.dl-count');
+    c.dataset.count = n; // a running countUp() reads this every frame
+    c.textContent = n.toLocaleString();
+  });
+}
+
+function patchPushed() {
+  document.querySelectorAll('[data-repo]').forEach((card) => {
+    card.querySelector('.card-pushed').textContent = pushedText(card.dataset.repo);
+  });
+}
+
+function startLiveStats() {
+  getJSON('https://huggingface.co/api/models?author=RX5950XT&expand[]=downloadsAllTime')
+    .then((list) => {
+      const byId = new Map(
+        list
+          .filter((x) => typeof x.id === 'string' && Number.isFinite(x.downloadsAllTime))
+          .map((x) => [x.id.toLowerCase(), x.downloadsAllTime])
+      );
+      const sumFor = (entry) => {
+        const ids = hfIds(entry).filter((id) => byId.has(id));
+        return ids.length ? ids.reduce((n, id) => n + byId.get(id), 0) : null;
+      };
+      const entries = [...(DATA.series ? [DATA.series] : []), ...DATA.models];
+      entries.forEach((m) => {
+        if (m.series) {
+          let total = 0;
+          let any = false;
+          m.series.forEach((step) => {
+            const n = sumFor(step);
+            if (n != null) {
+              live.downloads[step.name] = n;
+              total += n;
+              any = true;
+            } else if (step.downloads != null) {
+              total += step.downloads;
+            }
+          });
+          if (any) live.downloads[`series:${m.name}`] = total;
+        } else {
+          const n = sumFor(m);
+          if (n != null) live.downloads[m.name] = n;
+        }
+      });
+      patchDownloads();
+    })
+    .catch((err) => console.warn('[live stats] Hugging Face:', err.message));
+
+  getJSON('https://api.github.com/users/RX5950XT/repos?per_page=100')
+    .then((list) => {
+      list.forEach((r) => {
+        if (typeof r.full_name === 'string' && typeof r.pushed_at === 'string') {
+          live.pushed[r.full_name.toLowerCase()] = r.pushed_at;
+        }
+      });
+      patchPushed();
+    })
+    .catch((err) => console.warn('[live stats] GitHub:', err.message));
+}
+
+/* --- Entrance ------------------------------------------------------------- */
+
+/* A download count is the one number on the page worth watching arrive. */
+
+function countUp(el) {
+  // Read the target every frame: live stats may land mid-count.
+  const target = () => Number(el.dataset.count);
+  if (!target() || reduced.matches) return;
+
+  const start = performance.now();
+  const step = (now) => {
+    const p = Math.min(1, (now - start) / 1100);
+    const eased = 1 - Math.pow(1 - p, 4);
+    el.textContent = Math.round(target() * eased).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+  };
+
+  el.textContent = '0';
+  requestAnimationFrame(step);
+}
+
+function observeReveals() {
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        e.target.querySelectorAll('.dl-count').forEach(countUp);
+        io.unobserve(e.target);
+      });
+    },
+    { rootMargin: '0px 0px -8% 0px' }
+  );
+
+  document.querySelectorAll('.plate .reveal').forEach((el, i) => {
+    el.style.setProperty('--i', i);
+    requestAnimationFrame(() => el.classList.add('in'));
+  });
+  document.querySelectorAll('.flagship .reveal, .series-showcase .reveal, .output .reveal').forEach((el) => {
+    if (!el.closest('[hidden]')) io.observe(el);
+  });
+}
+
+/* --- Pointer light -------------------------------------------------------- */
+
+/* The page has no accent colour. What lights it is the pointer: a dot that
+   tracks 1:1, a ring that trails behind it, a fading streak, and a soft
+   field that drags the ambient light around with you. */
+
+let trailRGB = '255,248,240';
+let trailAlpha = 0.5;
+
+function readPointerColors() {
+  const cs = getComputedStyle(root);
+  trailRGB = cs.getPropertyValue('--trail').trim();
+  trailAlpha = parseFloat(cs.getPropertyValue('--trail-alpha')) || 0.5;
+}
+
+function trackSheen(card) {
+  let rect = null;
+  let sx = '50%';
+  let sy = '0%';
+  let pending = false;
+
+  card.addEventListener('pointerenter', () => (rect = card.getBoundingClientRect()));
+  card.addEventListener(
+    'pointermove',
+    (e) => {
+      if (!rect) rect = card.getBoundingClientRect();
+      sx = `${e.clientX - rect.left}px`;
+      sy = `${e.clientY - rect.top}px`;
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => {
+        pending = false;
+        card.style.setProperty('--sx', sx);
+        card.style.setProperty('--sy', sy);
+      });
+    },
+    { passive: true }
+  );
+}
+
+function startPointer() {
+  if (!matchMedia('(pointer: fine)').matches) return;
+  root.classList.add('pointer-fine');
+
+  const dot = $('#cursorDot');
+  const ring = $('#cursorRing');
+  const light = $('#pointerLight');
+  const canvas = $('#trail');
+  // desynchronized: skip vsync wait when the browser allows — cheaper on Edge.
+  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  const LIFE = 320;
+  const MAX_POINTS = 48;
+
+  let px = innerWidth / 2;
+  let py = innerHeight / 2;
+  let rx = px;
+  let ry = py;
+  let lx = px;
+  let ly = py;
+  let points = [];
+  let running = false;
+  let lit = false;
+
+  const resize = () => {
+    // Cap DPR — full 2× trail canvas is pure cost with little visual gain.
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
+    canvas.width = Math.floor(innerWidth * dpr);
+    canvas.height = Math.floor(innerHeight * dpr);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  resize();
+  addEventListener('resize', resize, { passive: true });
+
+  const kick = () => {
+    if (running || document.hidden) return;
+    running = true;
+    requestAnimationFrame(frame);
+  };
+
+  addEventListener(
+    'pointermove',
+    (e) => {
+      px = e.clientX;
+      py = e.clientY;
+      if (!reduced.matches) {
+        points.push({ x: px, y: py, t: performance.now() });
+        if (points.length > MAX_POINTS) points = points.slice(-MAX_POINTS);
+      }
+      dot.style.transform = `translate3d(${px}px, ${py}px, 0)`;
+      if (!lit) {
+        lit = true;
+        light.classList.add('lit');
+        root.classList.add('pointing');
+      }
+      ring.classList.toggle('near', !!e.target.closest('a, button, .portrait'));
+      kick();
+    },
+    { passive: true }
+  );
+
+  addEventListener('pointerdown', () => {
+    ring.classList.add('near');
+    kick();
+  });
+  addEventListener('pointerup', () => ring.classList.remove('near'));
+
+  // Tab in background: stop burning GPU. Resume on focus only if needed.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      running = false;
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+    }
+  });
+
+  const frame = () => {
+    // Both followers animate from wherever they currently are, so a change of
+    // direction is picked up on the next frame with no discontinuity.
+    rx += (px - rx) * 0.2;
+    ry += (py - ry) * 0.2;
+    ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+
+    lx += (px - lx) * 0.06;
+    ly += (py - ly) * 0.06;
+    light.style.transform = `translate3d(${lx}px, ${ly}px, 0)`;
+
+    let trailAlive = false;
+    if (!reduced.matches) {
+      const now = performance.now();
+      // In-place prune (no new array every frame).
+      let w = 0;
+      for (let i = 0; i < points.length; i++) {
+        if (now - points[i].t < LIFE) points[w++] = points[i];
+      }
+      points.length = w;
+      trailAlive = points.length > 1;
+
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      if (trailAlive) {
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        for (let i = 1; i < points.length; i++) {
+          const life = 1 - (now - points[i].t) / LIFE;
+          ctx.strokeStyle = `rgba(${trailRGB}, ${life * life * trailAlpha})`;
+          ctx.lineWidth = life * 3.5 + 0.4;
+          ctx.beginPath();
+          ctx.moveTo(points[i - 1].x, points[i - 1].y);
+          ctx.lineTo(points[i].x, points[i].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    const settling =
+      Math.abs(px - rx) > 0.15 ||
+      Math.abs(py - ry) > 0.15 ||
+      Math.abs(px - lx) > 0.4 ||
+      Math.abs(py - ly) > 0.4 ||
+      trailAlive;
+
+    if (settling && !document.hidden) {
+      requestAnimationFrame(frame);
+    } else {
+      running = false;
+    }
+  };
+}
+
+/* --- Portrait ------------------------------------------------------------- */
+
+/* The avatar is a 1-bit dither, so it is rebuilt as one: a few thousand
+   particles that start as noise and settle into the face, the way a diffusion
+   model denoises. The pointer pushes them aside; a click sends a shockwave. */
+
+let paintPortrait = () => {};
+
+function startPortrait() {
+  const canvas = $('#portrait');
+  const ctx = canvas && canvas.getContext && canvas.getContext('2d');
+  if (!ctx) return;
+
+  const img = new Image();
+  img.src = 'favicon.png'; // same-origin copy of the avatar, so pixels are readable
+  img.onload = () => {
+    root.classList.add('has-portrait');
+    boot();
+  };
+
+  const LEVELS = 5; // alpha buckets: one fill per bucket keeps a frame to ~5 draw calls
+  let parts = [];
+  let size = 0;
+  let color = '255,255,255';
+  let invert = false; // light theme: ink the dark parts, so the figure is not a photographic negative
+  let running = false;
+  let visible = true;
+  let born = false;
+  let px = -1e4;
+  let py = -1e4;
+  let burstAt = -1e9; // last click: the spring goes slack, then tightens again
+
+  function build(scatter) {
+    const rect = canvas.getBoundingClientRect();
+    size = rect.width;
+    if (!size) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = canvas.height = Math.round(size * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Big portrait → finer grain; the small one keeps enough cells to read.
+    const gap = size > 200 ? 3.4 : 2.6;
+    const n = Math.floor(size / gap);
+    const probe = document.createElement('canvas');
+    probe.width = probe.height = n;
+    const pctx = probe.getContext('2d', { willReadFrequently: true });
+    pctx.imageSmoothingQuality = 'high';
+    pctx.drawImage(img, 0, 0, n, n); // downscaling averages the dither into grey
+    const px8 = pctx.getImageData(0, 0, n, n).data;
+    // Averaging greys the dither down; stretch back so the brightest cell is white.
+    let peak = 0;
+    for (let k = 0; k < px8.length; k += 4) peak = Math.max(peak, px8[k + 1]);
+    const gain = 255 / Math.max(peak, 1);
+
+    const next = [];
+    for (let j = 0; j < n; j++) {
+      for (let i = 0; i < n; i++) {
+        const dx = i + 0.5 - n / 2;
+        const dy = j + 0.5 - n / 2;
+        if (dx * dx + dy * dy > (n / 2) * (n / 2)) continue; // round like the avatar
+        const k = (j * n + i) * 4;
+        const raw = (px8[k] * 0.3 + px8[k + 1] * 0.59 + px8[k + 2] * 0.11) / 255;
+        const bright = Math.min(1, raw * gain);
+        const lum = Math.pow(invert ? 1 - bright : bright, 0.85);
+        if (lum < 0.14) continue;
+        const hx = (i + 0.5) * gap;
+        const hy = (j + 0.5) * gap;
+        next.push({
+          hx,
+          hy,
+          x: scatter ? Math.random() * size : hx,
+          y: scatter ? Math.random() * size : hy,
+          vx: 0,
+          vy: 0,
+          lvl: Math.min(LEVELS - 1, Math.floor(lum * LEVELS)),
+          s: gap * (0.42 + 0.5 * lum),
+          // Brightest features resolve first, like coarse structure before detail.
+          wait: scatter ? (1 - lum) * 900 + Math.random() * 350 : 0,
+        });
+      }
+    }
+    parts = next;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, size, size);
+    const buckets = Array.from({ length: LEVELS + 1 }, () => []);
+    for (const p of parts) {
+      // A displaced particle catches the light for as long as it is out of place.
+      const off = Math.abs(p.x - p.hx) + Math.abs(p.y - p.hy);
+      buckets[off > 3 ? Math.min(LEVELS, p.lvl + 2) : p.lvl].push(p);
+    }
+    buckets.forEach((list, b) => {
+      if (!list.length) return;
+      ctx.fillStyle = `rgba(${color}, ${0.18 + (0.82 * b) / LEVELS})`;
+      ctx.beginPath();
+      for (const p of list) ctx.rect(p.x - p.s / 2, p.y - p.s / 2, p.s, p.s);
+      ctx.fill();
+    });
+  }
+
+  let t0 = 0;
+  function frame(now) {
+    if (!t0) t0 = now;
+    const age = now - t0;
+    const R = size * 0.22;
+    const calm = Math.min(1, (now - burstAt) / 1200);
+    const k = 0.008 + 0.047 * calm * calm;
+    const damp = 0.9 - 0.1 * calm;
+    let energy = 0;
+
+    for (const p of parts) {
+      if (age < p.wait) {
+        // Still noise: shimmer in place until this particle's turn comes.
+        p.x += (Math.random() - 0.5) * 1.6;
+        p.y += (Math.random() - 0.5) * 1.6;
+        energy += 1;
+        continue;
+      }
+      p.vx += (p.hx - p.x) * k;
+      p.vy += (p.hy - p.y) * k;
+      const dx = p.x - px;
+      const dy = p.y - py;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < R * R) {
+        const d = Math.sqrt(d2) || 1;
+        const f = (1 - d / R) * 2.4;
+        p.vx += (dx / d) * f;
+        p.vy += (dy / d) * f;
+      }
+      p.vx *= damp;
+      p.vy *= damp;
+      p.x += p.vx;
+      p.y += p.vy;
+      energy += Math.abs(p.vx) + Math.abs(p.vy) + Math.abs(p.hx - p.x) * 0.1;
+    }
+    draw();
+
+    // Settled: stop, like the rest of the page does. The next pointermove restarts it.
+    if (energy / (parts.length || 1) > 0.02 && visible && !document.hidden) {
+      requestAnimationFrame(frame);
+    } else {
+      running = false;
+    }
+  }
+
+  function kick() {
+    if (running || reduced.matches || !visible || document.hidden) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+
+  function readColor() {
+    invert = root.dataset.theme === 'light';
+    const c = getComputedStyle(root).getPropertyValue('--text').trim();
+    const m = c.match(/^#([0-9a-f]{6})$/i);
+    color = m
+      ? [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)).join(',')
+      : '255,255,255';
+  }
+
+  function boot() {
+    readColor();
+    build(!reduced.matches);
+    draw();
+    born = true;
+    kick();
+
+    paintPortrait = () => {
+      const was = invert;
+      readColor();
+      if (invert !== was) build(false);
+      draw();
+    };
+
+    new ResizeObserver(() => {
+      if (Math.round(canvas.getBoundingClientRect().width) === Math.round(size)) return;
+      build(false);
+      draw();
+    }).observe(canvas);
+
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible) kick();
+    }).observe(canvas);
+    // Opened in a background tab: the loop parks itself, so resume on return.
+    document.addEventListener('visibilitychange', kick);
+
+    addEventListener(
+      'pointermove',
+      (e) => {
+        const r = canvas.getBoundingClientRect();
+        px = e.clientX - r.left;
+        py = e.clientY - r.top;
+        const R = size * 0.22;
+        if (px > -R && py > -R && px < size + R && py < size + R) kick();
+      },
+      { passive: true }
+    );
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if (reduced.matches) return;
+      const r = canvas.getBoundingClientRect();
+      const cx = e.clientX - r.left;
+      const cy = e.clientY - r.top;
+      for (const p of parts) {
+        const dx = p.x - cx;
+        const dy = p.y - cy;
+        const d = Math.hypot(dx, dy) || 1;
+        // Uneven kick, so it bursts into dust rather than a clean ring.
+        const f = (size * 0.035 * (0.4 + Math.random())) / (1 + d / (size * 0.3));
+        p.vx += (dx / d) * f;
+        p.vy += (dy / d) * f;
+      }
+      burstAt = performance.now();
+      kick();
+    });
+
+    // Pointer left the window: let the face close back up.
+    addEventListener('pointerout', (e) => {
+      if (e.relatedTarget) return;
+      px = py = -1e4;
+      kick();
+    });
+  }
+
+  // Reduced motion can be switched on mid-visit: snap everything home.
+  reduced.addEventListener('change', () => {
+    if (!born) return;
+    build(false);
+    draw();
+  });
+}
+
+/* --- Context menu --------------------------------------------------------- */
+
+/* Glass menu that matches the plate. Native OS menu is fully blocked on this page.
+   Links come from DATA.links so URLs stay single-source. */
+
+function paintContextMenu() {
+  const menu = $('#ctx');
+  const s = ui();
+  if (!menu) return;
+  menu.setAttribute('aria-label', s.ctxMenu);
+  $('#ctxTitle').textContent = s.ctxTitle;
+  $('#ctxHandle').textContent = DATA.handle;
+  $('#ctxList').innerHTML = DATA.links
+    .map((l) => {
+      if (l.label === 'Email') return emailContact(l, true);
+      return `<a class="ctx-item" role="menuitem" href="${l.url}" target="_blank" rel="noopener me">
+        <span class="ctx-item-main">${linkIcon(l.label)}<span class="ctx-item-label">${l.label}</span></span>
+        <span class="ctx-item-go" aria-hidden="true">↗</span>
+      </a>`;
+    })
+    .join('');
+}
+
+function startContextMenu() {
+  const menu = $('#ctx');
+  if (!menu) return;
+
+  const close = () => {
+    if (menu.hidden) return;
+    menu.hidden = true;
+    menu.setAttribute('aria-hidden', 'true');
+    root.classList.remove('ctx-open');
+  };
+
+  const place = (x, y) => {
+    // Reset animation so re-open always plays cleanly.
+    menu.style.animation = 'none';
+    // Force reflow before re-enabling animation.
+    void menu.offsetWidth;
+    menu.style.animation = '';
+
+    menu.hidden = false;
+    menu.setAttribute('aria-hidden', 'false');
+    root.classList.add('ctx-open');
+
+    // Park off-screen first so getBoundingClientRect has real size, then clamp.
+    menu.style.transform = 'translate3d(0, 0, 0)';
+    const rect = menu.getBoundingClientRect();
+    const pad = 10;
+    let left = x;
+    let top = y;
+    if (left + rect.width > innerWidth - pad) left = innerWidth - rect.width - pad;
+    if (top + rect.height > innerHeight - pad) top = innerHeight - rect.height - pad;
+    if (left < pad) left = pad;
+    if (top < pad) top = pad;
+    menu.style.transform = `translate3d(${Math.round(left)}px, ${Math.round(top)}px, 0)`;
+  };
+
+  // Capture on window — earliest chance to kill the OS menu before anything else.
+  // Bubble-only on document was letting the native menu still appear on some Edge/Chrome paths.
+  const blockNativeAndOpen = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    place(e.clientX, e.clientY);
+  };
+
+  window.addEventListener('contextmenu', blockNativeAndOpen, true);
+
+  // Belt-and-suspenders: some engines also consult the property handler.
+  document.oncontextmenu = (e) => {
+    e.preventDefault();
+    return false;
+  };
+
+  // Dismiss only on primary click outside — never on the right-button press
+  // that is about to open/reposition the menu (that race can glitch the event path).
+  window.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (e.button !== 0) return;
+      if (!menu.hidden && !menu.contains(e.target)) close();
+    },
+    true
+  );
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+
+  addEventListener('resize', close);
+  addEventListener('scroll', close, true);
+
+  menu.addEventListener('click', (e) => {
+    if (e.target.closest('a.ctx-item')) close();
+  });
+
+  // Don't let a right-click inside the custom menu bubble a second contextmenu.
+  menu.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
+}
+
+function startHandleEffect() {
+  const handle = $('#handle');
+  if (!handle) return;
+  const originalText = DATA.handle || 'rx5950xt';
+  const chars = '0123456789ABCDEF!<>-_\\/[]{}—=+*^?#';
+  let interval = null;
+
+  handle.addEventListener('mouseenter', () => {
+    if (reduced.matches) return;
+    let iteration = 0;
+    clearInterval(interval);
+
+    interval = setInterval(() => {
+      handle.textContent = originalText
+        .split('')
+        .map((char, index) => {
+          if (index < iteration) {
+            return originalText[index];
+          }
+          return chars[Math.floor(Math.random() * chars.length)];
+        })
+        .join('');
+
+      if (iteration >= originalText.length) {
+        clearInterval(interval);
+        handle.textContent = originalText;
+      }
+      iteration += 1 / 3;
+    }, 28);
+  });
+
+  handle.addEventListener('mouseleave', () => {
+    clearInterval(interval);
+    handle.textContent = originalText;
+  });
+}
+
+/* --- Console -------------------------------------------------------------- */
+
+/* Anyone who opens DevTools gets the avatar. The ramp skips '%' on purpose:
+   console.log would read it as a format specifier and eat the next character. */
+
+/* Rendered with NBSP: see the join below. */
+const ASCII_AVATAR = [
+  '                              :. .: .-. :.',
+  '                           .:.+*-##=*@*:*+...',
+  '                            .:=&+@@*@@@*@-:..',
+  '                         ..---+&*@@*@@&*@==---:.',
+  '                       .::--==*&#@@#@@@@@+==-=-:-:.',
+  '                      .::::===#@&@@#@@#@@===-=----::.',
+  '                    ...:.---==&#@@##@@#@&++=-=----::::.',
+  '                  ....::::-&*#@*@+++#&*@&&*@=------:-:-:..',
+  '              .::::..::.::=&*#&*&+=*&##&@#*@=---::::::---::--..',
+  '            .-+-:::.:::---*&#+-===++++=+@*&@+-==----:------=+==:.',
+  '            -==+::..:++#+=#=*:.---===-:=*-&&#=&&&=++:---=--=+-++-.',
+  '           .=-=+-:..:+=#++#=:   ..:.   :=:#&#:*&&=*=:::--+=++-**=:',
+  '           .--:=::::-++*-=#::.         .:.*##:#&&-==:::-++=--=#+=:',
+  '            -=:*+++++=+*-+#::: .    : .-:.*#*:&@&-=##=&+#**+=+*==',
+  '            :=-*=*+=#*+#=+&=+=:--: =*--*#-*@#-#@&-*#+=#*#-#++**+=',
+  '            :-:++*+*#+*&=+&+**=+#+-#&=+#&=*&#=&@&=*@#=*#*:+=:++--',
+  '            .-:++*=*&=*#==*=+*=+#+=&&+=#*-#&*-&@#-@&*=*&+-=*-+=*=',
+  '             ..=-+-+#=*#==&++**#&#+@@#+&&+&#*=&@*=&&+-##=:-++=..',
+  '             ..-=-.:-::=*#*#&**&#*&@*#@&##@+==*=-:==--=+:--==:',
+  '               ..:    .==+#+*#*+#&*#@#*@&#**--=-:......  :.=:',
+  '                ..     =#*&@@@@&@@@@@@@@@&@#+==::.....  .:',
+  '                       .::=#&*#@@#@@#@@@*@@&#&@=. ...',
+  '                        :.=++#*=***#@**#&==#*+*=..',
+  '                       ...=*=+==*=+#*+++***#*#*-.',
+  '                     :-.  ==+*==++:*+:=*#=*+::.-*.',
+  '                      :: .+=*#*+&#=##**@#=**:::-=',
+  '                       -:-#+##**&&=#@##@&+**=:-==',
+  '                       -:=*=**=**#=@&=*#*-##*:==:',
+  '                         .-.-+-=+=:*=-=+*.*+: ..',
+  '                              .  . ::. :  ..',
+].join('\n').replace(/ /g, '\u00a0');
+
+function printBanner() {
+  console.log(
+    '%c' + ASCII_AVATAR,
+    'font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; line-height: 1.1'
+  );
+  console.log(
+    '%crx5950xt%c  vibe coder  %chttps://github.com/rx5950xt',
+    'font: 700 13px ui-monospace, monospace',
+    'font: 12px ui-monospace, monospace; opacity: .65',
+    'font: 12px ui-monospace, monospace; opacity: .5'
+  );
+}
+
+/* --- Boot ----------------------------------------------------------------- */
+
+$('#themeToggle').addEventListener('click', () =>
+  setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark')
+);
+$('#langToggle').addEventListener('click', () => setLang(lang === 'zh' ? 'en' : 'zh'));
+
+// Follow the system appearance until the visitor states a preference.
+matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+  if (!localStorage.getItem('theme')) {
+    applyTheme(e.matches ? 'light' : 'dark');
+  }
+});
+
+applyTheme(root.dataset.theme);
+root.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+paintPlate();
+paintContextMenu();
+render();
+startClock();
+startPointer();
+startPortrait();
+startContextMenu();
+startEmailCopy();
+startTopics();
+startZoom();
+startLiveStats();
+startHandleEffect();
+startSkyClicks();
+printBanner();
+
+
